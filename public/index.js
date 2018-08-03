@@ -7,7 +7,7 @@ function authenticationAPICall() {
 
 $(document)
   .ready(function() {
-    var liveness =false;
+    var liveness = false;
     $('#livenessToggle').eq(0).click(function() {
       liveness = !liveness;
     });
