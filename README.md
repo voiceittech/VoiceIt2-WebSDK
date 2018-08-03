@@ -1,7 +1,7 @@
 # VoiceIt2 Web Login Example and Kit
 The repository contains an example web demonstration of VoiceIt's API 2.0 use-cases. Scroll further below for instructions to implementing parts of the demo into your own projects.
 
-#### Prerequisets 
+#### Prerequisites 
 <ul>
   <li><img width="40px" src="https://png.icons8.com/color/1600/nodejs.png" alt="Node Js"/>
   <li><img width="50px" src="https://s24255.pcdn.co/wp-content/uploads/2017/02/ffmpeg-logo.png" alt="FFMPEG"/>
@@ -162,6 +162,8 @@ Need implementation help? Found a bug? Please contact support@voiceit.io.
 
 ### Disclaimer
 Please note this is a Beta verison- Feel free to document any errors/bugs in the issues section of the repository.
+
+Full support for Safari and Firefox coming soon.
 
 
 
