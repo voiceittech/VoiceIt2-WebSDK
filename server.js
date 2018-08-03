@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-const users = require('./js/users.js');
+const users = require('./users.js');
 const server = require('http').Server(app);
 //the config file
 const config = require('./config.js');
-const voiceItModule = require('./js/VoiceItBase.js');
+const voiceItModule = require('./voiceItBackEnd/js/VoiceItBase.js');
 const bodyParser = require('body-parser');
 var voiceItBackEnd;
 app.use(express.static('public'));

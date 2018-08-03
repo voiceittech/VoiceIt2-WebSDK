@@ -299,7 +299,7 @@ module.exports = function(config, server) {
     var type = options.biometricType + options.action;
     switch (type) {
       case "voiceVerification":
-        fs.appendFileSync("tempAssets/audio.wav", new Buffer.alloc(options.recording.length, options.recording));
+        fs.appendFileSync(rootAbsPath + "/tempAssets/audio.wav", new Buffer.alloc(options.recording.length, options.recording));
         myVoiceIt.voiceVerification({
           userId: userID,
           contentLanguage: config.contentLanguage,
@@ -318,7 +318,7 @@ module.exports = function(config, server) {
         });
         break;
       case "voiceEnrollment":
-        fs.appendFileSync("tempAssets/audio.wav", new Buffer.alloc(options.recording.length, options.recording));
+        fs.appendFileSync(rootAbsPath + "/tempAssets/audio.wav", new Buffer.alloc(options.recording.length, options.recording));
         myVoiceIt.createVoiceEnrollment({
           userId: userID,
           contentLanguage: config.contentLanguage,
@@ -337,7 +337,7 @@ module.exports = function(config, server) {
         });
         break;
       case "faceEnrollment":
-        fs.appendFileSync("tempAssets/video.mp4", new Buffer.alloc(options.recording.length, options.recording));
+        fs.appendFileSync(rootAbsPath + "/tempAssets/video.mp4", new Buffer.alloc(options.recording.length, options.recording));
         myVoiceIt.createFaceEnrollment({
           userId: userID,
           videoFilePath: rootAbsPath + "/tempAssets/video.mp4"
@@ -354,7 +354,7 @@ module.exports = function(config, server) {
         });
         break;
       case "faceVerification":
-        fs.appendFileSync("tempAssets/video.mp4", new Buffer.alloc(options.recording.length, options.recording));
+        fs.appendFileSync(rootAbsPath + "/tempAssets/video.mp4", new Buffer.alloc(options.recording.length, options.recording));
         myVoiceIt.faceVerification({
           userId: userID,
           contentLanguage: config.contentLanguage,
@@ -373,7 +373,7 @@ module.exports = function(config, server) {
         break;
       case "videoEnrollment":
         var recording = options.recording.video;
-        fs.appendFileSync("tempAssets/video.mov", new Buffer.alloc(recording.length, recording));
+        fs.appendFileSync(rootAbsPath + "/tempAssets/video.mov", new Buffer.alloc(recording.length, recording));
         myVoiceIt.createVideoEnrollment({
           userId: userID,
           contentLanguage: config.contentLanguage,
@@ -393,7 +393,7 @@ module.exports = function(config, server) {
         break;
       case "videoVerification":
         options.recording = options.recording.video;
-        fs.appendFileSync("tempAssets/video.mov", new Buffer.alloc(options.recording.length, options.recording));
+        fs.appendFileSync(rootAbsPath + "/tempAssets/video.mov", new Buffer.alloc(options.recording.length, options.recording));
         myVoiceIt.videoVerification({
           userId: userID,
           contentLanguage: config.contentLanguage,
@@ -443,7 +443,7 @@ module.exports = function(config, server) {
   function handleFaceLivenessCompletion(data) {
     //convert milliseconds stamps to in-video time
     stampToVidSeconds(successTimeStamps, timeStamps);
-    fs.appendFileSync("tempAssets/vid.mp4", new Buffer.alloc(data.recording.length, data.recording));
+    fs.appendFileSync(rootAbsPath + "/tempAssets/vid.mp4", new Buffer.alloc(data.recording.length, data.recording));
     var reducedStamps = [];
     //round off to 2 significant figures
     for (var j = 0; j < maxScreenShots; j++) {
@@ -457,7 +457,7 @@ module.exports = function(config, server) {
         count: 2,
         filename: 'pic.png',
         timemarks: reducedStamps
-      }, './tempAssets', function(err) {
+      }, rootAbsPath + '/tempAssets', function(err) {
         console.log(err);
       });
   }
@@ -468,7 +468,7 @@ module.exports = function(config, server) {
     } else {
       //convert milliseconds stamps to in-video time
       stampToVidSeconds(successTimeStamps, timeStamps);
-      fs.appendFileSync("tempAssets/vid.mp4", new Buffer.alloc(livFaceRecord.length, livFaceRecord));
+      fs.appendFileSync(rootAbsPath + "/tempAssets/vid.mp4", new Buffer.alloc(livFaceRecord.length, livFaceRecord));
       //round off to 2 significant figures
       var reducedStamps = [];
       //only one Faceshot for videoLiveness
@@ -481,7 +481,7 @@ module.exports = function(config, server) {
             if (err) throw err;
           });
           //get the audio
-          fs.appendFileSync("tempAssets/vid2.mp4", new Buffer.alloc(data.recording.length, data.recording));
+          fs.appendFileSync(rootAbsPath + "/tempAssets/vid2.mp4", new Buffer.alloc(data.recording.length, data.recording));
           ffmpeg(rootAbsPath + "/tempAssets/vid2.mp4")
             .output(rootAbsPath + "/tempAssets/audio.wav")
             .on('end', function() {
@@ -515,7 +515,7 @@ module.exports = function(config, server) {
           count: 1,
           filename: 'pic.png',
           timemarks: reducedStamps //number of seconds
-        }, './tempAssets', function(err) {
+        }, rootAbsPath + '/tempAssets', function(err) {
           console.log(err);
         });
     }
@@ -561,7 +561,7 @@ module.exports = function(config, server) {
   }
 
   function doLivenessVidCalls(recording) {
-    fs.appendFileSync("tempAssets/vid2.mp4", new Buffer.alloc(recording.length, recording));
+    fs.appendFileSync(rootAbsPath + "/tempAssets/vid2.mp4", new Buffer.alloc(recording.length, recording));
     ffmpeg(rootAbsPath + "/tempAssets/vid2.mp4")
       .output(rootAbsPath + "/tempAssets/audio.wav")
       .on('end', function() {
