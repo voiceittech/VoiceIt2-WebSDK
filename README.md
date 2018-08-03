@@ -55,8 +55,8 @@ In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voice
 Parts of the demo can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 use-cases (such as voice-only verification, or face and voice enrollment, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and fronted implementation is required:
 
 ### Back End Implementation
-Please copy the folder voiceit2-web-login-example/vocieItbackEnd to you project root.
-The base module for the back end will be voiceit2-web-login-example/vocieItbackEnd/js/voiceItBase.js. This module is responsible for post-recording processing, liveness math, handling socket communication with client, and making Api Calls, all done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
+Please copy the folder voiceit2-web-login-example/vocieItBackEnd to you project root.
+The base module for the back end is voiceit2-web-login-example/vocieItBackEnd/js/voiceItBase.js. This module is responsible for post-recording processing, liveness math, handling socket communication with client, and making Api Calls, all done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
 
 #### Gathering Back End Dependecies
 
@@ -106,13 +106,13 @@ voiceItBackEnd = new voiceItModule({
 This will set up your server to communicate with the front end.
 
 ### Front End Implementation
-The front end can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 use-cases (such as voice-only verification, or face and voice enrollment, or video-only verification w/ Liveness, to name a few).
+The front end can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently.
 
 #### Creating the HTML
 
 The gateway to front-end implementation is voiceit2-web-login-example/public/voiceItFront/voiceIt2.js. This is an initializer class that will gather and append all the dependecies to the DOM, create the required HTML structure for the main UI Modal (the pop-up Box from the Demo), and instansiate the voiceIt2Obj- this module is responsible for communicating with the server, and controlling the flow of the verification(s)/enrollment(s) processes. 
 To incorporate the Front End, please copy the folder voiceit2-web-login-example/public/voiceItFront to your project directory.
-Include voiceIt2.js into your html:
+Include voiceItFront/voiceIt2.js into your html:
 ```
 <script src='YOU_PROJECT_ROOT/voiceItFront/voiceIt2.js'>
 ```
@@ -124,12 +124,14 @@ This will gather fron-end dependecies (script and link tags), and create the htm
 
 #### Connecting to your UI
 
-For any of the use-cases mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness, false by default. 
+For any of the use-cases mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default). 
+
 For instance, to start a face verification w/wo liveness process, you'd have to call:
 ```
 myVoiceIt.init_Face_Verification(LIVENESS_BOOL);
 ```
-This will reveal the ui Modal (the pop-up box), ready to start the face verification w/liveness.
+This will reveal the ui Modal (the pop-up box), ready to start the face verification process.
+
 Similarly: 
 ```
 //Reveal the ui Modal, ready to start the vocie Enrollment process
@@ -154,8 +156,6 @@ myVoiceIt.init_Video_Enrollment()
 myVoiceIt.init_Video_Verification(LIVENESS_BOOL)
 ```
 The init_ACTION_TYPE() mehtod(s) can be called dynamically from any action/event per your implementation. For instance, in the demo, the respective button clicks call the respective init_ACTION_TYPE() mehtod, and the LIVENESS_BOOL is set by the ui toggle button.
-
-You are now all set up to provide voiceIt's API 2 services to clients. 
 
 ## Getting Help 
 Need implementation help? Found a bug? Please contact support@voiceit.io.
