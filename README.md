@@ -1,19 +1,19 @@
 # VoiceIt2 Web Login Example and Kit
 The repository contains an example web demonstration of VoiceIt's API 2.0 use-cases. Scroll further below for instructions to implementing parts of the demo into your own projects.
 
-## Prerequisets 
+#### Prerequisites 
 <ul>
-  <li><img width="60px" src="https://png.icons8.com/color/1600/nodejs.png" alt="Node Js"/>
-  <li><img width="70px" src="https://s24255.pcdn.co/wp-content/uploads/2017/02/ffmpeg-logo.png" alt="FFMPEG"/>
+  <li><img width="40px" src="https://png.icons8.com/color/1600/nodejs.png" alt="Node Js"/>
+  <li><img width="50px" src="https://s24255.pcdn.co/wp-content/uploads/2017/02/ffmpeg-logo.png" alt="FFMPEG"/>
 </ul>
 
-## Recommended Platform
-<img width="50px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
+#### Recommended Platform
+<img width="35px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
 
 ## Web Demo 
 
-### SnapShots 
-
+### SnapShot 
+<img width="640px" src="./demoGif.gif"/>
 
 ### Getting Started
 
@@ -55,8 +55,8 @@ In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voice
 Parts of the demo can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 use-cases (such as voice-only verification, or face and voice enrollment, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and fronted implementation is required:
 
 ### Back End Implementation
-Please copy the folder voiceit2-web-login-example/vocieItbackEnd to you project root.
-The base module for the back end will be voiceit2-web-login-example/vocieItbackEnd/js/voiceItBase.js. This module is responsible for post-recording processing, liveness math, handling socket communication with client, and making Api Calls, all done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
+Please copy the folder voiceit2-web-login-example/vocieItBackEnd to you project root.
+The base module for the back end is voiceit2-web-login-example/vocieItBackEnd/js/voiceItBase.js. This module is responsible for post-recording processing, liveness math, handling socket communication with client, and making Api Calls, all done through voiceit2-web-login-example/vocieItbackEnd/js/voiceItApiWrapper.js-a tweaked version of our Node Wrapper.
 
 #### Gathering Back End Dependecies
 
@@ -103,33 +103,37 @@ voiceItBackEnd = new voiceItModule({
       numLivTests: NUM_OF_LIVENESS_TESTS
     }, server);
 ```
-This will set up your server to communicate with the front end.
+Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)```
+Your server is now set up to communicate with the front end.
 
 ### Front End Implementation
-The front end can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 use-cases (such as voice-only verification, or face and voice enrollment, or video-only verification w/ Liveness, to name a few).
+The front end can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently.
 
 #### Creating the HTML
 
 The gateway to front-end implementation is voiceit2-web-login-example/public/voiceItFront/voiceIt2.js. This is an initializer class that will gather and append all the dependecies to the DOM, create the required HTML structure for the main UI Modal (the pop-up Box from the Demo), and instansiate the voiceIt2Obj- this module is responsible for communicating with the server, and controlling the flow of the verification(s)/enrollment(s) processes. 
 To incorporate the Front End, please copy the folder voiceit2-web-login-example/public/voiceItFront to your project directory.
-Include voiceIt2.js into your html:
+Include voiceItFront/voiceIt2.js into your html:
 ```
-<script src='YOU_PROJECT_ROOT/voiceItFront/voiceIt2.js'>
+<script src='YOU_PROJECT_ROOT/voiceItFront/voiceIt2.js'/>
 ```
 Now we can instansiate the voiceItFrontEndBase class:
 ```
 var myVocieIt = new voiceIt2FrontEndBase();
+myVoiceIt.init()
 ``` 
 This will gather fron-end dependecies (script and link tags), and create the html structure. This will also instansiate voiceIt2Obj as mentioned above.
 
 #### Connecting to your UI
 
-For any of the use-cases mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness, false by default. 
+For any of the use-cases mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default). 
+
 For instance, to start a face verification w/wo liveness process, you'd have to call:
 ```
 myVoiceIt.init_Face_Verification(LIVENESS_BOOL);
 ```
-This will reveal the ui Modal (the pop-up box), ready to start the face verification w/liveness.
+This will reveal the ui Modal (the pop-up box), ready to start the face verification process.
+
 Similarly: 
 ```
 //Reveal the ui Modal, ready to start the vocie Enrollment process
@@ -155,13 +159,13 @@ myVoiceIt.init_Video_Verification(LIVENESS_BOOL)
 ```
 The init_ACTION_TYPE() mehtod(s) can be called dynamically from any action/event per your implementation. For instance, in the demo, the respective button clicks call the respective init_ACTION_TYPE() mehtod, and the LIVENESS_BOOL is set by the ui toggle button.
 
-You are now all set up to provide voiceIt's API 2 services to clients. 
-
 ## Getting Help 
 Need implementation help? Found a bug? Please contact support@voiceit.io.
 
 ### Disclaimer
 Please note this is a Beta verison- Feel free to document any errors/bugs in the issues section of the repository.
+
+Full support for Safari and Firefox coming soon.
 
 
 
