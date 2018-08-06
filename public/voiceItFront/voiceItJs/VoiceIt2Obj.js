@@ -103,11 +103,11 @@ function voiceIt2Obj() {
   //initiate the module
   this.init = function() {
     var init = false;
-    main.socket2 = io.connect('http://localhost:8000', {
+    main.socket2 = io.connect('/', {
       reconnection: true,
       reconnectionDelay: 1,
       randomizationFactor: 0,
-      reconnectionDelayMax: 1
+      reconnectionDelayMax: 1,
     });
     main.socket2.emit('requestEnrollmentDetails', 1);
     main.assignClicks();
@@ -644,6 +644,7 @@ function voiceIt2Obj() {
 
     function drawFrames() {
       //mirror the video by drawing it onto the canvas
+      main.imageDataCtx.clearRect( 0, 0, webcam.videoWidth, webcam.videoHeight);
       main.imageDataCtx.setTransform(-1.0, 0, 0, 1, webcam.videoWidth, 0);
       main.imageDataCtx.drawImage(webcam, 0, 0, webcam.videoWidth, webcam.videoHeight);
       window.requestAnimationFrame(drawFrames);

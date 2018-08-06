@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
+const crypto = require('crypto');
+const fs = require('fs');
 const users = require('./users.js');
-const server = require('http').Server(app);
+var https = require('https');
+
 //the config file
 const config = require('./config.js');
 const voiceItModule = require('./voiceItBackEnd/js/VoiceItBase.js');
@@ -10,6 +13,20 @@ var voiceItBackEnd;
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
+var options = {
+  key: fs.readFileSync('/etc/apache2/ssl/localhost.key'),
+  cert: fs.readFileSync('/etc/apache2/ssl/localhost.crt'),
+  requestCert: false,
+  rejectUnauthorized: false,
+  agent: false,
+  strictSSL: false
+};
+
+var server = https.Server(options, app);
+
+server.listen(5000, () => {
+  console.log('Listening on *:5000');
+});
 
 //initiate the base voiceit Module
 app.post('/authenticate', (req, res) => {
@@ -31,7 +48,7 @@ app.post('/authenticate', (req, res) => {
           apiToken: config.VOICEIT_API_TOKEN,
           contentLanguage: config.contentLanguage,
           phrase: config.phrase,
-          numLivTests: config.numLivTests
+          numLivTests: 5
         }, server);
       },150);
       res.status(200).send(data);
@@ -51,8 +68,4 @@ app.post('/authenticate', (req, res) => {
     };
     res.status(404).send(data);
   }
-});
-
-server.listen(8000, () => {
-  console.log('Listening on *:8000');
 });

@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = function(config, server) {
   const myVoiceIt = new voiceit2(config.apiKey, config.apiToken);
-  let io = require('socket.io')(server);
+  let io = require('socket.io').listen(server);
   var userID = config.userId;
   const rootAbsPath = path.resolve(__dirname, '../');
 

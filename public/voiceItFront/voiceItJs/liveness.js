@@ -61,7 +61,7 @@ function Liveness(){
 				 };
 				 setTimeout(()=>{
 					 initializeBRF(main.brfv4);
-				 },100);
+				 },200);
 			}
 			if(main.brfv4.sdkReady) {
 				main.initSDK();
@@ -76,7 +76,7 @@ function Liveness(){
 			main.brfmanager.init(main.resolution, main.resolution, "com.tastenkunst.brfv4.js.examples.minimal.webcam");
 			main.brfmanager.setMode('BRFMode.FACE_TRACKING');
 			if (main.setup == false){
-				main.socket = io.connect('http://localhost:8000',{reconnection:true, reconnectionDelay: 1, randomizationFactor: 0, reconnectionDelayMax: 1});
+				main.socket = io.connect('/',{reconnection:true, reconnectionDelay: 1, randomizationFactor: 0, reconnectionDelayMax: 1});
 				main.assignSocketEvents();
 			}
 	}
