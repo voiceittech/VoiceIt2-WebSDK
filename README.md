@@ -22,13 +22,25 @@ Before unpacking the repo, plese make sure to create a Developer account at http
 login and navigate to the "Settings tab" at the bottom lower left corner. Click "Activate API 2" to get the Api Key and Token, both of which will be needed later on. Also, navigate to "User Management" tab and click "Create a User". This will create a user with a User ID- this will be needed later on. 
 
 #### Getting the Dependecies 
-Please clone or download this repository. First, make sure you have node JS installed:
+Please clone or download this repository. First, make sure you have node JS installed;
+
+OSX:
 ```
 brew install node
 ```
-Also, make sure you have ffmpeg installed:
+Linux:
+```
+sudo apt-get install node
+```
+Also, make sure you have ffmpeg installed;
+
+OSX:
 ```
 brew install ffmpeg
+```
+Linux:
+```
+sudo apt-get install ffmpeg
 ```
 Finally, unpack the contents, and cd into the root. Run:
 ```
