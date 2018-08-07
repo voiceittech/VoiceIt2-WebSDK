@@ -550,7 +550,7 @@ module.exports = function(config, server) {
           }
         } else {
           fails++;
-          if (fails > 1) {
+          if (fails >= 1) {
             io.emit('completeLiveness', 2);
           }
         }
