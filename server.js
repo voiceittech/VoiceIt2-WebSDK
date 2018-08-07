@@ -36,8 +36,8 @@ app.post('/authenticate', (req, res) => {
       setTimeout(() => {
         voiceItBackEnd = new voiceItModule({
           userId: user.id,
-          apiKey: 'API_KEY_HERE',
-          apiToken: 'API_TOKEN_HERE',
+          apiKey: config.VOICEIT_API_KEY,
+          apiToken: config.VOICEIT_API_TOKEN,
           contentLanguage: config.contentLanguage,
           phrase: config.phrase,
           numLivTests: 3,
