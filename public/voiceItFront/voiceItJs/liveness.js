@@ -59,13 +59,9 @@ function Liveness(){
 				 	 return main.brfv4BaseURL+fileName;
 				 	}
 				 };
-				 setTimeout(()=>{
-					 if (initializeBRF == undefined){
-						 main.waitForBRF();
-					 } else {
-							initializeBRF(main.brfv4);
-					 }
-				 },100);
+				 setTimeout(() => {
+						initializeBRF(main.brfv4);
+				 },200);
 			}
 			if(main.brfv4.sdkReady) {
 				main.initSDK();

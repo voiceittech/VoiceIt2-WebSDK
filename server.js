@@ -3,7 +3,7 @@ const app = express();
 const crypto = require('crypto');
 const fs = require('fs');
 const users = require('./users.js');
-var https = require('https');
+var http = require('http');
 
 //the config file
 const config = require('./config.js');
@@ -13,18 +13,10 @@ var voiceItBackEnd;
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-var options = {
-  key: fs.readFileSync('/etc/apache2/ssl/localhost.key'),
-  cert: fs.readFileSync('/etc/apache2/ssl/localhost.crt'),
-  requestCert: false,
-  rejectUnauthorized: false,
-  agent: false,
-  strictSSL: false
-};
 
-var server = https.Server(options, app);
+var server = http.Server(app);
 
-server.listen(5000, () => {
+server.listen(8000, () => {
   console.log('Listening on *:5000');
 });
 

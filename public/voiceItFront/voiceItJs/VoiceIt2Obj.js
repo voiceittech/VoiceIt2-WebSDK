@@ -658,7 +658,7 @@ function voiceIt2Obj() {
       var audio = $('<audio />').appendTo('body');
       audio.attr('id', 'myAudio');
       audio.attr('class', 'video-js vjs-default-skin');
-    }
+  }
     main.player = videojs('myAudio', {
       controls: true,
       width: 200,
