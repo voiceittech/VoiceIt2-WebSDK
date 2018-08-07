@@ -64,7 +64,7 @@ This will start the server at http://localhost:8000. Please navigate to http://l
 In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voiceit123'. After submitting the form, further verification/enrollment methods will appear that you can test out. 
 
 ## Incorporating the Kit
-Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 use-cases (such as voice-only verification, or face and voice enrollment, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and fronted implementation is required:
+Parts of the Example can be incorporated for any specific use-case. Each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently, providing a total of 27 different use-cases (such as voice-only verification, or face enrollment and video verification, or video-only verification w/ Liveness, to name a few). For any such use-case, a backend and fronted implementation is required:
 
 ### Backend Implementation
 Please copy the folder voiceit2-web-login-example/voiceItBackEnd to you project root.
