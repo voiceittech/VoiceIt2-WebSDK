@@ -13,7 +13,7 @@ module.exports = function(config, server) {
   var socket2Id;
 
   //test stuff
-  var tests = [0, 1, 2, 3, 4];
+  var tests = [0, 1, 2];
   var currTest;
   var time;
   var testIndex = 0;
@@ -132,7 +132,7 @@ module.exports = function(config, server) {
               io.emit('completeLiveness', 1);
               testIndex += 1;
 
-              if (testIndex > 4) {
+              if (testIndex > 2) {
                 testIndex = 0;
               }
               currTest = tests[testIndex];

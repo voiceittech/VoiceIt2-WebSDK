@@ -214,7 +214,6 @@ function Liveness(){
 
 			if (face.state === main.brfv4.BRFState.FACE_TRACKING_START ||
 			face.state === main.brfv4.BRFState.FACE_TRACKING) {
-				console.log(234234);
 					main.socket.emit('data', face);
 			}
 			if (main.stats.end) {
