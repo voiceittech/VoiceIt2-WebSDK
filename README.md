@@ -12,8 +12,11 @@ The repository contains an example web demonstration of VoiceIt's API 2.0 use-ca
 
 ## Web Example 
 
-### Snapshot 
-<img width="640px" src="./demoGif.gif"/>
+#### UI Snapshot 
+<img width="360px" src="./demoGif.gif" style="display: inline !important"/>
+
+#### Liveness Snapshot 
+<img width="360px" src="./livenessGif.gif" style="display: inline !important; float: right;"/>
 
 ### Getting Started
 
