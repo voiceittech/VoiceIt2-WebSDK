@@ -103,7 +103,6 @@ const config = require('./config.js');
 
 voiceItBackEnd = new voiceItModule(config, server);
 ```
-
 Or pass it options directly:
 
 ```
@@ -118,9 +117,43 @@ voiceItBackEnd = new voiceItModule({
       maxLivTries: MAX_FAILED_LIVENESS_TEST_ATTEMPTS
     }, server);
 ```
-Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)```
-Your server is now set up to communicate with the frontend.
+Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)```.
 
+#### Updating the user id
+The backend module must be inititialized only once. To update the user ID that the module will peform operations on, please call the updateUser method:
+```
+voiceItBackEnd.updateUser('USER_ID_HERE');
+```
+
+#### Updating the phrase
+The file voiceit2-web-login-example/public/voiceItFront/prompts.js manages the phrases and prompts. To update the current phrase, please call the setCurrentPhrase Method:
+```
+voiceItBackEnd.setCurrPhrase("CURRENT_PHRASE");
+``` 
+
+#### Getting the result 
+Please set up a listener for the 'result' event:
+```
+voiceItBackEnd.on('result', function(result){
+  //handle outcome
+});
+```
+After the completion of any action, the result event will be triggered. For non-liveness events, the result response will be of the following json structure:
+```
+{
+response: {.....json response of the api call....},
+type: {TYPE_ACTION}
+}
+```
+
+For Liveness related tasks, the response will be of the following structure:
+```
+{
+type: type,
+liveness: true,
+livenessOutcome: "OUTCOME"
+}
+```
 ### Frontend Implementation
 The frontend can be implemented in a modular fashion- each type (voice, face, and video), and each action (enrollment, and verification w/wo Liveness), can be implemented independently.
 
