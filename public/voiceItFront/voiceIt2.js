@@ -15,12 +15,12 @@ function voiceIt2FrontEndBase() {
       voiceInitiator = new voiceItHtmlStructure();
       voiceInitiator.init();
       setTimeout(()=>{
+        initVoiceit();
         this.myVoiceIt = new voiceIt2Obj();
         this.myVoiceIt.init();
-      }, 500);
+      }, 1000);
     }, 100);
   }
-
 
   this.init_Voice_Enrollment = () => {
     if (this.myVoiceIt == undefined) {

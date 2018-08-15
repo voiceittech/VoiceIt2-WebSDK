@@ -107,9 +107,6 @@ $(document)
                 $('#loading').fadeTo(250, 0.6);
                 $('#formOverlay').fadeTo(350,0.6);
                 if (!init) {
-                  $(voiceItHTML).on('test2', (e, resultObj) => {
-                      console.log(3443);
-                  });
                   voiceItHTML.init();
                   setTimeout(function() {
                     $("#voiceEnrollmentBtn").click(function() {
@@ -145,7 +142,7 @@ $(document)
                     $('#loading').fadeTo(250, 0.0, function(){
                       $(this).css('display','none');
                     });
-                  }, 1200);
+                  }, 1600);
                   init = true;
                 }
               });

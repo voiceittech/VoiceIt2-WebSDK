@@ -7,6 +7,16 @@
   border-top: none;
 }
 
+.ui.active.dimmer.modals.transition {
+    display: flex !important;
+    display: -ms-flexbox !important;
+}
+
+.visible.transition {
+    display: block!important;
+    visibility: visible!important;
+}
+
 #authenticate {
   color: black;
   background-color: rgb(251,193,50);

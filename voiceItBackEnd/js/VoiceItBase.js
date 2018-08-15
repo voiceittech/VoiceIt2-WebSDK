@@ -17,7 +17,6 @@ function voiceItModule (config, server) {
 
   this.currPhrase = config.phrase;
 
-
   var socket1Id;
   var socket2Id;
 
@@ -165,7 +164,6 @@ function voiceItModule (config, server) {
                 doingLiveness = false;
                 var obj = {
                   type: type,
-                  liveness: true,
                   livenessOutcome: "failed"
                 };
                 main.emit('result', obj);
@@ -211,7 +209,6 @@ function voiceItModule (config, server) {
               doingLiveness = false;
               var obj = {
                 type: type,
-                liveness: true,
                 livenessOutcome: "failed"
               };
               main.emit('result', obj);
@@ -257,7 +254,6 @@ function voiceItModule (config, server) {
               doingLiveness = false;
               var obj = {
                 type: type,
-                liveness: true,
                 livenessOutcome: "failed"
               };
               main.emit('result', obj);
@@ -604,7 +600,6 @@ function voiceItModule (config, server) {
             }
             var obj = {
               type: type,
-              liveness: true,
               livenessOutcome: "passed"
             };
             main.emit('result', obj);
@@ -616,7 +611,6 @@ function voiceItModule (config, server) {
           }
           var obj = {
             type: type,
-            liveness: true,
             livenessOutcome: "failed"
           };
           main.emit('result', obj);
@@ -647,7 +641,6 @@ function voiceItModule (config, server) {
             io.emit("completeLiveness", 3);
             var obj = {
               type: type,
-              liveness: true,
               livenessOutcome: "passed"
             };
             main.emit('result', obj);
@@ -655,7 +648,6 @@ function voiceItModule (config, server) {
             io.emit("completeLiveness", 2);
             var obj = {
               type: type,
-              liveness: true,
               livenessOutcome: "passed"
             };
             main.emit('result', obj);
@@ -782,7 +774,6 @@ function voiceItModule (config, server) {
             doingLiveness = false;
             var obj = {
               type: type,
-              liveness: true,
               livenessOutcome: "failed"
             };
             main.emit('result', obj);

@@ -157,7 +157,9 @@ function voiceItHtmlStructure() {
     "parent": "#overlayHolder"
   }, {
     "attributes": {
-      "id": "imageData"
+      "id": "imageData",
+      "height": "480",
+      "width": "640"
     },
     "nodeName": "canvas",
     "parent": "#overlayHolder"

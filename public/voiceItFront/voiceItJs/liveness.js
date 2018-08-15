@@ -1,5 +1,34 @@
 function Liveness() {
 
+  var manyfaces = false;
+
+  var brfv4WASMBuffer = null;
+
+  var brfv4SDKName = "BRFv4_JS_TK190218_v4.0.5_trial";
+
+  var _isWebAssemblySupported = (function() {
+
+    function testSafariWebAssemblyBug() {
+
+      var bin   = new Uint8Array([0,97,115,109,1,0,0,0,1,6,1,96,1,127,1,127,3,2,1,0,5,3,1,0,1,7,8,1,4,116,101,115,116,0,0,10,16,1,14,0,32,0,65,1,54,2,0,32,0,40,2,0,11]);
+      var mod   = new WebAssembly.Module(bin);
+      var inst  = new WebAssembly.Instance(mod, {});
+
+      // test storing to and loading from a non-zero location via a parameter.
+      // Safari on iOS 11.2.5 returns 0 unexpectedly at non-zero locations
+
+      return (inst.exports.test(4) !== 0);
+    }
+
+    var isWebAssemblySupported = (typeof WebAssembly === 'object');
+
+    if(isWebAssemblySupported && !testSafariWebAssemblyBug()) {
+      isWebAssemblySupported = false;
+    }
+
+    return isWebAssemblySupported;
+  })();
+
   this.brfv4Example = {
     stats: {}
   };
@@ -8,7 +37,7 @@ function Liveness() {
 	this.stopped = false;
   //this.hidden = true;
 
-  this.brfv4BaseURL = "voiceItFront/voiceItJs/brf-js/libs/brf_wasm/";
+  this.brfv4BaseURL = _isWebAssemblySupported ? "voiceItFront/voiceItJs/brf-js/libs/brf_wasm/" : "voiceItFront/voiceItJs/brf-js/libs/brf_asmjs/";
   this.support = (typeof WebAssembly === 'object');
   this.oldCircles = [];
   this.socket;
@@ -22,7 +51,6 @@ function Liveness() {
   this.resolution = null;
   this.ua = navigator.userAgent;
   this.test;
-  this.stats;
 
   var main = this;
 
@@ -38,21 +66,24 @@ function Liveness() {
     }
   }
 
-  if (!main.support) {
-    main.brfv4BaseURL = "voiceItFront/voiceItJs/brf-js/libs/brf_asmjs/";
+  function addBRFScript() {
+    var script = document.createElement("script");
+    script.setAttribute("type", "text/javascript");
+    script.setAttribute("async", true);
+    script.setAttribute("src", main.brfv4BaseURL + brfv4SDKName + ".js");
+    document.getElementsByTagName("head")[0].appendChild(script);
   }
 
-  var script = document.createElement("script");
-  script.setAttribute("type", "text/javascript");
-  script.setAttribute("async", true);
-  script.setAttribute("src", main.brfv4BaseURL + "BRFv4_JS_TK190218_v4.0.5_trial.js");
-  document.getElementsByTagName("head")[0].appendChild(script);
+  // var script = document.createElement("script");
+  // script.setAttribute("type", "text/javascript");
+  // script.setAttribute("async", true);
+  // script.setAttribute("src", main.brfv4BaseURL + "BRFv4_JS_TK190218_v4.0.5_trial.js");
+  // document.getElementsByTagName("head")[0].appendChild(script);
 
   this.init = function(type) {
     main.cancel = false;
-    main.stats = main.brfv4Example.stats;
-    if (main.stats.init) {
-      main.stats.init(60);
+    if (main.brfv4Example.stats.init) {
+      main.brfv4Example.stats.init(60);
     }
     main.waitForBRF();
   }
@@ -62,51 +93,66 @@ function Liveness() {
 	}
 
   this.waitForBRF = function() {
-    if (main.brfv4 === null) {
+
+    if (main.brfv4 === null && window.hasOwnProperty("initializeBRF")) {
       main.brfv4 = {
         locateFile: function(fileName) {
           return main.brfv4BaseURL + fileName;
-        }
+        },
+        wasmBinary: brfv4WASMBuffer
       };
-      setTimeout(() => {
         initializeBRF(main.brfv4);
-      }, 200);
     }
-    if (main.brfv4.sdkReady) {
+
+    if (main.brfv4 && main.brfv4.sdkReady) {
       main.initSDK();
     } else {
       setTimeout(main.waitForBRF, 100);
     }
   }
 
+  function tooManyFaces() {
+    $('#overlay2').fadeTo(200, 1.0);
+    $('#header').fadeTo(200, 0, function() {
+      $(this).text("Please make sure there is only one face in the camera view");
+      $('#header').fadeTo(200, 1.0);
+    });
+  }
+
+  function singleface() {
+    $('#overlay2').fadeTo(200, 1.0);
+  }
+
   this.initSDK = function() {
     main.resolution = new main.brfv4.Rectangle(0, 0, main.imageData.width, main.imageData.height);
     main.brfmanager = new main.brfv4.BRFManager();
-    main.brfmanager.init(main.resolution, main.resolution, "com.tastenkunst.brfv4.js.examples.minimal.webcam");
-		main.socket = io.connect('/', {
-			reconnection: true,
-			reconnectionDelay: 1,
-			randomizationFactor: 0,
-			reconnectionDelayMax: 1,
-			transports: ['websocket'],
-			secure: true,
-			// forceNew: true
-		});
+    main.brfmanager.init(main.resolution, main.resolution, "vocieitBRFTracking");
+    console.log(main.resolution);
 		main.assignSocketEvents();
+    setTimeout(()=>{
+      main.trackfaces();
+    },200);
   }
 
   this.assignSocketEvents = function() {
-    main.socket.emit('initLiveness', 1);
+    main.socket = io.connect('/', {
+      reconnection: true,
+      reconnectionDelay: 1,
+      randomizationFactor: 0,
+      reconnectionDelayMax: 1,
+      transports: ['websocket'],
+      secure: true,
+      forceNew: true
+    });
     main.socket.on('initiated', function(s) {
       main.test = s;
       main.createLivenessCircle();
-      window.requestAnimationFrame(main.trackfaces);
       main.drawCircle(main.test);
     });
     main.socket.on('test', function(test) {
 			if (main.cancel){
 				main.cancel = false;
-				window.requestAnimationFrame(main.trackfaces);
+				//main.trackfaces();
 			}
       main.redrawCircle(test);
     });
@@ -250,46 +296,50 @@ function Liveness() {
   }
 
   this.trackfaces = function() {
-    if (main.stats.start) main.stats.start();
+    if (main.brfv4Example.stats.start) {
+      main.brfv4Example.stats.start();
+    }
     main.brfmanager.update(main.imageDataCtx.getImageData(0, 0, main.resolution.width, main.resolution.height).data);
     var faces = main.brfmanager.getFaces();
     var face = faces[0];
+    console.log(face.rotationX);
     main.socket.emit('data', face);
-    if (main.stats.end) {
-      main.stats.end();
+    if (main.brfv4Example.stats.end) {
+      main.brfv4Example.stats.end();
     }
-    if (!main.cancel) {
-      window.requestAnimationFrame(main.trackfaces);
-    } else {
-
-		}
+    if (!main.cancel){
+      animationId = window.requestAnimationFrame(main.trackfaces);
+    }
   }
 
   this.stop = () => {
 		main.stopped = true;
 		main.socket.emit('terminateLiveness',1);
     main.cancel = true;
-		setTimeout(()=>{
-			main.brfv4Example = {
-	      stats: {}
-	    };
-			main.oldCircles = [];
-	    main.webcam = document.getElementById("myVideo");
-	    main.imageData = document.getElementById("imageData");
-	    main.imageDataCtx = main.imageData.getContext('2d');
-	    main.brfv4 = null;
-	    main.brfmanager = null;
-	    main.resolution = null;
-	    main.ua = null;
-	    main.test = null;
-	    main.stats = null;
-		},50);
+    window.cancelAnimationFrame(animationId);
+		// setTimeout(()=>{
+		// 	main.brfv4Example = {
+	  //     stats: {}
+	  //   };
+		// 	main.oldCircles = [];
+	  //   main.webcam = document.getElementById("myVideo");
+	  //   main.imageData = document.getElementById("imageData");
+    //   console.log(main.imageData.height);
+	  //   main.imageDataCtx = main.imageData.getContext('2d');
+	  //   main.brfv4 = null;
+	  //   main.brfmanager = undefined;
+	  //   main.resolution = null;
+	  //   main.ua = null;
+	  //   main.test = null;
+		// },50);
   }
 
   this.resume = function() {
+    main.assignSocketEvents();
+    main.stop = false;
     main.setup = true;
     main.cancel = false;
-    main.init();
+    main.trackfaces();
   }
 
   this.createLivenessCircle = function() {
@@ -558,4 +608,45 @@ function Liveness() {
     // main.socket.disconnect(true);
     // main.socket = null;
   });
+
+
+  function readWASMBinary(url, onload, onerror, onprogress) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = function xhr_onload() {
+      if (xhr.status === 200 || xhr.status === 0 && xhr.response) {
+        onload(xhr.response);
+        return;
+      }
+      onerror()
+    };
+    xhr.onerror = onerror;
+    xhr.onprogress = onprogress;
+    xhr.send(null);
+  }
+
+
+  (function() {
+
+    if(_isWebAssemblySupported) {
+
+      readWASMBinary(main.brfv4BaseURL + brfv4SDKName + ".wasm",
+        function(r) {
+
+          brfv4WASMBuffer = r; // see function waitForSDK. The ArrayBuffer needs to be added to the module object.
+
+          addBRFScript();
+
+        },
+        function (e) { console.error(e); },
+        function (p) { }
+      );
+
+    } else {
+
+      addBRFScript();
+    }
+
+  })();
 }

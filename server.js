@@ -3,7 +3,7 @@ const app = express();
 const crypto = require('crypto');
 const fs = require('fs');
 const users = require('./users.js');
-var http = require('http');
+var http = require('https');
 const phrases = require('./phrases.js');
 
 //the config file
@@ -12,14 +12,19 @@ const voiceItModule = require('./voiceItBackEnd/js/VoiceItBase.js');
 const bodyParser = require('body-parser');
 var voiceItBackEnd;
 app.use(express.static('public'));
+express.static.mime.types["wasm"] = "application/wasm";
 app.use(bodyParser.json());
 
-var server = http.Server(app);
+var options = {
+  key: fs.readFileSync('/etc/apache2/ssl/localhost.key'),
+  cert: fs.readFileSync('/etc/apache2/ssl/localhost.crt')
+};
+
+var server = http.Server(options,app);
 
 server.listen(8000, () => {
   console.log('Listening on *:8000');
 });
-
 
 //The voiceitBackBnd module must be initialized only once
 voiceItBackEnd = new voiceItModule({
@@ -31,7 +36,6 @@ voiceItBackEnd = new voiceItModule({
   numLivTests: 3,
   maxLivTries: 2
 }, server);
-
 
 voiceItBackEnd.on('result', function(result){
   console.dir(result);
