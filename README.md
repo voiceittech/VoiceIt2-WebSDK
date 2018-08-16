@@ -272,9 +272,7 @@ Full support for Safari and Firefox coming soon.
 - [x] Test on Chrome
 - [x] Firefox Compatibility
 - [x] Test on Firefox
-- [ ] Test on Mobile Chrome
-- [ ] Mobile Safari Compatibility
-- [ ] Test on Mobile Safari
+- [ ] Test on Opera
 - [ ] Test on Windows 10
 
 
