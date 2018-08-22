@@ -112,7 +112,7 @@ Parts of the Example can be incorporated for any specific use-case. Each type (v
 <a name="back"></a>
 ### Backend Implementation
 Please copy the folder voiceit2-web-login-example/voiceItBackEnd to you project root.
-The base module for the backend is voiceit2-web-login-example/voiceItBackEnd/js/voiceItBase.js. This module is responsible for post-recording processing, liveness detection math, handling socket communication with client, and making API calls, all done through voiceit2-web-login-example/voiceItbackEnd/js/voiceItApiWrapper.js-an altered version of our Node Wrapper.
+The base module for the backend is voiceit2-web-login-example/voiceItBackEnd/js/voiceItBase.js. This module is responsible for monitoring "Task" instances, each of which would deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session. A task instance would do post-recording processing, liveness detection math, socket communication with the specific client, and API calls, all done through voiceit2-web-login-example/voiceItbackEnd/js/voiceItApiWrapper.js-an altered version of our Node Wrapper.
 
 <a name="backdecies"></a>
 #### Gathering Backend Dependencies
@@ -178,8 +178,7 @@ Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)
 <a name="task"></a>
 #### Creating a Task
 The backend module must be inititialized only once. 
-To handle a task for any user, a new voiceItBackEnd.task instance must be created. This will initialize a task for a specific user, in a specific web session:
-
+To handle a task for any user, a new voiceItBackEnd.task instance must be created:
 ```
 var task = new voiceItBackEnd.task({
     sessionID: "SESSION_ID,
