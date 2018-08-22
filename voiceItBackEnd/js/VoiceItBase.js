@@ -6,20 +6,10 @@ const EventEmitter = require('events');
 const util = require('util');
 const uuid = require('uuid/v1');
 
-Array.prototype.clean = function(deleteValue) {
-for (var i = 0; i < this.length; i++) {
-  if (this[i] == deleteValue) {
-    this.splice(i, 1);
-    i--;
-  }
-}
-return this;
-};
-
 
 function voiceItModule (config, server, session) {
-  this.ongoingTasks = [];
-  this.tasks = [];
+  this.ongoingTasks = {};
+  this.tasks = {};
   var main = this;
   const myVoiceIt = new voiceit2(config.apiKey, config.apiToken);
   let io = require('socket.io').listen(server, {
@@ -31,12 +21,11 @@ function voiceItModule (config, server, session) {
       var taskOptions = main.getTaskOptions(socket.request.sessionID);
       if (taskOptions !== undefined){
         taskOptions.socketId = socket.id;
-        main.ongoingTasks.push({
-          sessionId: socket.request.sessionID,
-          task: new main.taskCreator(taskOptions)
-        });
+        var sessId = socket.request.sessionID;
+        main.ongoingTasks[sessId] = new main.taskCreator(taskOptions);
       }
     });
+
     socket.on('disconnect', function(){
       setTimeout(function(){
         main.removeTask(socket.request.sessionID);
@@ -51,45 +40,18 @@ function voiceItModule (config, server, session) {
   const rootAbsPath = path.resolve(__dirname, '../');
 
   this.removeTask = function(sessionId) {
-    for (var i = 0; i < main.ongoingTasks.length; i++){
-      if (main.ongoingTasks[i] !== null){
-      if (main.ongoingTasks[i].sessionId == sessionId){
-        if (main.ongoingTasks[i].task !== undefined){
-          for (var key in main.ongoingTasks[i].task){
-            main.ongoingTasks[i].task[key] = null;
-          }
-          main.ongoingTasks[i].task = null;
-          main.ongoingTasks[i] = null;
-        }
+    if (main.ongoingTasks[sessionId] !== undefined){
+      delete main.ongoingTasks[sessionId]
       }
+    if (main.tasks[sessionId] !== undefined) {
+      delete main.tasks[sessionId];
     }
-  }
-  for (var i = 0; i < main.tasks.length; i++){
-    if (main.tasks[i] !== null){
-    if (main.tasks[i].sessionId == sessionId){
-      if (main.tasks[i].task !== undefined){
-        for (var key in main.tasks[i].task){
-          main.tasks[i].task[key] = null;
-        }
-        main.tasks[i].task = null;
-        main.tasks[i] = null;
-      }
-    }
-  }
 }
-main.ongoingTasks.clean(null);
-main.tasks.clean(null);
-}
+
   this.getTaskOptions = function(sessionID) {
-      for (var i = 0; i < main.tasks.length; i++){
-        if (main.tasks[i] !== null){
-        if (main.tasks[i].sessionId == sessionID){
-          if (main.tasks[i].task !== undefined){
-            return main.tasks[i].task.getOptions();
-          }
-        }
+    if (main.tasks[sessionID] !== undefined){
+      return main.tasks[sessionID].getOptions();
     }
-  }
   }
 
   //helper to convert a point to a vector
@@ -109,11 +71,8 @@ main.tasks.clean(null);
     this.userID = config2.userId;
     this.contentLanguage = config2.contentLanguage;
     this.phrase = config2.phrase;
-    var id = config2.sessionID;
-    main.tasks.push({
-      sessionId: id,
-      task: this
-    });
+    var sessId = config2.sessionID;
+    main.tasks[sessId] = this;
     this.getOptions = function (){
       return {
       sessionID: main2.sessionId,
@@ -736,8 +695,6 @@ main.tasks.clean(null);
     }
 
     //Handle client-server communication
-      io.sockets.connected[main2.socketID].on('initLiveness', function() {
-      });
       io.sockets.connected[main2.socketID].on('requestAllEnrollmentDetails', function(request) {
         myVoiceIt.getAllEnrollmentsForUser({
           userId: main2.userID
@@ -754,7 +711,6 @@ main.tasks.clean(null);
             }
           }
           io.to(main2.socketID).emit('allEnrollmentNeeded', obj);
-          // main.emit('result', {response: jsonResponse, type: "getAllEnrollments"});
         });
       });
 
@@ -774,7 +730,6 @@ main.tasks.clean(null);
             }
           }
           io.to(main2.socketID).emit('faceEnrollmentNeeded', obj);
-          //main.emit('result', {response: jsonResponse, type: "getAllFaceEnrollments"});
         });
       });
 
