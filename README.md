@@ -48,8 +48,7 @@ Please refer to [this video](https://vimeo.com/285173131) for a walkthrough exam
 
 <a name="ui"></a>
 #### UI Snapshot 
-<img width="360px" src="./demoGif.gif" style="display: inline !important"/>
-<img width="360px" src="./livenessGif.gif" style="display: inline !important; float: right;"/>
+<img width="220px" src="./voiceVerification.gif" style="display: inline !important"/><img width="220px" src="./faceVerification.gif" style="display: inline-block !important;"/><img width="220px" src="./videoVerification.gif" style="display: inline-block !important;"/>
 
 <a name="start"></a>
 ### Getting Started
