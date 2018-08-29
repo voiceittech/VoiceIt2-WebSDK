@@ -5,6 +5,7 @@ function voiceIt2Obj() {
       main.mobile = true;
       $('#livenessBox').css('display', 'none');
   }
+  this.phrase;
   this.skipped = false;
   this.video;
   this.player;
@@ -50,6 +51,7 @@ function voiceIt2Obj() {
 
   this.livenessObj;
   this.enrollmentNeededFace = false;
+  this.enrollmentNeededVideo = false;
   this.enrollmentNeededVoice = false;
 
   this.passedLiveness = false;
@@ -107,6 +109,7 @@ function voiceIt2Obj() {
   this.browser = this.getBrowser();
 
   this.setPhrase = function(phrase) {
+    main.phrase = phrase;
     main.prompt.setCurrPhrase(phrase);
   }
 
@@ -161,7 +164,7 @@ function voiceIt2Obj() {
     main.liveness = liveness;
     main.type.biometricType = 'video';
     main.type.action = 'Verification';
-    if (!main.enrollmentNeededVoice) {
+    if (!main.enrollmentNeededVideo) {
       if (!main.isinitiated) {
         main.initiate();
       }
@@ -196,8 +199,9 @@ function voiceIt2Obj() {
     main.socket2.emit('initFrontObj', 1);
     setTimeout(function(){
       main.requestPhrases();
-      main.requestAllEnrollments();
-      main.requestAllFaceEnrollments();
+      main.requestFaceEnrollments();
+      main.requestVideoEnrollments();
+      main.requestVoiceEnrollments();
     },500);
   }
 
@@ -205,11 +209,16 @@ function voiceIt2Obj() {
     main.socket2.emit('requestPhrase', 1);
   }
 
-  this.requestAllEnrollments = function() {
-    main.socket2.emit('requestAllEnrollmentDetails', 1);
+
+  this.requestFaceEnrollments = function() {
+    main.socket2.emit('requestFaceEnrollmentDetails', 1);
   }
 
-  this.requestAllFaceEnrollments = function() {
+  this.requestVoiceEnrollments = function() {
+    main.socket2.emit('requestFaceEnrollmentDetails', 1);
+  }
+
+  this.requestVideoEnrollments = function() {
     main.socket2.emit('requestFaceEnrollmentDetails', 1);
   }
 
@@ -219,7 +228,7 @@ function voiceIt2Obj() {
       main.setPhrase(response.phrase);
     });
 
-    main.socket2.on("allEnrollmentNeeded", function(response) {
+    main.socket2.on("voiceEnrollmentNeeded", function(response) {
       if (response.type == "voice" && response.code == 1) {
         main.enrollmentNeededVoice = true;
       }
@@ -228,6 +237,12 @@ function voiceIt2Obj() {
     main.socket2.on("faceEnrollmentNeeded", function(response) {
       if (response.type == "face" && response.code == 1) {
         main.enrollmentNeededFace = true;
+      }
+    });
+
+    main.socket2.on("videoEnrollmentNeeded", function(response) {
+      if (response.type == "video" && response.code == 1) {
+        main.enrollmentNeededVideo = true;
       }
     });
 
@@ -456,6 +471,7 @@ function voiceIt2Obj() {
   this.handleDeletion = function(response) {
     response = response.response;
     if (response.responseCode == "SUCC") {
+      main.enrollmentNeededVideo = true;
       main.enrollmentNeededFace = true;
       main.enrollmentNeededVoice = true;
       setTimeout(function() {
@@ -503,11 +519,12 @@ function voiceIt2Obj() {
           main.headerj.text(main.prompt.getPrompt("SUCC_ENROLLMENT_2"));
         } else if (main.enrollCounter == 3) {
           if (main.type.biometricType == "voice") {
+            main.enrollmentNeededVoice = false;
             $('#enrollVoice').css('opacity', '0.0');
           } else {
+            main.enrollmentNeededVideo = false;
             $('#enrollVideo').css('opacity', '0.0');
           }
-          main.enrollmentNeededVoice = false;
           main.headerj.text(main.prompt.getPrompt("SUCC_ENROLLMENT_3"));
           main.exitOut();
         }
@@ -1151,7 +1168,7 @@ function voiceIt2Obj() {
   }
 
   this.initLiveness = function () {
-    main.livenessObj = new Liveness(main.socket2);
+    main.livenessObj = new Liveness(main.socket2, main.phrase);
     main.livenessObj.init();
     main.livenessInit = true;
     if (!main.assignedEvents){

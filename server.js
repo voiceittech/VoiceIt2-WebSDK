@@ -60,7 +60,7 @@ app.post('/authenticate', (req, res) => {
               sessionID: req.sessionID,
               userId: user.id,
               contentLanguage: "en-US",
-              phrase: "My face and voice identify me"
+              phrase: "Never forget tomorrow is a new day"
             });
       },150);
       res.status(200).send(data);

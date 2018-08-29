@@ -649,7 +649,7 @@ function voiceItModule (config, server, session) {
     }
 
     //Handle client-server communication
-      io.sockets.connected[main2.socketID].on('requestAllEnrollmentDetails', function(request) {
+      io.sockets.connected[main2.socketID].on('requestVoiceEnrollmentDetails', function(request) {
         myVoiceIt.getVoiceEnrollments({
           userId: main2.userID
         }, (jsonResponse) => {
@@ -664,7 +664,7 @@ function voiceItModule (config, server, session) {
               code: 0
             }
           }
-          io.to(main2.socketID).emit('allEnrollmentNeeded', obj);
+          io.to(main2.socketID).emit('voiceEnrollmentNeeded', obj);
         });
       });
 
@@ -688,6 +688,25 @@ function voiceItModule (config, server, session) {
             }
           }
           io.to(main2.socketID).emit('faceEnrollmentNeeded', obj);
+        });
+      });
+
+      io.sockets.connected[main2.socketID].on('requestVideoEnrollmentDetails', function(request) {
+        myVoiceIt.getVideoEnrollments({
+          userId: main2.userID
+        }, (jsonResponse) => {
+          if (jsonResponse.count < 3) {
+            var obj = {
+              type: "video",
+              code: 1
+            }
+          } else {
+            var obj = {
+              type: "video",
+              code: 0
+            }
+          }
+          io.to(main2.socketID).emit('videoEnrollmentNeeded', obj);
         });
       });
 

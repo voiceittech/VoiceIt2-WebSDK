@@ -4,17 +4,17 @@ function prompts () {
 
   this.currPhrase = "Never forget tomorrow is a new day";
 
-  this.getCurrPhrase = function (int)  {
-    return this.currPhrase;
+  this.getCurrPhrase = function() {
+    return main.currPhrase;
   }
 
   this.setCurrPhrase = function (phrase)  {
-    this.setPrompts(phrase);
+    main.setPrompts(phrase);
     main.currPhrase = phrase;
   }
 
   this.getPrompt = function(promptName){
-    var s  = this.prompts[promptName];
+    var s  = main.prompts[promptName];
     return s;
   };
 

@@ -1,4 +1,4 @@
-function Liveness(socket) {
+function Liveness(socket, phrase) {
   var animationId = 0;
 
   var manyfaces = false;
@@ -85,6 +85,7 @@ function Liveness(socket) {
       main.brfv4Example.stats.init(60);
     }
     main.waitForBRF();
+    main.livPrompts.setCurrPhrase(phrase);
   }
 
 	this.doingLiveness = function () {
