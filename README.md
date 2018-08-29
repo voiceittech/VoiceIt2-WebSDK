@@ -47,8 +47,10 @@ The repository contains an example [web demonstration](https://vimeo.com/2851731
 Please refer to [this video](https://vimeo.com/285173131) for a walkthrough example
 
 <a name="ui"></a>
-#### UI Snapshot 
-<img width="220px" src="./voiceVerification.gif" style="display: inline !important"/><img width="220px" src="./faceVerification.gif" style="display: inline-block !important;"/><img width="220px" src="./videoVerification.gif" style="display: inline-block !important;"/>
+#### UI Snapshots
+The following shows Voice Verification, Face Verification (With liveness detection on) and Video Verification, respectively.
+
+<img width="250px" src="./voiceVerification.gif" style="display: inline !important"/><img width="250px" src="./faceVerification.gif" style="display: inline-block !important;"/><img width="250px" src="./videoVerification.gif" style="display: inline-block !important;"/>
 
 <a name="start"></a>
 ### Getting Started
