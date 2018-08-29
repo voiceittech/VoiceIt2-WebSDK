@@ -1,6 +1,6 @@
 module.exports = {
   'demo@voiceit.io': {
-    id: "usr_8f684b61394c4a8586c4732cd7390faf",
+    id: "USER_ID_HERE",
     password: 'voiceit123'
   }
 };
