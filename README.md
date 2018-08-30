@@ -236,25 +236,36 @@ Now we can instansiate the voiceItFrontEndBase class:
 var myVoiceIt = new voiceIt2FrontEndBase();
 myVoiceIt.init()
 ``` 
-This will gather front-end dependencies (script and link tags), and create the html structure. But this will not instansiate the voiceIt2Obj. 
-
-#### Creating the voiceit front end object
-After initializing the base myVoiceIt object as above, it is necessary to wait at least 2 seconds for the dependecies to load, and the html structure to be appended. Hencforth, please call the createVoiceItObj() method:
+This will gather front-end dependencies (script and link tags), create the html structure, and initialize the voiceItFrontEndBase Object. It is necessary to wait at least 2 seconds for all the dependecies, and html structure to load. We recommend using the onLoad callback to know when everything has loaded and proceede thereafter. 
 ```
-myVoiceIt.createVoiceItObj();
+myVoiceit.onLoad = function(){
+//VoiceIt dependecies have been loaded
+}
 ```
-This will create the main object responsible for interacting with the back end. 
 
 <a name="connect"></a>
 #### Connecting your UI to the Backend
 
-For any of the use-cases mentioned above, you need to call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default). 
+For any of the use-cases mentioned above, please call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default). 
 
 For instance, to start a face verification w/wo liveness process, you'd have to call:
 ```
 myVoiceIt.init_Face_Verification(LIVENESS_BOOL);
 ```
 This will reveal the UI Modal to start the face verification process.
+We recommend calling these methods inside the onLoad callback, as so:
+```
+myVoiceit.onLoad = function(){
+//VoiceIt dependecies have been loaded
+...
+..
+$('#example_voiceEnrollment_button').on('click',function(){
+myVoiceIt.init_Voice_Enrollment();
+});
+..
+...
+}
+```
 
 Similarly: 
 ```
