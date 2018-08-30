@@ -26,15 +26,12 @@ $(document)
       $("#faceVerificationBtn").on('click', function() {
         voiceItHTML.init_Face_Verification(liveness);
       });
-
       $("#faceEnrollmentBtn").on('click', function() {
         voiceItHTML.init_Face_Enrollment();
       });
-
       $("#videoVerificationBtn").on('click', function() {
         voiceItHTML.init_Video_Verification(liveness);
       });
-
       $("#videoEnrollmentBtn").on('click', function() {
         voiceItHTML.init_Video_Enrollment();
       });

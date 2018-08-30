@@ -202,7 +202,7 @@ function voiceIt2Obj() {
       main.requestFaceEnrollments();
       main.requestVideoEnrollments();
       main.requestVoiceEnrollments();
-    },500);
+    },100);
   }
 
   this.requestPhrases = function ()  {
@@ -986,6 +986,7 @@ function voiceIt2Obj() {
       if (main.type.biometricType !== "face") {
         main.headerj.text(main.prompt.getPrompt("VERIFY"));
       } else {
+        console.log(233232);
         main.headerj.text(this.prompt.getPrompt("LOOK_INTO_CAM"));
       }
       if (main.type.biometricType == "voice") {
