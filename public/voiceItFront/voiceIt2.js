@@ -12,13 +12,20 @@ function voiceIt2FrontEndBase() {
   main.onLoad = function(){
   }
 
-  setTimeout(function(){
-      voiceInitiator = new voiceItHtmlStructure();
-      voiceInitiator.init();
-  },200);
-
   main.init = function(){
       main.createVoiceItObj();
+      main.appendStructure();
+  }
+
+  main.appendStructure = function(){
+    if (window.hasOwnProperty('voiceItHtmlStructure')) {
+      voiceInitiator = new voiceItHtmlStructure();
+      voiceInitiator.init();
+    } else {
+      setTimeout(function(){
+      main.appendStructure();
+      },50);
+    }
   }
 
   main.createVoiceItObj = function () {
@@ -29,7 +36,7 @@ function voiceIt2FrontEndBase() {
     } else {
       setTimeout(function(){
         main.createVoiceItObj();
-      },100);
+      },50);
     }
   }
 

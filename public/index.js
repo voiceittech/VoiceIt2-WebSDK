@@ -14,9 +14,12 @@ $(document)
       liveness = $(this).is(':checked')? true: false;
     });
 
+    var initialized = false;
+
     var voiceItHTML = new voiceIt2FrontEndBase();
     voiceItHTML.init();
     voiceItHTML.onLoad = function(){
+      initialized = true;
       $("#voiceEnrollmentBtn").on('click', function() {
         voiceItHTML.init_Voice_Enrollment();
       });
@@ -37,7 +40,7 @@ $(document)
       });
     };
 
-    var initialized = false;
+
 
     $('#mainForm').keydown(function(event) {
       if (event.keyCode == 13) {
@@ -91,6 +94,27 @@ $(document)
       return pattern.test(emailAddress);
     }
 
+    function allLoaded() {
+      if (initialized){
+        setTimeout(function(){
+          $('#verifyHolder').css('display', 'flex');
+          $('#verifyHolder').css('justify-content', 'center');
+          $('#verify').text('Please Verify');
+          $('#verify').css('display', 'block');
+          $('#verify').fadeTo(500, 1.0);
+          $('#authenticate').css('display', 'none');
+          $('#options').fadeTo(400, 1.0);
+          $('#loading').fadeTo(250, 0.0, function(){
+            $(this).css('display','none');
+          });
+        },1300);
+      } else {
+        setTimeout(function(){
+          allLoaded();
+        },100);
+      }
+    }
+
     $('#options').css('display', 'none');
     $('#verify').css('display', 'none');
     $('#enrollVideo').css('opacity', '0.0');
@@ -127,21 +151,9 @@ $(document)
               $('#authenticate').fadeTo(400, 0.0, function() {
                 $('#loading').fadeTo(250, 0.6);
                 $('#formOverlay').fadeTo(350,0.6);
-                if (!initialized) {
-                    setTimeout(function(){
-                      $('#verifyHolder').css('display', 'flex');
-                      $('#verifyHolder').css('justify-content', 'center');
-                      $('#verify').text('Please Verify');
-                      $('#verify').css('display', 'block');
-                      $('#verify').fadeTo(500, 1.0);
-                      $('#authenticate').css('display', 'none');
-                      $('#options').fadeTo(400, 1.0);
-                      $('#loading').fadeTo(250, 0.0, function(){
-                        $(this).css('display','none');
-                      });
-                    },2000);
-                  initialized = true;
-                }
+                setTimeout(function(){
+                  allLoaded();
+                },1300);
               });
             } else {
               $('#authenticate').fadeTo(400, 0.0, function() {

@@ -109,6 +109,7 @@ function voiceIt2Obj() {
   this.browser = this.getBrowser();
 
   this.setPhrase = function(phrase) {
+    console.log("received phraseee");
     main.phrase = phrase;
     main.prompt.setCurrPhrase(phrase);
   }
@@ -195,21 +196,15 @@ function voiceIt2Obj() {
       transports: ['websocket'],
       forceNew: true
     });
-    main.assignClicks();
     main.socket2.on('connect', function(){
-      console.log(124243);
+      main.assignClicks();
       main.socket2.emit('initFrontObj', 1);
-      main.requestPhrases();
       main.requestFaceEnrollments();
       main.requestVideoEnrollments();
       main.requestVoiceEnrollments();
-    })
+    });
   }
-
-  this.requestPhrases = function ()  {
-    main.socket2.emit('requestPhrase', 1);
-  }
-
+  
   this.requestFaceEnrollments = function() {
     main.socket2.emit('requestFaceEnrollmentDetails', 1);
   }
@@ -223,7 +218,6 @@ function voiceIt2Obj() {
   }
 
   this.assignClicks = function() {
-
     main.socket2.on('phrase', function(response) {
       main.setPhrase(response.phrase);
     });
@@ -374,6 +368,7 @@ function voiceIt2Obj() {
         $('#readyButton').css('display','none');
         main.hidden = false;
         main.start();
+        console.log(main.prompt.getPrompt("VERIFY"));
         if (main.type.biometricType !== "voice") {
           main.circlej.fadeTo(500, 1.0);
         }
@@ -970,7 +965,6 @@ function voiceIt2Obj() {
   }
 
   this.start = function() {
-    main.requestPhrases();
     main.headerj.css('display', 'inline-block');
     if (main.type.action == "Verification" && main.type.biometricType == "voice") {
       main.headerj.css('display', 'inline-block !important');

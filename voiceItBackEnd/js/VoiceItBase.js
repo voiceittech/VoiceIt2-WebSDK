@@ -158,6 +158,8 @@ function voiceItModule (config, server, session) {
     main2.facedDownCounter = 0;
     main2.faceOtherWayCounter = 0;
 
+    io.to(main2.socketID).emit('phrase', {phrase: config2.phrase});
+
     //start timestamps for video
     main2.initTimeStamps = function() {
       main2.timeStamps = [];
