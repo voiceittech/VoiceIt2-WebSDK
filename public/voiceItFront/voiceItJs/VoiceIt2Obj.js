@@ -109,7 +109,6 @@ function voiceIt2Obj() {
   this.browser = this.getBrowser();
 
   this.setPhrase = function(phrase) {
-    console.log("received phraseee");
     main.phrase = phrase;
     main.prompt.setCurrPhrase(phrase);
   }
@@ -204,7 +203,7 @@ function voiceIt2Obj() {
       main.requestVoiceEnrollments();
     });
   }
-  
+
   this.requestFaceEnrollments = function() {
     main.socket2.emit('requestFaceEnrollmentDetails', 1);
   }
@@ -368,7 +367,6 @@ function voiceIt2Obj() {
         $('#readyButton').css('display','none');
         main.hidden = false;
         main.start();
-        console.log(main.prompt.getPrompt("VERIFY"));
         if (main.type.biometricType !== "voice") {
           main.circlej.fadeTo(500, 1.0);
         }
