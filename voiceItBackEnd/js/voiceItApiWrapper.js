@@ -235,7 +235,6 @@ function VoiceIt2(apk, tok) {
 
     const form = new FormData();
     form.append('userId', options.userId);
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('video', fs.createReadStream(options.videoFilePath));
 
     this.axiosInstance.post(`${BASE_URL}/enrollments/face`, form, {
@@ -250,7 +249,6 @@ function VoiceIt2(apk, tok) {
   this.createFaceEnrollmentByUrl = (options, callback) => {
     const form = new FormData();
     form.append('userId', options.userId);
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('fileUrl', options.videoFileURL);
 
     this.axiosInstance.post(`${BASE_URL}/enrollments/face/byUrl`, form, {
@@ -271,7 +269,6 @@ function VoiceIt2(apk, tok) {
     form.append('userId', options.userId);
     form.append('contentLanguage', options.contentLanguage);
     form.append('phrase', options.phrase ? options.phrase : '');
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('video', fs.createReadStream(options.videoFilePath), {
       filename: 'video.mp4',
     });
@@ -290,7 +287,6 @@ function VoiceIt2(apk, tok) {
     form.append('userId', options.userId);
     form.append('contentLanguage', options.contentLanguage);
     form.append('phrase', options.phrase ? options.phrase : '');
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('fileUrl', options.videoFileURL);
 
     this.axiosInstance.post(`${BASE_URL}/enrollments/video/byUrl`, form, {
@@ -412,7 +408,6 @@ function VoiceIt2(apk, tok) {
 
     const form = new FormData();
     form.append('userId', options.userId);
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('video', fs.createReadStream(options.videoFilePath), {
       filename: 'video.mp4',
     });
@@ -432,7 +427,6 @@ function VoiceIt2(apk, tok) {
     }
     const form = new FormData();
     form.append('userId', options.userId);
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('photo', fs.createReadStream(options.photoFilePath), {
       filename: 'photo.jpg',
     });
@@ -449,7 +443,6 @@ function VoiceIt2(apk, tok) {
   this.faceVerificationByUrl = (options, callback) => {
     const form = new FormData();
     form.append('userId', options.userId);
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('userId', options.userId);
     form.append('fileUrl', options.videoFileURL);
 
@@ -471,7 +464,6 @@ function VoiceIt2(apk, tok) {
     form.append('userId', options.userId);
     form.append('contentLanguage', options.contentLanguage);
     form.append('phrase', options.phrase ? options.phrase : '');
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('userId', options.userId);
     form.append('video', fs.createReadStream(options.videoFilePath), {
       filename: 'video.mp4',
@@ -496,7 +488,6 @@ function VoiceIt2(apk, tok) {
     form.append('userId', options.userId);
     form.append('contentLanguage', options.contentLanguage);
     form.append('phrase', options.phrase ? options.phrase : '');
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('userId', options.userId);
     form.append('photo', fs.createReadStream(options.photoFilePath), {
       filename: 'photo.jpg',
@@ -518,7 +509,6 @@ function VoiceIt2(apk, tok) {
     form.append('userId', options.userId);
     form.append('contentLanguage', options.contentLanguage);
     form.append('phrase', options.phrase ? options.phrase : '');
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('userId', options.userId);
     form.append('fileUrl', options.videoFileURL);
 
@@ -578,7 +568,6 @@ function VoiceIt2(apk, tok) {
 
     const form = new FormData();
     form.append('groupId', options.groupId);
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('video', fs.createReadStream(options.videoFilePath), {
       filename: 'video.mp4',
     });
@@ -595,7 +584,6 @@ function VoiceIt2(apk, tok) {
   this.faceIdentificationByUrl = (options, callback) => {
     const form = new FormData();
     form.append('groupId', options.groupId);
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('fileUrl', options.videoFileURL);
 
     this.axiosInstance.post(`${BASE_URL}/identification/face/byUrl`, form, {
@@ -616,7 +604,6 @@ function VoiceIt2(apk, tok) {
     form.append('groupId', options.groupId);
     form.append('contentLanguage', options.contentLanguage);
     form.append('phrase', options.phrase ? options.phrase : '');
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('video', fs.createReadStream(options.videoFilePath), {
       filename: 'video.mp4',
     });
@@ -635,7 +622,6 @@ function VoiceIt2(apk, tok) {
     form.append('groupId', options.groupId);
     form.append('contentLanguage', options.contentLanguage);
     form.append('phrase', options.phrase ? options.phrase : '');
-    form.append('doBlinkDetection', options.doBlinkDetection ? 1 : 0);
     form.append('fileUrl', options.videoFileURL);
 
     this.axiosInstance.post(`${BASE_URL}/identification/video/byUrl`, form, {
