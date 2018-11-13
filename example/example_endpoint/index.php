@@ -4,8 +4,7 @@ include('../config.php');
 
 $myVoiceIt = new VoiceIt2WebBackend($VOICEIT_API_KEY, $VOICEIT_API_TOKEN);
 
-function voiceItResultCallback($jsonResponse){
-  $jsonObj = json_decode($jsonResponse);
+function voiceItResultCallback($jsonObj){
   $callType = strtolower($jsonObj["callType"]);
   $userId = $jsonObj["userId"];
   if(stripos($callType, "verification") !== false){

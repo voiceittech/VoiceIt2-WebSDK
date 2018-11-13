@@ -76,4 +76,3 @@ typings/
 .serverless
 
 .DS_Store
-example/config.php

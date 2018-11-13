@@ -23,7 +23,7 @@ function saveFileData($fileTempName, $extension){
 
 function formatResponse($callType, $userId, $jsonResponse){
   $jsonResponseObj = json_decode($jsonResponse);
-  return json_encode(array('callType' => $callType, 'userId' => $userId, 'jsonResponse' => $jsonResponseObj));
+  return array('callType' => $callType, 'userId' => $userId, 'jsonResponse' => $jsonResponseObj);
 }
 
 class VoiceIt2WebBackend {
