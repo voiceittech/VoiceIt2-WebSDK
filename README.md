@@ -100,7 +100,7 @@ $myVoiceIt->InitBackend($_POST, $_FILES, voiceItResultCallback);
 ```
 
 #### Getting the Result
-After the completion of any verification action, the voiceItResultCallback will be triggered. The result response will be of the following json structure:
+After the completion of any verification action, the `voiceItResultCallback` will be triggered. The result response will be of the following json structure:
 
 ```json
 {
@@ -123,13 +123,17 @@ Similarly to `VoiceItApi2WebSDK/php-example/login/index.php` you need to initial
 // Note: You might have to modify the require path of the voiceit-php-backend folder
 // depending on where you placed the folder in your project
 require('voiceit-php-backend/VoiceIt2WebBackend.php');
+
 // Upon a successful login, lookup the associated VoiceIt userId
 $VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
+
 header("HTTP/1.1 200 OK");
 // Initialize module and replace this with your own credentials
 $myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN_HERE");
+
 // Generate a new token for the userId
 $createdToken = $myVoiceIt->generateTokenForUser($VOICEIT_USERID);
+
 // Then return this token to the front end, for example as part of a jsonResponse
 $jsonResponse = Array(
 	"ResponseCode" => "SUCC",
