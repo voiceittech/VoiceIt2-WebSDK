@@ -1,7 +1,4 @@
-<img src="./js.png" width="100%" style="width:100%" />
-
 # VoiceIt2 Web Login Example and Kit
-
 The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 use-cases. Please navigate to [Incorporating the kit](#kit) for instructions on how to integrate parts of the Example into your own projects.
 
 - [Prerequisites](#prereq)
@@ -11,7 +8,7 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 	- [UI SnapShots](#ui)
 	- [Getting Started](#start)
 		- [Getting the Credentials](#credit)
-		- [Dependencies](#decies)
+		- [Dependencieds](#decies)
 		- [The Config File](#config)
 		- [The User Id](#userid)
 		- [Running the example](#run)
@@ -31,7 +28,7 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 
 
 <a name="prereq"></a>
-#### Prerequisites 
+#### Prerequisites
 <ul>
   <li><img width="40px" src="https://png.icons8.com/color/1600/nodejs.png" alt="Node Js"/>
   <li><img width="50px" src="https://s24255.pcdn.co/wp-content/uploads/2017/02/ffmpeg-logo.png" alt="FFMPEG"/>
@@ -46,21 +43,21 @@ The repository contains an example [web demonstration](#webexample) of VoiceIt's
 <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Mozilla_Firefox_3.5_logo_256.png" alt="Firefox"/>    <img style="display: inline-block" width="35px" src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Opera_browser_logo_2013.png" alt="Google Chrome"/>
 
 <a name="webexample"></a>
-## Web Example 
+## Web Example
 Please refer to [this video](https://vimeo.com/285173131) for a walkthrough example
 
 <a name="ui"></a>
 #### UI Snapshots
 The following shows Voice Verification, Face Verification (With liveness detection on) and Video Verification (with Liveness turned off), respectively.
 
-<img width="290px" src="./voiceVerification.gif" style="display: inline !important"/><img width="290px" src="./faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./videoVerification.gif" style="display: inline-block !important;"/>
+<img width="290px" src="./graphics/voiceVerification.gif" style="display: inline !important"/><img width="290px" src="./graphics/faceVerification.gif" style="display: inline-block !important;"/><img width="290px" src="./graphics/videoVerification.gif" style="display: inline-block !important;"/>
 
 <a name="start"></a>
 ### Getting Started
 
 <a name="credit"></a>
-#### Getting the Credentials 
-Before unpacking the repo, plese make sure to create a Developer account at https://voiceit.io/signup. Upon completion, 
+#### Getting the Credentials
+Before unpacking the repo, plese make sure to create a Developer account at https://voiceit.io/signup. Upon completion,
 login and navigate to the "Settings tab" at the bottom lower left corner. Click "Activate API 2.0" to get your Api Key and Token, both of which will be needed later on. Also, navigate to the "User Management" tab and click "Create a User". This will create a user with a User ID which will be needed later on.
 
 <a name="decies"></a>
@@ -92,13 +89,13 @@ npm install
 This will get the required dependencies for the Example.
 
 <a name="config"></a>
-#### The Config File 
+#### The Config File
 Before starting the Example, please navigate to voiceit2-web-login-example/config.js. The config file hosts options that initiate the voiceIt Back-End module. Please replace the 'API_KEY_HERE' with your API Key, and 'API_TOKEN_HERE' with your API Token. Change other options as per your preferences.
 
 <a name="userid"></a>
 #### The User Id
-A userId will be needed for most API calls. For the Example, we've created a users file that has a simple object with key/value pair of user-email to User-Details . In a real scenario, a voiceIt User ID could be fetched from a database, a session, etc. 
-Please navigate to voiceit2-web-login-example/users.js, and replace 'USER_ID_HERE' with a user Id from your account. 
+A userId will be needed for most API calls. For the Example, we've created a users file that has a simple object with key/value pair of user-email to User-Details . In a real scenario, a voiceIt User ID could be fetched from a database, a session, etc.
+Please navigate to voiceit2-web-login-example/users.js, and replace 'USER_ID_HERE' with a user Id from your account.
 
 <a name="run"></a>
 #### Running the Example
@@ -106,8 +103,8 @@ After the steps above, run the following to start the Example server:
 ```
 npm start
 ```
-This will start the server at http://localhost:8000. Please navigate to http://localhost:8000. 
-In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voiceit123'. After submitting the form, further verification/enrollment methods will appear that you can test out. 
+This will start the server at http://localhost:3000. Please navigate to http://localhost:3000.
+In the email input, type: 'demo@voiceit.io'. In the password input, type: 'voiceit123'. After submitting the form, further verification/enrollment methods will appear that you can test out.
 
 <a name="kit"></a>
 ## Incorporating the Kit
@@ -184,7 +181,7 @@ Please make sure to use ```server.listen(....)``` rather than ```app.listen(...)
 
 <a name="task"></a>
 #### Creating a Task
-The backend module must be inititialized only once. 
+The backend module must be inititialized only once.
 To handle a task for any user, a new voiceItBackEnd.task instance must be created:
 ```
 var task = new voiceItBackEnd.task({
@@ -196,7 +193,7 @@ var task = new voiceItBackEnd.task({
 ```
 This will set up the back end to listen for, and perform, any specific action (from the 27 possbile) set for the user in the front end.
 <a name="result"></a>
-#### Getting the result 
+#### Getting the result
 Please set up a listener for the 'result' event:
 ```
 voiceItBackEnd.on('result', function(result){
@@ -238,8 +235,8 @@ Now we can instansiate the voiceItFrontEndBase class:
 ```
 var myVoiceIt = new voiceIt2FrontEndBase();
 myVoiceIt.init()
-``` 
-This will gather front-end dependencies (script and link tags), create the html structure, and initialize the voiceItFrontEndBase Object. It is necessary to wait at least 2 seconds for all the dependecies, and html structure to load. We recommend using the onLoad callback to know when everything has loaded and proceede thereafter. 
+```
+This will gather front-end dependencies (script and link tags), create the html structure, and initialize the voiceItFrontEndBase Object. It is necessary to wait at least 2 seconds for all the dependecies, and html structure to load. We recommend using the onLoad callback to know when everything has loaded and proceede thereafter.
 ```
 myVoiceit.onLoad = function(){
 //VoiceIt dependecies have been loaded
@@ -250,7 +247,7 @@ In case a created "Task" cannot connect with the client side socket, we have pro
 <a name="connect"></a>
 #### Connecting your UI to the Backend
 
-For any of the use-cases mentioned above, please call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default). 
+For any of the use-cases mentioned above, please call the init_ACTION_TYPE() menthod(s) of the voiceIt2FrontEndBase instance. Methods for Face and Video Verification take a boolean parameter for liveness (false by default).
 
 For instance, to start a face verification w/wo liveness process, you'd have to call:
 ```
@@ -271,7 +268,7 @@ myVoiceIt.init_Voice_Enrollment();
 }
 ```
 
-Similarly: 
+Similarly:
 ```
 //Reveal the UI Modal to start the Voice Enrollment process
 myVoiceIt.init_Voice_Enrollment();
@@ -297,7 +294,7 @@ myVoiceIt.init_Video_Verification(LIVENESS_BOOL)
 The init_ACTION_TYPE() method(s) can be called dynamically from any action/event per your implementation. For instance, in the Example, the respective button clicks call the respective init_ACTION_TYPE() method, and the LIVENESS_BOOL is set by the UI toggle button.
 
 <a name="help"></a>
-## Getting Help 
+## Getting Help
 Need implementation help? Found a bug? Please contact hassan@voiceit.io.
 
 <a name="disclaimer"></a>
@@ -313,10 +310,7 @@ Please note this is a Beta verison- Feel free to document any errors/bugs in the
 - [x] Test on Chrome (Android) - without liveness
 - [x] Test on Firefox (Mac)
 - [x] Test on FireFox (Linux)
-- [x] Test on Firefox (Windows 10)
+- [ ] Test on Firefox (Windows 10)
 - [ ] Test on Edge (Windows 10)
-- [x] Test on Windows 10
+- [ ] Test on Windows 10
 - [x] Test on Opera (Mac)
-
-
-
