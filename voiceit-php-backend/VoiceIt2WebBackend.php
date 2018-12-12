@@ -22,7 +22,7 @@ function saveFileData($fileTempName, $extension){
 }
 
 function formatResponse($callType, $userId, $jsonResponse){
-  $jsonResponseObj = json_decode($jsonResponse);
+  $jsonResponseObj = json_decode($jsonResponse, true);
   return array('callType' => $callType, 'userId' => $userId, 'jsonResponse' => $jsonResponseObj);
 }
 
