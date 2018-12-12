@@ -22,12 +22,16 @@ function saveFileData($fileTempName, $extension){
 }
 
 function formatResponse($callType, $userId, $jsonResponse){
-  $jsonResponseObj = json_decode($jsonResponse);
+  $jsonResponseObj = json_decode($jsonResponse, true);
   return array('callType' => $callType, 'userId' => $userId, 'jsonResponse' => $jsonResponseObj);
 }
 
-class VoiceIt2WebBackend {
+function returnJson($jsonResponse){
+  header('Content-Type: application/json');
+  echo $jsonResponse;
+}
 
+class VoiceIt2WebBackend {
   public $BASE_URL = 'https://api.voiceit.io';
   public $api_key;
   public $api_token;
@@ -77,7 +81,7 @@ class VoiceIt2WebBackend {
     $secureToken = "".$POST_REF["viSecureToken"];
 
     if(!$this->validateToken($secureToken)){
-      echo json_encode(array('responseCode' => "INVT", 'message' => 'Invalid Token'));
+      returnJson(json_encode(array('responseCode' => "INVT", 'message' => 'Invalid Token')));
       return;
     }
 
@@ -85,17 +89,17 @@ class VoiceIt2WebBackend {
 
     if($reqType == "deleteVoiceEnrollments"){
       $resp = $this->deleteAllVoiceEnrollments($EXTRACTED_USER_ID);
-      echo $resp;
+      returnJson($resp);
     }
 
     if($reqType == "deleteFaceEnrollments"){
       $resp = $this->deleteAllFaceEnrollments($EXTRACTED_USER_ID);
-      echo $resp;
+      returnJson($resp);
     }
 
     if($reqType == "deleteVideoEnrollments"){
       $resp = $this->deleteAllVideoEnrollments($EXTRACTED_USER_ID);
-      echo $resp;
+      returnJson($resp);
     }
 
     if($reqType == "enoughVoiceEnrollments"){
@@ -111,7 +115,7 @@ class VoiceIt2WebBackend {
       } else {
         $finalResult = json_encode(array('enoughEnrollments' => false));
       }
-      echo $finalResult;
+      returnJson($finalResult);
     }
 
     if($reqType == "enoughFaceEnrollments"){
@@ -119,12 +123,12 @@ class VoiceIt2WebBackend {
       $resp_obj = json_decode($resp);
       if($resp_obj->responseCode == "SUCC"){
         if($resp_obj->count >= 1){
-          echo json_encode(array('enoughEnrollments' => true));
+          returnJson(json_encode(array('enoughEnrollments' => true)));
         } else {
-          echo json_encode(array('enoughEnrollments' => false));
+          returnJson(json_encode(array('enoughEnrollments' => false)));
         }
       } else {
-        echo json_encode(array('enoughEnrollments' => false));
+        returnJson(json_encode(array('enoughEnrollments' => false)));
       }
     }
 
@@ -133,12 +137,12 @@ class VoiceIt2WebBackend {
       $resp_obj = json_decode($resp);
       if($resp_obj->responseCode == "SUCC"){
         if($resp_obj->count >= 3){
-          echo json_encode(array('enoughEnrollments' => true));
+          returnJson(json_encode(array('enoughEnrollments' => true)));
         } else {
-          echo json_encode(array('enoughEnrollments' => false));
+          returnJson(json_encode(array('enoughEnrollments' => false)));
         }
       } else {
-        echo json_encode(array('enoughEnrollments' => false));
+          returnJson(json_encode(array('enoughEnrollments' => false)));
       }
     }
 
@@ -148,14 +152,14 @@ class VoiceIt2WebBackend {
       $recordingFileName = saveFileData($FILES_REF["viVoiceData"]['tmp_name'], "wav");
       $resp = $this->createVoiceEnrollment($EXTRACTED_USER_ID, $contentLang, $phrase, $recordingFileName);
       unlink($recordingFileName) or die("Couldn't delete ".$recordingFileName);
-      echo $resp;
+      returnJson($resp);
     }
 
     if($reqType == "createFaceEnrollment"){
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
       $resp = $this->createFaceEnrollment($EXTRACTED_USER_ID, $videoFileName);
       unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
-      echo $resp;
+      returnJson($resp);
     }
 
     if($reqType == "createVideoEnrollment"){
@@ -164,7 +168,7 @@ class VoiceIt2WebBackend {
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
       $resp = $this->createVideoEnrollment($EXTRACTED_USER_ID, $contentLang, $phrase, $videoFileName);
       unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
-      echo $resp;
+      returnJson($resp);
     }
 
     if($reqType == "voiceVerification"){
@@ -173,24 +177,25 @@ class VoiceIt2WebBackend {
       $recordingFileName = saveFileData($FILES_REF["viVoiceData"]['tmp_name'], "wav");
       $resp = $this->voiceVerification($EXTRACTED_USER_ID, $contentLang, $phrase, $recordingFileName);
       unlink($recordingFileName) or die("Couldn't delete ".$recordingFileName);
-      echo $resp;
+      header('Content-Type: application/json');
       $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
+      returnJson($resp);
     }
 
     if($reqType == "faceVerification"){
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
       $resp = $this->faceVerification($EXTRACTED_USER_ID, $videoFileName);
       unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
-      echo $resp;
       $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
+      returnJson($resp);
     }
 
     if($reqType == "faceVerificationWithLiveness"){
       $photoFileName = saveFileData($FILES_REF["viPhotoData"]['tmp_name'], "png");
       $resp = $this->faceVerificationWithPhoto($EXTRACTED_USER_ID, $photoFileName);
       unlink($photoFileName) or die("Couldn't delete ".$photoFileName);
-      echo $resp;
       $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
+      returnJson($resp);
     }
 
     if($reqType == "videoVerification"){
@@ -199,8 +204,8 @@ class VoiceIt2WebBackend {
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
       $resp = $this->videoVerification($EXTRACTED_USER_ID, $contentLang, $phrase, $videoFileName);
       unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
-      echo $resp;
       $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
+      returnJson($resp);
     }
 
     if($reqType == "videoVerificationWithLiveness"){
@@ -211,8 +216,8 @@ class VoiceIt2WebBackend {
       $resp = $this->videoVerificationWithPhoto($EXTRACTED_USER_ID, $contentLang, $phrase, $audioFileName, $photoFileName);
       unlink($audioFileName) or die("Couldn't delete ".$audioFileName);
       unlink($photoFileName) or die("Couldn't delete ".$photoFileName);
-      echo $resp;
       $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
+      returnJson($resp);
     }
   }
 
@@ -411,7 +416,7 @@ class VoiceIt2WebBackend {
     $fields = [
       'userId' => $userId,
       'contentLanguage' => $contentLanguage,
-      'phrase' => $phrase,
+      // 'phrase' => $phrase,
       'recording' => curl_file_create($filePath)
     ];
     curl_setopt($crl, CURLOPT_POSTFIELDS, $fields);
@@ -485,23 +490,6 @@ class VoiceIt2WebBackend {
       'phrase' => $phrase,
       'audio' => curl_file_create($audioFilePath),
       'photo' => curl_file_create($photoFilePath)
-    ];
-    curl_setopt($crl, CURLOPT_POSTFIELDS, $fields);
-    return curl_exec($crl);
-  }
-
-  public function faceIdentification($groupId, $filePath, $doBlinkDetection = false) {
-    $this->checkFileExists($filePath);
-    $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/identification/face');
-    curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId));
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'POST');
-    $fields = [
-      'groupId' => $groupId,
-      'doBlinkDetection' => $doBlinkDetection ? 1 : 0,
-      'video' => curl_file_create($filePath)
     ];
     curl_setopt($crl, CURLOPT_POSTFIELDS, $fields);
     return curl_exec($crl);
