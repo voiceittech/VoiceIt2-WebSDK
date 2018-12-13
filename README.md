@@ -1,3 +1,5 @@
+<img src="./js.png" width="100%" style="width:100%" />
+
 # VoiceIt API 2 Web SDK
 The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 in the browser with a PHP or NodeJS backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
 
