@@ -52,7 +52,7 @@ The following show Voice Verification, Face Verification (With liveness detectio
 ### Getting Started
 
 
-Sign up for a free Developer Account at <a href="https://voiceit.io/signup" target="_blank">VoiceIt.io</a> and view your API Key and Token in the settings page (as shown below). You can also review the HTTP Documentation at <a href="https://api.voiceit.io" target="_blank">api.voiceit.io</a>.
+Sign up for a free Developer Account at [VoiceIt.io](https://voiceit.io/signup) and view your API Key and Token in the settings page (as shown below). You can also review the HTTP Documentation at [api.voiceit.io](https://api.voiceit.io).
 
 <img src="./graphics/getcredentials.png" alt="API Key and Token" width="400px" />
 
@@ -220,7 +220,7 @@ The frontend can be implemented in a modular fashion - each type (voice, face, a
 
 #### Initializing the frontend
 
-To incorporate the frontend, please copy the files `VoiceItApi2WebSDK/dist/voiceit2.min.js` (javascript library) and `VoiceItApi2WebSDK/dist/face_detector.wasm` (face detector web assembly model) to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
+To incorporate the frontend, please copy the file `VoiceItApi2WebSDK/dist/voiceit2.min.js` (javascript library) to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
 
 Then include the minified JavaScript file `voiceit2.min.js` via a script tag on the webpage.
 
@@ -232,7 +232,7 @@ Now we can initialize the frontend object, it takes the relative public path to 
 
 ```javascript
 // The
-var myVoiceIt = new VoiceIt2.initialize('/example_endpoint/', '/face_detector.wasm');
+var myVoiceIt = new VoiceIt2.initialize('/example_endpoint/');
 ```
 
 #### Setting Theme Color
