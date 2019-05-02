@@ -89,17 +89,17 @@ class VoiceIt2WebBackend {
     $EXTRACTED_USER_ID = $this->getPayload($secureToken);
 
     if($reqType == "deleteVoiceEnrollments"){
-      $resp = $this->deleteAllVoiceEnrollments($EXTRACTED_USER_ID);
+      $resp = $this->deleteAllEnrollments($EXTRACTED_USER_ID);
       returnJson($resp);
     }
 
     if($reqType == "deleteFaceEnrollments"){
-      $resp = $this->deleteAllFaceEnrollments($EXTRACTED_USER_ID);
+      $resp = $this->deleteAllEnrollments($EXTRACTED_USER_ID);
       returnJson($resp);
     }
 
     if($reqType == "deleteVideoEnrollments"){
-      $resp = $this->deleteAllVideoEnrollments($EXTRACTED_USER_ID);
+      $resp = $this->deleteAllEnrollments($EXTRACTED_USER_ID);
       returnJson($resp);
     }
 
@@ -363,6 +363,7 @@ class VoiceIt2WebBackend {
     return curl_exec($crl);
 	}
 
+  // deprecation warning
   public function deleteAllVoiceEnrollments($userId) {
     $crl = curl_init();
     curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/'.$userId.'/voice'.$this->notification_url);
@@ -373,6 +374,7 @@ class VoiceIt2WebBackend {
     return curl_exec($crl);
   }
 
+  // deprecation warning
   public function deleteAllFaceEnrollments($userId) {
     $crl = curl_init();
     curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/'.$userId.'/face'.$this->notification_url);
@@ -383,6 +385,7 @@ class VoiceIt2WebBackend {
     return curl_exec($crl);
   }
 
+  // deprecation warning
   public function deleteAllVideoEnrollments($userId) {
     $crl = curl_init();
     curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/'.$userId.'/video'.$this->notification_url);

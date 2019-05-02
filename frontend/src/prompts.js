@@ -84,7 +84,7 @@ export default function Prompts() {
     LIVENESS_FAILED: "Sorry, verification failed",
     LIVENESS_TRY_AGAIN: "Test failed, please try again",
     LIVENESS_TRY_AGAIN_AND_TURN_BACK: "Test failed. Please turn your face to the correct direction",
-    REENROLLMENT_WARNING: "Reenrollment will delete all previous enrollments. \n Proceed?"
+    REENROLLMENT_WARNING: "Reenrollment will delete all previous voice, face, and video enrollments. \n Proceed?"
   };
 
   promptsRef.setCurrentPhrase = function(phrase) {
