@@ -90,17 +90,7 @@ function VoiceIt2(apk, tok) {
 
       const extractedUserId = payloadObj.userId;
       switch(reqType) {
-          case "deleteVoiceEnrollments":
-              mainThis.deleteAllEnrollments({userId: extractedUserId}, (result) =>{
-                res.json(result);
-              });
-              break;
-          case "deleteFaceEnrollments":
-              mainThis.deleteAllEnrollments({userId: extractedUserId}, (result) =>{
-                res.json(result);
-              });
-              break;
-          case "deleteVideoEnrollments":
+          case "deleteAllEnrollments":
               mainThis.deleteAllEnrollments({userId: extractedUserId}, (result) =>{
                 res.json(result);
               });
@@ -386,36 +376,6 @@ function VoiceIt2(apk, tok) {
     }).catch((error) => {
       callback(error.response.data);
     });
-  };
-
-  // deprecation warning
-  this.deleteAllFaceEnrollments = (options, callback) => {
-    this.axiosInstance.delete(`${BASE_URL}/enrollments/${options.userId}/face${this.notificationUrl}`)
-      .then((httpResponse) => {
-        callback(httpResponse.data);
-      }).catch((error) => {
-        callback(error.response.data);
-      });
-  };
-
-  // deprecation warning
-  this.deleteAllVoiceEnrollments = (options, callback) => {
-    this.axiosInstance.delete(`${BASE_URL}/enrollments/${options.userId}/voice${this.notificationUrl}`)
-      .then((httpResponse) => {
-        callback(httpResponse.data);
-      }).catch((error) => {
-        callback(error.response.data);
-      });
-  };
-
-  // deprecation warning
-  this.deleteAllVideoEnrollments = (options, callback) => {
-    this.axiosInstance.delete(`${BASE_URL}/enrollments/${options.userId}/video${this.notificationUrl}`)
-      .then((httpResponse) => {
-        callback(httpResponse.data);
-      }).catch((error) => {
-        callback(error.response.data);
-      });
   };
 
    this.deleteAllEnrollments = (options, callback) => {

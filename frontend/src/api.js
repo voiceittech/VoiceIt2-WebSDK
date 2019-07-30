@@ -125,36 +125,15 @@ export default function api(modal, endPoint){
     );
   }
 
-  apiRef.deleteFaceEnrollments = (callback) => {
+  apiRef.deleteAllEnrollments = (callback) => {
     vi$.post(
       modal,
       BASE_END_POINT,
-      'deleteFaceEnrollments',
+      'deleteAllEnrollments',
       vi$.getToken(),
       {},
       callback
     );
   }
 
-  apiRef.deleteVoiceEnrollments = (callback) => {
-    vi$.post(
-      modal,
-      BASE_END_POINT,
-      'deleteVoiceEnrollments',
-      vi$.getToken(),
-      {},
-      callback
-    );
-  }
-
-  apiRef.deleteVideoEnrollments = (callback) => {
-    vi$.post(
-      modal,
-      BASE_END_POINT,
-      'deleteVideoEnrollments',
-      vi$.getToken(),
-      {},
-      callback
-    );
-  }
 }

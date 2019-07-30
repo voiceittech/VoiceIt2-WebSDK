@@ -253,19 +253,19 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       // Proceed for enrollment
       vi$.clickOn(voiceIt2ObjRef.modal.domRef.rightArrowIcon, function() {
           if (voiceIt2ObjRef.type.biometricType === "face"){
-            voiceIt2ObjRef.apiRef.deleteFaceEnrollments(voiceIt2ObjRef.handleDeletion);
+            voiceIt2ObjRef.apiRef.deleteAllEnrollments(voiceIt2ObjRef.handleDeletion);
           } else if (voiceIt2ObjRef.type.biometricType === "video"){
-            voiceIt2ObjRef.apiRef.deleteFaceEnrollments(function(responseFace){
+            voiceIt2ObjRef.apiRef.deleteAllEnrollments(function(responseFace){
                 if (responseFace.responseCode === "SUCC") {
-                  voiceIt2ObjRef.apiRef.deleteVoiceEnrollments(function(responseVoice){
+                  voiceIt2ObjRef.apiRef.deleteAllEnrollments(function(responseVoice){
                     if (responseVoice.responseCode === "SUCC") {
-                      voiceIt2ObjRef.apiRef.deleteVideoEnrollments(voiceIt2ObjRef.handleDeletion);
+                      voiceIt2ObjRef.apiRef.deleteAllEnrollments(voiceIt2ObjRef.handleDeletion);
                     }
                   });
                 }
             });
           } else {
-            voiceIt2ObjRef.apiRef.deleteVoiceEnrollments(voiceIt2ObjRef.handleDeletion);
+            voiceIt2ObjRef.apiRef.deleteAllEnrollments(voiceIt2ObjRef.handleDeletion);
           }
           voiceIt2ObjRef.modal.hideWarningOverlay(300, function() {
             voiceIt2ObjRef.modal.showWaitingLoader();

@@ -88,17 +88,7 @@ class VoiceIt2WebBackend {
 
     $EXTRACTED_USER_ID = $this->getPayload($secureToken);
 
-    if($reqType == "deleteVoiceEnrollments"){
-      $resp = $this->deleteAllEnrollments($EXTRACTED_USER_ID);
-      returnJson($resp);
-    }
-
-    if($reqType == "deleteFaceEnrollments"){
-      $resp = $this->deleteAllEnrollments($EXTRACTED_USER_ID);
-      returnJson($resp);
-    }
-
-    if($reqType == "deleteVideoEnrollments"){
+    if($reqType == "deleteAllEnrollments"){
       $resp = $this->deleteAllEnrollments($EXTRACTED_USER_ID);
       returnJson($resp);
     }
@@ -362,69 +352,6 @@ class VoiceIt2WebBackend {
     curl_setopt($crl, CURLOPT_POSTFIELDS, $fields);
     return curl_exec($crl);
 	}
-
-  // deprecation warning
-  public function deleteAllVoiceEnrollments($userId) {
-    $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/'.$userId.'/voice'.$this->notification_url);
-    curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    return curl_exec($crl);
-  }
-
-  // deprecation warning
-  public function deleteAllFaceEnrollments($userId) {
-    $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/'.$userId.'/face'.$this->notification_url);
-    curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    return curl_exec($crl);
-  }
-
-  // deprecation warning
-  public function deleteAllVideoEnrollments($userId) {
-    $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/'.$userId.'/video'.$this->notification_url);
-    curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    return curl_exec($crl);
-  }
-
-  public function deleteVoiceEnrollment($userId, $enrollmentId) {
-    $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/voice/'.$userId.'/'.strval($enrollmentId).$this->notification_url);
-    curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    return curl_exec($crl);
-  }
-
-  public function deleteFaceEnrollment($userId, $faceEnrollmentId) {
-    $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/face/'.$userId.'/'.strval($faceEnrollmentId).$this->notification_url);
-    curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    return curl_exec($crl);
-  }
-
-  public function deleteVideoEnrollment($userId, $enrollmentId) {
-    $crl = curl_init();
-    curl_setopt($crl, CURLOPT_URL, $this->BASE_URL.'/enrollments/video/'.$userId.'/'.strval($enrollmentId).$this->notification_url);
-    curl_setopt($crl, CURLOPT_USERPWD, "$this->api_key:$this->api_token");
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array('platformId: '.$this->platformId, 'platformVersion: '.VoiceIt2WebBackend::VERSION));
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    return curl_exec($crl);
-  }
 
   public function voiceVerification($userId, $contentLanguage, $phrase, $filePath) {
     $this->checkFileExists($filePath);
