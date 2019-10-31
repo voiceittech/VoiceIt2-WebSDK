@@ -50,6 +50,8 @@ On mobile devices:
 * Firefox 23 (Enabled by default since 25)
 * Tizen
 
+For update to date web browser support please visit: [HERE](https://en.wikipedia.org/wiki/HTML5_audio#Supporting_browsers_2)
+
 ## Recommended Platform
 <img width="35px" src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG17.png" alt="Google Chrome"/>
 
