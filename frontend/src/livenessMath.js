@@ -19,6 +19,9 @@ const LivenessMath = {
     const newTime = new Date().getTime();
     const v = faceObj.vertices;
     switch (type) {
+      case 0:
+        // Looking Down Logic
+        break;
         // Looking Right Logic
       case 1:
         if ((newTime - LivenessObjRef.testTimeStart) > TIME_BEFORE_PROCESSING_FACE) {
