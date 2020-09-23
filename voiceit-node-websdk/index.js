@@ -6,6 +6,7 @@ const uuidv4 = require('uuid/v4');
 const pckg = require('./package.json');
 
 const BASE_URL = 'https://api.voiceit.io';
+const LIVENESS_URL = 'https://liveness.voiceit.io'
 
 function checkFileExists(filePath, callback) {
   if (!fs.existsSync(filePath)) {
@@ -39,7 +40,7 @@ function VoiceIt2(apk, tok, options) {
   this.options = {
     tempFilePath: options.tempFilePath || ""
   };
-  
+
   this.axiosInstance = axios.create({
     auth: {
       username: apk,
@@ -214,7 +215,7 @@ function VoiceIt2(apk, tok, options) {
               });
               break;
           case "faceVerificationWithLiveness":
-              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'jpg', function(){
+              var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
                 mainThis.faceVerificationWithPhoto({
                     userId: extractedUserId,
                     photoFilePath: tempFilePath
@@ -225,6 +226,25 @@ function VoiceIt2(apk, tok, options) {
                 });
               });
               break;
+          case "initialLiveness":
+              mainThis.getLCO({userId: extractedUserId}, (result) =>{
+                  resultCallback(formatResponse(reqType, extractedUserId, result));
+                  res.json(result);
+              });
+              break;
+          case "faceLiveness":
+          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+            mainThis.faceLiveness({
+              userId: extractedUserId,
+              file: tempFilePath,
+              lcoId: req.body.vilcoId
+            }, (result) => {
+              fs.unlinkSync(tempFilePath);
+              resultCallback(formatResponse(reqType, extractedUserId, result));
+              res.json(result);
+            });
+          });
+            break;
           case "videoVerification":
               var phrase = req.body.viPhrase;
               var contentLang = req.body.viContentLanguage;
@@ -272,6 +292,15 @@ function VoiceIt2(apk, tok, options) {
 
   this.createUser = (callback) => {
     this.axiosInstance.post(`${BASE_URL}/users${this.notificationUrl}`)
+      .then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+  };
+
+  this.getLCO = (options, callback) => {
+    this.axiosInstance.get(`${LIVENESS_URL}/${options.userId}`)
       .then((httpResponse) => {
         callback(httpResponse.data);
       }).catch((error) => {
@@ -456,6 +485,29 @@ function VoiceIt2(apk, tok, options) {
       callback(error.response.data);
     });
   };
+
+
+  this.faceLiveness = (options, callback) => {
+      if (!checkFileExists(options.file, callback)) {
+        return;
+      }
+      const form = new FormData();
+      form.append('userId', options.userId);
+      form.append('contentLanguage', options.contentLanguage ? options.contentLanguage : 'en-US');
+      form.append('lcoId', options.lcoId);
+      form.append('phrase', options.phrase ? options.phrase : '');
+      form.append('file', fs.createReadStream(options.file), {
+        filename: 'video.mp4',
+      });
+      this.axiosInstance.post(`${LIVENESS_URL}/face`, form, {
+        headers: form.getHeaders(),
+      }).then((httpResponse) => {
+        callback(httpResponse.data);
+      }).catch((error) => {
+        callback(error.response.data);
+      });
+    }
+
 
   this.videoVerification = (options, callback) => {
     if (!checkFileExists(options.videoFilePath, callback)) {

@@ -14,6 +14,28 @@ export default function api(modal, endPoint){
     );
   }
 
+  apiRef.getLCO = (options, callback) => {
+    vi$.post(
+      modal,
+      BASE_END_POINT,
+      'initialLiveness',
+      vi$.getToken(),
+      options,
+      callback
+    );
+  }
+
+  apiRef.faceLiveness = (options, callback) => {
+    vi$.post(
+      modal,
+      BASE_END_POINT,
+      'faceLiveness',
+      vi$.getToken(),
+      options,
+      callback
+    );
+  }
+
   apiRef.createFaceEnrollment = (options, callback) => {
     vi$.post(
       modal,

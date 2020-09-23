@@ -3,41 +3,45 @@ import vi$ from './utilities';
 import api from './api';
 import Prompts from './prompts';
 import Liveness from './liveness';
-import videojs from 'video.js';
-import 'webrtc-adapter';
-import RecordRTC from 'recordrtc';
-import Record from 'videojs-record/dist/videojs.record.js';
-// Register videojs-wavesurfer plugin
+import 'video.js/dist/video-js.min.css';
 import 'videojs-wavesurfer/dist/css/videojs.wavesurfer.css';
+import 'videojs-record/dist/css/videojs.record.css';
+import videojs from 'video.js';
+import RecordRTC from 'recordrtc';
+import 'webrtc-adapter';
 import WaveSurfer from 'wavesurfer.js';
-import Wavesurfer from 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
 import MicrophonePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.microphone.js';
+import Wavesurfer from 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
+import Record from 'videojs-record/dist/videojs.record.js';
+
 WaveSurfer.microphone = MicrophonePlugin;
+
+// Register videojs-wavesurfer plugin
 
 import 'semantic-ui-css/semantic.min.css';
 import './vistyle.css';
 import Colors from './colors';
-import * as posenet from '@tensorflow-models/posenet';
 
 // Constant Variables
 const TIME_BEFORE_EXITING_MODAL_AFTER_SUCCESS = 2800;
 const ErrorCodes = ["TVER", "PNTE", "NFEF", "UNAC", "UNFD"];
 const MAX_ATTEMPTS = 3;
 
-export function initialize(backendURLPath){
+export function initialize(backendEndpointPath,livenessEndpointPath){
   var voiceIt2ObjRef = this;
   voiceIt2ObjRef.isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   voiceIt2ObjRef.setupView = async function(doLiveness = false){
     voiceIt2ObjRef.secureToken = vi$.getValue('viSecureToken') || '';
     voiceIt2ObjRef.modal = new Modal(voiceIt2ObjRef);
-    voiceIt2ObjRef.apiRef = new api(voiceIt2ObjRef.modal, backendURLPath);
+    voiceIt2ObjRef.apiRef = new api(voiceIt2ObjRef.modal, backendEndpointPath, livenessEndpointPath);
     voiceIt2ObjRef.enrollCounter = 0;
+    voiceIt2ObjRef.LCO = "";
     if(doLiveness){
-      if(voiceIt2ObjRef.faceNeuralNet == undefined){
-        // Load neuralnet
-        voiceIt2ObjRef.faceNeuralNet = await posenet.load(0.5);
-      }
+      // if(voiceIt2ObjRef.faceNeuralNet == undefined){
+      //   // Load neuralnet
+      //   voiceIt2ObjRef.faceNeuralNet = await posenet.load(0.5);
+      // }
     }
     // Variables needed for the audio/video streams, and for destroying instances
     voiceIt2ObjRef.viImageCanvasCtx;
@@ -133,7 +137,7 @@ export function initialize(backendURLPath){
   voiceIt2ObjRef.encapsulatedFaceVerification = function(options) {
     voiceIt2ObjRef.setupView(options.doLiveness).then(function(){
       voiceIt2ObjRef.liveness = options.doLiveness;
-      voiceIt2ObjRef.livenessAudio = options.doLivenessAudio;
+      // voiceIt2ObjRef.livenessAudio = options.doLivenessAudio;
       voiceIt2ObjRef.type.biometricType = 'face';
       voiceIt2ObjRef.type.action = 'Verification';
       voiceIt2ObjRef.completionCallback = options.completionCallback;
@@ -230,7 +234,13 @@ voiceIt2ObjRef.initModalClickListeners = function(){
               && voiceIt2ObjRef.type.biometricType !== "voice"
             ) {
               voiceIt2ObjRef.livenessType = 'face';
-              voiceIt2ObjRef.livenessObj.startLiveness(voiceIt2ObjRef.type.biometricType);
+              setTimeout(()=>{
+                  voiceIt2ObjRef.player.record().start();
+              },2000);
+              //voiceIt2ObjRef.livenessObj.startRecordingLiveness();
+              voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
+              //show prompt
+              //go to on finish record to handle re recording (Maz 3 tries, exit out if passes before)
           }
         }
       );
@@ -323,15 +333,23 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   //ready up animations and stuff for face enroll/verific.
   voiceIt2ObjRef.handleFaceSetup = function() {
+    //get the LCO
+    if (voiceIt2ObjRef.liveness) {
+      console.log("getting the LCO");
+      voiceIt2ObjRef.apiRef.getLCO({
+
+      },function(response){
+        voiceIt2ObjRef.LCO = response.challenges;
+        voiceIt2ObjRef.livenessReqId = response.lcoId;
+      });
+    }
     voiceIt2ObjRef.attempts = 0;
     const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
     voiceIt2ObjRef.createVideo(doLiveness);
     voiceIt2ObjRef.createOverlay();
     voiceIt2ObjRef.modal.domRef.outerOverlay.style.opacity = 1.0;
     voiceIt2ObjRef.modal.show();
-    if (!doLiveness){
-      voiceIt2ObjRef.initFaceRecord();
-    }
+    voiceIt2ObjRef.initFaceRecord(doLiveness);
   };
 
   // Ready up animations and stuff for video enroll/verific.
@@ -388,14 +406,14 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
 
   async function poseDetectionFrame() {
-
-      if(doLiveness && voiceIt2ObjRef.livenessObj && voiceIt2ObjRef.livenessObj.livenessStarted && !voiceIt2ObjRef.livenessObj.finished){
-        const pose = await voiceIt2ObjRef.faceNeuralNet.estimateSinglePose(
-        webcam, imageScaleFactor, true, 16);
-        if(voiceIt2ObjRef.livenessObj){
-            voiceIt2ObjRef.livenessObj.livenessCheck(pose);
-        }
-      }
+      //
+      // if(doLiveness && voiceIt2ObjRef.livenessObj && voiceIt2ObjRef.livenessObj.livenessStarted && !voiceIt2ObjRef.livenessObj.finished){
+      //   const pose = await voiceIt2ObjRef.faceNeuralNet.estimateSinglePose(
+      //   webcam, imageScaleFactor, true, 16);
+      //   if(voiceIt2ObjRef.livenessObj){
+      //       voiceIt2ObjRef.livenessObj.livenessCheck(pose);
+      //   }
+      // }
 
       // Mirror the video by drawing it onto the canvas
       voiceIt2ObjRef.viImageCanvasCtx.clearRect(0, 0, webcam.videoWidth, webcam.videoHeight);
@@ -421,13 +439,24 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       fluid: false,
       plugins: {
         wavesurfer: {
-          src: "live",
-          waveColor: "#36393b",
-          progressColor: "black",
-          debug: true,
-          cursorWidth: 1,
-          msDisplayMax: 20,
-          hideScrollbar: true
+            backend: 'WebAudio',
+            waveColor: '#36393b',
+            progressColor: 'black',
+            debug: true,
+            cursorWidth: 1,
+            hideScrollbar: true,
+            plugins: [
+                // enable microphone plugin
+                WaveSurfer.microphone.create({
+                    bufferSize: 4096,
+                    numberOfInputChannels: 1,
+                    numberOfOutputChannels: 1,
+                    constraints: {
+                        video: false,
+                        audio: true
+                    }
+                })
+            ]
         },
         record: {
           audio: true,
@@ -466,33 +495,90 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   // Set up videoJS for face
-  voiceIt2ObjRef.initFaceRecord = function() {
+  voiceIt2ObjRef.initFaceRecord = function(liveness) {
     var video = vi$.create('video');
     video.setAttribute('id', 'videoRecord');
     video.setAttribute('class', 'video-js vjs-default-skin');
     document.body.appendChild(video);
-    voiceIt2ObjRef.player = videojs('videoRecord', {
-      controls: true,
-      width: 640,
-      height: 480,
-      fluid: false,
-      controlBar: {
-        fullscreenToggle: false,
-        volumePanel: false
-      },
-      plugins: {
-        record: {
-          audio: false,
-          video: true,
-          maxLength: 3,
-          debug: true
+    if (!liveness){
+      voiceIt2ObjRef.player = videojs('videoRecord', {
+        controls: true,
+        width: 640,
+        height: 480,
+        fluid: false,
+        controlBar: {
+          fullscreenToggle: false,
+          volumePanel: false
+        },
+        plugins: {
+          record: {
+            audio: false,
+            video: true,
+            maxLength: 3,
+            debug: true
+          }
         }
-      }
-    }, function() {
-      console.log('Using video.js ' + videojs.VERSION);
-    });
+      }, function() {
+        console.log('Using video.js ' + videojs.VERSION);
+      });
+    } else {
+      voiceIt2ObjRef.player = videojs('videoRecord', {
+        controls: true,
+        width: 640,
+        height: 480,
+        fluid: false,
+        controlBar: {
+          fullscreenToggle: false,
+          volumePanel: false
+        },
+        plugins: {
+          record: {
+            audio: false,
+            video: true,
+            maxLength: 8,
+            debug: true
+          }
+        }
+      }, function() {
+        console.log('Using video.js ' + videojs.VERSION);
+      });
+    }
     voiceIt2ObjRef.setupListeners();
   };
+
+  voiceIt2ObjRef.handleFaceLivenessResponse = function(response){
+    //voiceIt2ObjRef.modal.removeWaitingLoader();
+    if (response.success && response.api2Response.responseCode) {
+      console.log("exiting out");
+      voiceIt2ObjRef.exitOut(true, response);
+      voiceIt2ObjRef.modal.removeWaitingLoader();
+      voiceIt2ObjRef.modal.displayMessage("Successfully verified");
+    } else {
+      voiceIt2ObjRef.attempts++;
+      //continue to verify
+      if (voiceIt2ObjRef.attempts > MAX_ATTEMPTS) {
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
+        voiceIt2ObjRef.exitOut(false, response);
+      } else {
+        voiceIt2ObjRef.modal.removeWaitingLoader();
+        voiceIt2ObjRef.modal.displayMessage("Please try again");
+        voiceIt2ObjRef.apiRef.getLCO({
+
+        },function(response){
+          voiceIt2ObjRef.modal.showWaitingLoader(true);
+          voiceIt2ObjRef.LCO = response.challenges;
+          voiceIt2ObjRef.livenessReqId = response.lcoId;
+          setTimeout(()=>{
+            voiceIt2ObjRef.modal.displayMessage(response.challenges);
+            voiceIt2ObjRef.modal.removeWaitingLoader();
+          },1000);
+          setTimeout(()=>{
+            voiceIt2ObjRef.player.record().start();
+          },2000);
+        });
+      }
+    }
+  }
 
   voiceIt2ObjRef.handleVerificationResponse = function(response){
     voiceIt2ObjRef.modal.removeWaitingLoader();
@@ -537,10 +623,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt2ObjRef.onFinishLivenessFaceVerification = function(){
-      voiceIt2ObjRef.livenessObj.finished = true;
+      // voiceIt2ObjRef.livenessObj.finished = true;
       voiceIt2ObjRef.modal.showWaitingLoader(true);
       voiceIt2ObjRef.apiRef.faceVerificationWithLiveness({
-        viPhotoData : voiceIt2ObjRef.livenessObj.successPic
+        //viPhotoData : voiceIt2ObjRef.livenessObj.successPic
       }, function(response){
       voiceIt2ObjRef.modal.removeWaitingLoader();
       if (response.responseCode === "SUCC") {
@@ -600,17 +686,17 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       if (
           voiceIt2ObjRef.liveness &&
           voiceIt2ObjRef.type.action !== "Enrollment" &&
-          voiceIt2ObjRef.type.biometricType !== "voice" &&
+          voiceIt2ObjRef.type.biometricType == "video" &&
           voiceIt2ObjRef.passedLiveness
       ) {
-
-        if(voiceIt2ObjRef.livenessType === 'voice' && voiceIt2ObjRef.type.biometricType === "video" && voiceIt2ObjRef.type.action === "Verification"){
+        //if passed video liveness
+        if(voiceIt2ObjRef.type.biometricType === "video" && voiceIt2ObjRef.type.action === "Verification"){
             voiceIt2ObjRef.modal.showWaitingLoader(true);
             voiceIt2ObjRef.apiRef.videoVerificationWithLiveness({
               viContentLanguage: voiceIt2ObjRef.contentLanguage,
               viPhrase: voiceIt2ObjRef.phrase,
-              viVoiceData : voiceIt2ObjRef.player.recordedData,
-              viPhotoData: voiceIt2ObjRef.livenessObj.successPic
+              viVoiceData : voiceIt2ObjRef.player.recordedData
+              // viPhotoData: voiceIt2ObjRef.livenessObj.successPic
             }, function(response){
             voiceIt2ObjRef.modal.removeWaitingLoader();
             if (response.responseCode === "SUCC") {
@@ -636,6 +722,20 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             }
           });
         }
+      } else if (
+        voiceIt2ObjRef.liveness &&
+        voiceIt2ObjRef.type.biometricType === "face" &&
+        voiceIt2ObjRef.type.action === "Verification") {
+          //make api call to Andrew Here
+          vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
+          voiceIt2ObjRef.modal.showWaitingLoader(true);
+          voiceIt2ObjRef.apiRef.faceLiveness({
+            viVideoData : voiceIt2ObjRef.player.recordedData,
+            vilcoId: voiceIt2ObjRef.livenessReqId
+          }, function(response){
+            console.log(response);
+          voiceIt2ObjRef.handleFaceLivenessResponse(response);
+          });
       } else if (
         !voiceIt2ObjRef.liveness ||
         voiceIt2ObjRef.type.biometricType === "voice" ||

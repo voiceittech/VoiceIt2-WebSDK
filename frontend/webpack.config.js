@@ -34,7 +34,8 @@ module.exports = {
   resolve: {
         alias: {
             videojs: 'video.js',
-            WaveSurfer: 'wavesurfer.js'
+            WaveSurfer: 'wavesurfer.js',
+            wavesurfer: 'videojs-wavesurfer/dist/videojs.wavesurfer.js'
         }
   },
   plugins: [
