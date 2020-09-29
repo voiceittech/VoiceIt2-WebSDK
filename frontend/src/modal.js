@@ -150,7 +150,9 @@ export default function Modal(mRef) {
       'attributes': {
         'id': 'videoLiveness',
         'autoplay': '',
-        'playsinline': ''
+        'playsinline': '',
+        'type' : 'video/webm',
+        "codecs" :"vp8, vorbis"
       },
       'nodeName': 'video',
       'parent': 'cardOverlay'
@@ -663,7 +665,7 @@ export default function Modal(mRef) {
     VoiceItModalRef.domRef.viMessage.style.display = 'inline-block';
   }
 
-  VoiceItModalRef.showWaitingLoader = function(down){
+  VoiceItModalRef.showWaitingLoader = function(down, livenessText){
         if(VoiceItModalRef.domRef.waitingLoader){
           vi$.remove(VoiceItModalRef.domRef.waitingLoader);
         }
@@ -696,6 +698,14 @@ export default function Modal(mRef) {
           waitingLoaderImg.style[prop] = waitingLoaderProps.styles[prop];
         }
         VoiceItModalRef.domRef.overlayHolder.insertBefore(VoiceItModalRef.domRef.waitingLoader, VoiceItModalRef.domRef.firstChild);
+        //add the checking text Here
+        var overflowParent = document.getElementsByClassName("image")[0].children[1];
+        overflowParent.style.overflow = "";
+        var checkingText = document.createElement("div");
+        checkingText.textContent = "Checking";
+        checkingText.id = "checkingText";
+        checkingText.setAttribute("style","top: 101%;margin: auto;color: white;position: absolute;font-size: 1rem;");
+        overflowParent.children[3].appendChild(checkingText);
   }
 
   VoiceItModalRef.removeWaitingLoader = function(){

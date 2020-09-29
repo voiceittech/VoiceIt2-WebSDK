@@ -233,7 +233,7 @@ function VoiceIt2(apk, tok, options) {
               });
               break;
           case "faceLiveness":
-          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'webm', function(){
             mainThis.faceLiveness({
               userId: extractedUserId,
               file: tempFilePath,
@@ -248,7 +248,7 @@ function VoiceIt2(apk, tok, options) {
           case "videoLiveness":
           var phrase = req.body.viPhrase;
           var contentLang = req.body.viContentLanguage;
-          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'mp4', function(){
+          var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'webm', function(){
             mainThis.videoLiveness({
               userId: extractedUserId,
               file: tempFilePath,
@@ -514,7 +514,7 @@ function VoiceIt2(apk, tok, options) {
       form.append('lcoId', options.lcoId);
       //form.append('phrase', options.phrase ? options.phrase : '');
       form.append('file', fs.createReadStream(options.file), {
-        filename: 'video.mp4',
+        filename: 'video.webm',
       });
       this.axiosInstance.post(`${LIVENESS_URL}/face`, form, {
         headers: form.getHeaders(),
@@ -535,7 +535,7 @@ function VoiceIt2(apk, tok, options) {
         form.append('lcoId', options.lcoId);
         form.append('phrase', options.phrase ? options.phrase : '');
         form.append('file', fs.createReadStream(options.file), {
-          filename: 'video.mp4',
+          filename: 'video.webm',
         });
         this.axiosInstance.post(`${LIVENESS_URL}/video`, form, {
           headers: form.getHeaders(),

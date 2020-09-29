@@ -217,12 +217,15 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
       // When clicking skip button
       vi$.clickOn(voiceIt2ObjRef.modal.domRef.skipButton, function() {
-        voiceIt2ObjRef.modal.endLivenessTutorial();
+                    voiceIt2ObjRef.modal.endLivenessTutorial();
       });
 
       // Assigning the start() function to the read button
       vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
         function() {
+          if (voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment"){
+          }
+
             vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
             voiceIt2ObjRef.startView();
             if (voiceIt2ObjRef.type.biometricType !== "voice") {
@@ -583,7 +586,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.apiRef.getLCO({
 
         },function(response){
-          voiceIt2ObjRef.modal.showWaitingLoader(true);
+          voiceIt2ObjRef.modal.showWaitingLoader(true, true);
           voiceIt2ObjRef.LCO = response.challenges;
           voiceIt2ObjRef.livenessReqId = response.lcoId;
           setTimeout(()=>{
@@ -615,7 +618,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.apiRef.getLCO({
 
         },function(response){
-          voiceIt2ObjRef.modal.showWaitingLoader(true);
+          voiceIt2ObjRef.modal.showWaitingLoader(true, true);
           voiceIt2ObjRef.LCO = response.challenges;
           voiceIt2ObjRef.livenessReqId = response.lcoId;
           setTimeout(()=>{
@@ -674,7 +677,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.onFinishLivenessFaceVerification = function(){
       // voiceIt2ObjRef.livenessObj.finished = true;
-      voiceIt2ObjRef.modal.showWaitingLoader(true);
+      voiceIt2ObjRef.modal.showWaitingLoader(true,true);
       voiceIt2ObjRef.apiRef.faceVerificationWithLiveness({
         //viPhotoData : voiceIt2ObjRef.livenessObj.successPic
       }, function(response){
@@ -739,7 +742,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           voiceIt2ObjRef.type.biometricType == "video"
       ) {
         vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
-        voiceIt2ObjRef.modal.showWaitingLoader(true);
+        voiceIt2ObjRef.modal.showWaitingLoader(true,true);
         voiceIt2ObjRef.apiRef.videoLiveness({
           viVideoData : voiceIt2ObjRef.player.recordedData,
           vilcoId: voiceIt2ObjRef.livenessReqId,
@@ -755,7 +758,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.type.action === "Verification") {
           //make api call to Andrew Here
           vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
-          voiceIt2ObjRef.modal.showWaitingLoader(true);
+          voiceIt2ObjRef.modal.showWaitingLoader(true,true);
           voiceIt2ObjRef.apiRef.faceLiveness({
             viVideoData : voiceIt2ObjRef.player.recordedData,
             vilcoId: voiceIt2ObjRef.livenessReqId
