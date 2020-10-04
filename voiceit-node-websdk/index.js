@@ -227,8 +227,13 @@ function VoiceIt2(apk, tok, options) {
               });
               break;
           case "initialLiveness":
-              mainThis.getLCO({userId: extractedUserId}, (result) =>{
+          var contentLang = req.body.viContentLanguage;
+              mainThis.getLCO({
+                userId: extractedUserId,
+                contentLanguage: contentLang
+              }, (result,status) =>{
                   resultCallback(formatResponse(reqType, extractedUserId, result));
+                  result.status = status;
                   res.json(result);
               });
               break;
@@ -247,13 +252,11 @@ function VoiceIt2(apk, tok, options) {
             break;
           case "videoLiveness":
           var phrase = req.body.viPhrase;
-          var contentLang = req.body.viContentLanguage;
           var tempFilePath = writeFileBuffer(mainThis.options.tempFilePath, req.files[0].buffer, 'webm', function(){
             mainThis.videoLiveness({
               userId: extractedUserId,
               file: tempFilePath,
               lcoId: req.body.vilcoId,
-              contentLanguage: contentLang,
               phrase: phrase,
             }, (result) => {
               fs.unlinkSync(tempFilePath);
@@ -317,9 +320,9 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.getLCO = (options, callback) => {
-    this.axiosInstance.get(`${LIVENESS_URL}/${options.userId}`)
+    this.axiosInstance.get(`${LIVENESS_URL}/${options.userId}/${options.contentLanguage}`)
       .then((httpResponse) => {
-        callback(httpResponse.data);
+        callback(httpResponse.data,httpResponse.status);
       }).catch((error) => {
         callback(error.response.data);
       });

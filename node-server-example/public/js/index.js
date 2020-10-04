@@ -142,7 +142,7 @@ function setupFrontEnd() {
 
     myVoiceIt.encapsulatedFaceVerification({
       doLiveness:isLivenessEnabled(),
-      doLivenessAudio: isLivenessAudioEnabled(),
+      contentLanguage:'en-US',
       needEnrollmentsCallback:function(){
         // Three voice enrollments needed
         showForTime('#enrollFace', 1600);
