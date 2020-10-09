@@ -516,8 +516,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     } else {
       voiceIt2ObjRef.player = videojs('videoRecord', {
         controls: false,
-        width: 1080,
-        height: 720,
+        width: 640,
+        height: 480,
         fluid: false,
         plugins: {
           record: {
@@ -562,8 +562,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     } else {
       voiceIt2ObjRef.player = videojs('videoRecord', {
         controls: true,
-        width: 1080,
-        height: 720,
+        width: 640,
+        height: 480,
         fluid: false,
         controlBar: {
           fullscreenToggle: false,
@@ -776,6 +776,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           //make api call to Andrew Here
           vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
           voiceIt2ObjRef.modal.showWaitingLoader(true,true);
+          console.log(voiceIt2ObjRef.player);
           voiceIt2ObjRef.apiRef.faceLiveness({
             viVideoData : voiceIt2ObjRef.player.recordedData,
             vilcoId: voiceIt2ObjRef.livenessReqId

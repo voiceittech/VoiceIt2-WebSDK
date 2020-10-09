@@ -150,12 +150,12 @@ export default function Modal(mRef) {
       'attributes': {
         'id': 'videoLiveness',
         'autoplay': '',
-        'playsinline': '',
-        'type' : 'video/webm',
-        "codecs" :"vp8, vorbis"
+        'playsinline': ''
       },
       'nodeName': 'video',
-      'parent': 'cardOverlay'
+      'parent': 'cardOverlay',
+      'type' : 'video/webm',
+      "codecs" :"vp8, vorbis"
     }, {
       'styles':{
         'color': '#2ECC71',
@@ -706,7 +706,7 @@ export default function Modal(mRef) {
           checkingText.textContent = "Checking";
           checkingText.id = "checkingText";
           checkingText.setAttribute("style","top: 101%;margin: auto;color: white;position: absolute;font-size: 1rem;");
-          overflowParent.children[3].appendChild(checkingText);  
+          overflowParent.children[3].appendChild(checkingText);
         }
   }
 
