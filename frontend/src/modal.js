@@ -137,7 +137,7 @@ export default function Modal(mRef, language) {
       'parent': 'cardOverlay'
     },{
       'styles':{
-        'overflow': 'hidden',
+        // 'overflow': 'hidden',
         'position': 'relative',
         'justifyContent': 'center',
         'display': 'flex',
@@ -629,7 +629,8 @@ export default function Modal(mRef, language) {
   VoiceItModalRef.endLivenessTutorial = function(){
     vi$.fadeOut(VoiceItModalRef.domRef.livenessOverlay, 400, function() {
       VoiceItModalRef.domRef.readyButton.style.display = 'inline-block';
-      vi$.fadeIn(VoiceItModalRef.domRef.readyButton, 300);
+      vi$.fadeIn(VoiceItModalRef.domRef.readyButton, 100);
+      document.getElementsByClassName("content")[0].style.display = "block";
       vi$.remove(VoiceItModalRef.domRef.livenessOverlay);
       if(VoiceItModalRef.domRef.imageCanvas) {
          VoiceItModalRef.domRef.imageCanvas.style.opacity = 1.0;
@@ -643,8 +644,9 @@ export default function Modal(mRef, language) {
     VoiceItModalRef.domRef.livenessOverlay.style.opacity = 1.0;
     VoiceItModalRef.domRef.livenessOverlay.style.display = 'inline-flex';
     VoiceItModalRef.domRef.livenessText.style.display = '';
+    document.getElementsByClassName("content")[0].style.display = "none";
     vi$.delay(TIME_TO_READ_LIVENESS_TUTORIAL, function(){
-      //VoiceItModalRef.endLivenessTutorial();
+      VoiceItModalRef.endLivenessTutorial();
     })
   }
 

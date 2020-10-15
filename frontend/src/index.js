@@ -321,6 +321,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       },function(response){
         if (response.success === false){
           //error handling
+          vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
           voiceIt2ObjRef.modal.displayMessage("An error occured " + response.message);
         } else {
           // no timeout, start circle, and start recording as soon as possible
@@ -328,10 +329,17 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           voiceIt2ObjRef.livenessChallengeTime = response.livenessChallengeTime;
           voiceIt2ObjRef.initFaceRecord(doLiveness);
           //if it's not there
-          voiceIt2ObjRef.LCO = response.challenges;
+          voiceIt2ObjRef.LCO = "";
+          voiceIt2ObjRef.livenessReadyText = response.uiLivenessInstruction;
+          for (var i = 0; i < response.challenges.length; i++){
+            voiceIt2ObjRef.LCO += response.challenges[i] + " ";
+          }
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.livenessReadyText);
           voiceIt2ObjRef.livenessReqId = response.lcoId;
+          voiceIt2ObjRef.changeDisplayTextForLiveness();
           vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
             function() {
+              document.getElementsByClassName("content")[0].style.bottom = "3.5em";
                 vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
                 voiceIt2ObjRef.startView();
                 voiceIt2ObjRef.player.record().start();
@@ -351,6 +359,12 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     voiceIt2ObjRef.modal.show();
   };
 
+  voiceIt2ObjRef.changeDisplayTextForLiveness = function() {
+    document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].style.bottom = "-14%";
+    document.getElementsByClassName("image")[0].children[1].style.overflow = "unset";
+    document.getElementsByClassName("content")[0].style.bottom = "3.7rem";
+  }
+
   // Ready up animations and stuff for video enroll/verific.
   voiceIt2ObjRef.handleVideoSetup = function() {
     //get the LCO
@@ -361,14 +375,22 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         if (!response.success){
           //error handling
           //Hide the Begin button
+          vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
           voiceIt2ObjRef.modal.displayMessage("An error occured " + response.message);
         } else {
         voiceIt2ObjRef.livenessChallengeTime = response.livenessChallengeTime;
         const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
         voiceIt2ObjRef.initVideoRecord(doLiveness);
         //if it's not there
-        voiceIt2ObjRef.LCO = response.challenges;
         voiceIt2ObjRef.livenessReqId = response.lcoId;
+        voiceIt2ObjRef.LCO = "";
+        voiceIt2ObjRef.livenessReadyText = response.uiLivenessInstruction;
+        for (var i = 0; i < response.challenges.length; i++){
+          voiceIt2ObjRef.LCO += response.challenges[i] + " ";
+        }
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.livenessReadyText);
+        voiceIt2ObjRef.livenessReqId = response.lcoId;
+        voiceIt2ObjRef.changeDisplayTextForLiveness();
 
         vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
           function() {

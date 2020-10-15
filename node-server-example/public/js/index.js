@@ -1,11 +1,11 @@
+const contentLanguage = "es-ES";
+
 function mobileCheck() {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     return true;
   }
   return false;
 }
-
-const contentLanguage = "es-ES";
 
 function showLoader(show){
   var loadingContainer = document.querySelector('#messageLabel');
