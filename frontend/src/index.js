@@ -1,4 +1,5 @@
 import Modal from './modal';
+import Liveness from './liveness';
 import vi$ from './utilities';
 import api from './api';
 import Prompts from './prompts';
@@ -48,6 +49,7 @@ export function initialize(backendEndpointPath, language){
     voiceIt2ObjRef.video;
     voiceIt2ObjRef.player;
     voiceIt2ObjRef.prompts = new Prompts(language);
+    voiceIt2ObjRef.getLCOResponse = "";
     voiceIt2ObjRef.type = {
       biometricType: "",
       action: ""
@@ -314,27 +316,23 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   //ready up animations and stuff for face enroll/verific.
   voiceIt2ObjRef.handleFaceSetup = function() {
     //get the LCO
-    if (voiceIt2ObjRef.liveness) {
+    const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
+    if (doLiveness) {
+      voiceIt2ObjRef.livenessObj = new Liveness(voiceIt2ObjRef);
       //show waiting loader for at least 1 second
       console.log(voiceIt2ObjRef.contentLanguage);
       voiceIt2ObjRef.apiRef.getLCO({
         viContentLanguage: voiceIt2ObjRef.contentLanguage
       },function(response){
-        if (response.success === false){
+        if (!response.success){
           //error handling
           vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
           voiceIt2ObjRef.modal.displayMessage(response.message);
         } else {
           // no timeout, start circle, and start recording as soon as possible
-          const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
           voiceIt2ObjRef.livenessChallengeTime = response.livenessChallengeTime;
           voiceIt2ObjRef.initFaceRecord(doLiveness);
-          //if it's not there
-          voiceIt2ObjRef.LCO = "";
           voiceIt2ObjRef.livenessReadyText = response.uiLivenessInstruction;
-          for (var i = 0; i < response.lcoStrings.length; i++){
-            voiceIt2ObjRef.LCO += response.lcoStrings[i] + " ";
-          }
           voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.livenessReadyText);
           voiceIt2ObjRef.livenessReqId = response.lcoId;
           voiceIt2ObjRef.changeDisplayTextForLiveness();
@@ -344,9 +342,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
                 vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
                 voiceIt2ObjRef.startView();
                 voiceIt2ObjRef.player.record().start();
-                voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
-                voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 350);
-                voiceIt2ObjRef.modal.revealProgressCircle(350);
+                voiceIt2ObjRef.getLCOResponse = response;
+                voiceIt2ObjRef.handleFaceLivenessFlow(response);
           });
         }
       });
@@ -360,6 +357,32 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     voiceIt2ObjRef.modal.show();
   };
 
+  voiceIt2ObjRef.handleFaceLivenessFlow = function(response){
+    var i = 0;
+    voiceIt2ObjRef.modal.displayMessage(response.lcoStrings[i]);
+    var timePerChallenge = response.livenessChallengeTime / response.lco.length;
+    // voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 350);
+    voiceIt2ObjRef.modal.createLivenessCircle();
+    voiceIt2ObjRef.livenessObj.drawCircle(response.lco[i]);
+    voiceIt2ObjRef.modal.revealProgressCircle(150);
+    var intervalId = setInterval(()=>{
+      i++;
+      if (i >= response.lco.length){
+        clearInterval(intervalId);
+      } else {
+        vi$.fadeOut(voiceIt2ObjRef.modal.domRef.viMessage,150, ()=>{
+          vi$.fadeIn(voiceIt2ObjRef.modal.domRef.viMessage,150);
+          voiceIt2ObjRef.modal.displayMessage(response.lcoStrings[i]);
+        });
+        voiceIt2ObjRef.modal.hideProgressCircle(150, ()=>{
+          voiceIt2ObjRef.modal.revealProgressCircle(150);
+          voiceIt2ObjRef.livenessObj.drawCircle(response.lco[i]);
+        });
+      }
+    },timePerChallenge*1000 + 300);
+  }
+
+
   voiceIt2ObjRef.changeDisplayTextForLiveness = function() {
     document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].style.bottom = "-14%";
     document.getElementsByClassName("image")[0].children[1].style.overflow = "unset";
@@ -369,7 +392,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   // Ready up animations and stuff for video enroll/verific.
   voiceIt2ObjRef.handleVideoSetup = function() {
     //get the LCO
-    if (voiceIt2ObjRef.liveness) {
+    const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
+    if (doLiveness) {
+      voiceIt2ObjRef.livenessObj = new Liveness(voiceIt2ObjRef);
       voiceIt2ObjRef.apiRef.getLCO({
         viContentLanguage: voiceIt2ObjRef.contentLanguage
       },function(response){
@@ -380,37 +405,22 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           voiceIt2ObjRef.modal.displayMessage(response.message);
         } else {
         voiceIt2ObjRef.livenessChallengeTime = response.livenessChallengeTime;
-        const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
         voiceIt2ObjRef.initVideoRecord(doLiveness);
         //if it's not there
         voiceIt2ObjRef.livenessReqId = response.lcoId;
-        voiceIt2ObjRef.LCO = "";
         voiceIt2ObjRef.livenessReadyText = response.uiLivenessInstruction;
-        for (var i = 0; i < response.lcoStrings.length; i++){
-          voiceIt2ObjRef.LCO += response.lcoStrings[i] + " ";
-        }
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.livenessReadyText);
         voiceIt2ObjRef.livenessReqId = response.lcoId;
         voiceIt2ObjRef.changeDisplayTextForLiveness();
-
         vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
           function() {
+            document.getElementsByClassName("content")[0].style.bottom = "3.5em";
               vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
               voiceIt2ObjRef.startView();
+              voiceIt2ObjRef.getLCOResponse = response;
+              voiceIt2ObjRef.player.record().start();
                   //after LCT start showing the verification prompt
-                  setTimeout(()=>{
-                    voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
-                    voiceIt2ObjRef.modal.createVideoCircle();
-                  },voiceIt2ObjRef.livenessChallengeTime*1000+500);
-                voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
-                voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 350);
-                voiceIt2ObjRef.modal.revealProgressCircle(350);
-                setTimeout(()=>{
-                    voiceIt2ObjRef.modal.hideProgressCircle(350);
-                },voiceIt2ObjRef.livenessChallengeTime*1000+500);
-                setTimeout(()=>{
-                    voiceIt2ObjRef.player.record().start();
-                },500);
+              voiceIt2ObjRef.handleVideoLivenessFlow(response);
           }
         );
       }
@@ -424,6 +434,36 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     voiceIt2ObjRef.modal.domRef.outerOverlay.style.opacity = 1.0;
     voiceIt2ObjRef.modal.show();
   };
+
+  voiceIt2ObjRef.handleVideoLivenessFlow = function(response) {
+    var i = 0;
+    voiceIt2ObjRef.modal.displayMessage(response.lcoStrings[i]);
+    var timePerChallenge = response.livenessChallengeTime / response.lco.length;
+
+    voiceIt2ObjRef.modal.createLivenessCircle();
+    voiceIt2ObjRef.livenessObj.drawCircle(response.lco[i]);
+    voiceIt2ObjRef.modal.revealProgressCircle(150);
+    var intervalId = setInterval(()=>{
+      i++;
+      if (i >= response.lco.length){
+        clearInterval(intervalId);
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+        voiceIt2ObjRef.modal.hideProgressCircle(100, ()=>{
+          voiceIt2ObjRef.modal.createVideoCircle();
+          voiceIt2ObjRef.modal.createProgressCircle(4000);
+        });
+      } else {
+        vi$.fadeOut(voiceIt2ObjRef.modal.domRef.viMessage,150, ()=>{
+          vi$.fadeIn(voiceIt2ObjRef.modal.domRef.viMessage,150);
+          voiceIt2ObjRef.modal.displayMessage(response.lcoStrings[i]);
+        });
+        voiceIt2ObjRef.modal.hideProgressCircle(150, ()=>{
+          voiceIt2ObjRef.modal.revealProgressCircle(150);
+          voiceIt2ObjRef.livenessObj.drawCircle(response.lco[i]);
+        });
+      }
+    },timePerChallenge*1000 + 300);
+  }
 
   voiceIt2ObjRef.createVideo = function(doLiveness) {
     let webcam = vi$.create('video');
@@ -547,7 +587,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           record: {
             audio: true,
             video: true,
-            maxLength: voiceIt2ObjRef.livenessChallengeTime + 5
+            maxLength: voiceIt2ObjRef.livenessChallengeTime + 4 + 1
           }
         }
       }, function() {
@@ -597,7 +637,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           record: {
             audio: false,
             video: true,
-            maxLength: voiceIt2ObjRef.livenessChallengeTime,
+            maxLength: voiceIt2ObjRef.livenessChallengeTime + 1,
             debug: true
           }
         }
@@ -608,7 +648,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt2ObjRef.handleFaceLivenessResponse = function(response){
-    //voiceIt2ObjRef.modal.removeWaitingLoader();
     if (response.success) {
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();
@@ -617,29 +656,25 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       //continue to verify
       if (!response.retry) {
         voiceIt2ObjRef.modal.removeWaitingLoader();
-        setTimeout(()=>{
-          voiceIt2ObjRef.modal.displayMessage(response.uiMessage);
-          setTimeout(()=>{voiceIt2ObjRef.exitOut(false, response);},2000);
-        },2500);
+        voiceIt2ObjRef.modal.displayMessage(response.uiMessage);
+        setTimeout(()=>{voiceIt2ObjRef.exitOut(false, response);},2000);
       } else {
         voiceIt2ObjRef.modal.removeWaitingLoader();
         voiceIt2ObjRef.modal.displayMessage(response.uiMessage);
         setTimeout(()=>{
         voiceIt2ObjRef.modal.showWaitingLoader(true, true);
         setTimeout(()=>{
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
           voiceIt2ObjRef.modal.removeWaitingLoader();
           voiceIt2ObjRef.player.record().start();
-          voiceIt2ObjRef.modal.hideProgressCircle(350);
-          voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 700);
-          voiceIt2ObjRef.modal.revealProgressCircle(350);
-        },2500);
-      },1500);
+          voiceIt2ObjRef.handleFaceLivenessFlow(voiceIt2ObjRef.getLCOResponse);
+        },1500);
+      },2000);
       }
     }
   }
 
   voiceIt2ObjRef.handleVideoLivenessResponse = function(response){
+    console.log(response);
     if (response.success) {
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();
@@ -658,18 +693,11 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         setTimeout(()=>{
         voiceIt2ObjRef.modal.showWaitingLoader(true, true);
         setTimeout(()=>{
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.LCO);
           voiceIt2ObjRef.modal.removeWaitingLoader();
           voiceIt2ObjRef.player.record().start();
-          voiceIt2ObjRef.modal.createProgressCircle(voiceIt2ObjRef.livenessChallengeTime*1000 + 350);
-          voiceIt2ObjRef.modal.revealProgressCircle(350);
-          setTimeout(()=>{
-              voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
-              voiceIt2ObjRef.modal.createVideoCircle();
-              voiceIt2ObjRef.modal.hideProgressCircle(350);
-          },voiceIt2ObjRef.livenessChallengeTime*1000);
-        },2500);
-      },1500);
+          voiceIt2ObjRef.handleVideoLivenessFlow(voiceIt2ObjRef.getLCOResponse);
+        },1500);
+      },2500);
     }
   }
 }
@@ -781,6 +809,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           voiceIt2ObjRef.type.biometricType == "video"
       ) {
         voiceIt2ObjRef.modal.destroyVideoCircle();
+        voiceIt2ObjRef.modal.hideProgressCircle(100);
         vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
         voiceIt2ObjRef.modal.showWaitingLoader(true,true);
         voiceIt2ObjRef.apiRef.videoLiveness({
@@ -795,6 +824,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.liveness &&
         voiceIt2ObjRef.type.biometricType === "face" &&
         voiceIt2ObjRef.type.action === "Verification") {
+          voiceIt2ObjRef.modal.hideProgressCircle(350);
           //make api call to Andrew Here
           vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
           voiceIt2ObjRef.modal.showWaitingLoader(true,true);

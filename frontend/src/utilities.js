@@ -1,6 +1,8 @@
 import ProgressBar from 'progressbar.js';
 import Colors from './colors';
+
 const vi$ = {
+  LCOs: ["FACE_NEUTRAL", "FACE_LEFT", "FACE_RIGHT", "FACE_DOWN", "FACE_UP", "FACE_TILT_LEFT", "FACE_TILT_RIGHT", "SMILE"],
   post: function(modal, endPoint, requestType, token, props, callback) {
       var http = new XMLHttpRequest();
       var formData = new FormData();
@@ -25,21 +27,6 @@ const vi$ = {
           callback(parsedJson);
         }
       }
-  },
-  isWebAssemblySupported:function() {
-    function testSafariWebAssemblyBug() {
-      var bin   = new Uint8Array([0,97,115,109,1,0,0,0,1,6,1,96,1,127,1,127,3,2,1,0,5,3,1,0,1,7,8,1,4,116,101,115,116,0,0,10,16,1,14,0,32,0,65,1,54,2,0,32,0,40,2,0,11]);
-      var mod   = new WebAssembly.Module(bin);
-      var inst  = new WebAssembly.Instance(mod, {});
-      // Test storing to and loading from a non-zero location via a parameter.
-      // Safari on iOS 11.2.5 returns 0 unexpectedly at non-zero locations
-      return (inst.exports.test(4) !== 0);
-    }
-    var isWebAssemblySupported = (typeof WebAssembly === 'object');
-    if(isWebAssemblySupported && !testSafariWebAssemblyBug()) {
-      isWebAssemblySupported = false;
-    }
-    return isWebAssemblySupported;
   },
   detectBrowser: function() {
     var nVer = navigator.appVersion;
