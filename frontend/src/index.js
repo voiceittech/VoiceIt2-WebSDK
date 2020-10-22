@@ -131,6 +131,7 @@ export function initialize(backendEndpointPath, language){
   voiceIt2ObjRef.encapsulatedFaceVerification = function(options) {
     voiceIt2ObjRef.setupView(options.doLiveness).then(function(){
       voiceIt2ObjRef.liveness = options.doLiveness;
+      voiceIt2ObjRef.livenessAudio = options.doLivenessAudio;
       voiceIt2ObjRef.contentLanguage = options.contentLanguage || '';
       voiceIt2ObjRef.type.biometricType = 'face';
       voiceIt2ObjRef.type.action = 'Verification';
