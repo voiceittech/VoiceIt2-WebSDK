@@ -73,12 +73,13 @@ export default function Prompts(language) {
   CONTACT_DEVELOPER:" Error:\n Póngase en contacto con el desarrollador de la aplicación enviando el código de error",
   UNFD:"Usuario no encontrado. Asegúrate de tener el ID de usuario correcto",
   MAX_ATTEMPTS:"Se superó el máximo de intentos permitidos. Vuelve a intentarlo más tarde",
+  REENROLLMENT_WARNING:"Este enrolamiento eliminará todos los enrolamientos anteriores de voz, rostro y video.\n ¿Quieres continuar?",
+  /* Liveness Prompts */
   LIVENESS_READY_PROMPT:"Acércate a la cámara. Realizarás una serie predeterminada de desafíos de vitalidad. Tendrás 2 segundos para realizar cada prueba, seleccionadas al azar de las siguientes tres: ",
   LIVENESS_SUCCESS:"Has sido verificado correctamente",
   LIVENESS_TIMEDOUT:"Lo siento, se agotó el tiempo de espera. Realiza las pruebas de vitalidad rápidamente",
   LIVENESS_FAILED:"Lo siento, la verificación falló",
-  LIVENESS_TRY_AGAIN:"La prueba falló, vuelve a intentarlo",
-  REENROLLMENT_WARNING:"Este enrolamiento eliminará todos los enrolamientos anteriores de voz, rostro y video.\n ¿Quieres continuar?"
+  LIVENESS_TRY_AGAIN:"La prueba falló, vuelve a intentarlo"
   }
   :
   {
@@ -154,13 +155,13 @@ export default function Prompts(language) {
   CONTACT_DEVELOPER: "Error:\n Please contact app developer with response code \"MESSAGE_HERE\".",
   UNFD: "User not found. Pease make sure you have the right user ID",
   MAX_ATTEMPTS: "Exceeded maximum attempts allowed. Please try again later",
+  REENROLLMENT_WARNING: "Reenrollment will delete all previous voice, face, and video enrollments. \n Proceed?",
   /* Liveness Prompts */
   LIVENESS_READY_PROMPT: "Please move closer to the camera. You\'ll be performing a predetermined number of liveness challenges. A few examples of the challenges could be the following:",
   LIVENESS_SUCCESS: "You've been successfully verified",
   LIVENESS_TIMEDOUT: "Sorry, liveness timed out. Please perform the liveness tests quickly",
   LIVENESS_FAILED: "Sorry, verification failed",
-  LIVENESS_TRY_AGAIN: "Liveness test failed, please try again",
-  REENROLLMENT_WARNING: "Reenrollment will delete all previous voice, face, and video enrollments. \n Proceed?"
+  LIVENESS_TRY_AGAIN: "Liveness test failed, please try again"
   }
   );
 
