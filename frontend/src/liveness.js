@@ -6,8 +6,13 @@ export default function Liveness(VoiceItObj) {
   const LivenessRef = this;
   LivenessRef.oldCircles = [];
   LivenessRef.drawCircle = function(testType) {
+    modal.createAudioPrompts();
     switch (testType) {
       case "FACE_UP":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_UP.wav";
+          document.getElementById("audioPrompt").load();
+      }
       modal.updateProgressCircle(
         modal.domRef.progressCircle,
         0.25,
@@ -18,6 +23,10 @@ export default function Liveness(VoiceItObj) {
       LivenessRef.oldCircles[1] = "rotate(315deg)";
         break;
       case "FACE_DOWN":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_DOWN.wav";
+          document.getElementById("audioPrompt").load();
+      }
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
           0.25,
@@ -28,6 +37,10 @@ export default function Liveness(VoiceItObj) {
         LivenessRef.oldCircles[1] = "rotate(135deg)";
         break;
       case "FACE_TILT_RIGHT":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_TILT_RIGHT.wav";
+          document.getElementById("audioPrompt").load();
+      }
       modal.updateProgressCircle(
         modal.domRef.progressCircle,
         0.25,
@@ -38,6 +51,10 @@ export default function Liveness(VoiceItObj) {
       LivenessRef.oldCircles[1] = "rotate(22.5deg)";
       break;
       case "FACE_RIGHT":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_RIGHT.wav";
+          document.getElementById("audioPrompt").load();
+      }
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
           0.25,
@@ -48,6 +65,10 @@ export default function Liveness(VoiceItObj) {
         LivenessRef.oldCircles[1] = "rotate(45deg)";
         break;
       case "FACE_TILT_LEFT":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_TILT_LEFT.wav";
+          document.getElementById("audioPrompt").load();
+      }
       modal.updateProgressCircle(
         modal.domRef.progressCircle,
         0.25,
@@ -58,6 +79,10 @@ export default function Liveness(VoiceItObj) {
       LivenessRef.oldCircles[1] = "rotate(247.5deg)";
       break;
       case "FACE_LEFT":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_LEFT.wav";
+          document.getElementById("audioPrompt").load();
+      }
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
           0.25,
@@ -68,6 +93,10 @@ export default function Liveness(VoiceItObj) {
         LivenessRef.oldCircles[1] = "rotate(220deg)";
         break;
       case "SMILE":
+      if (VoiceItObj.livenessAudio) {
+          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/SMILE.wav";
+          document.getElementById("audioPrompt").load();
+      }
         modal.updateProgressCircle(modal.domRef.progressCircle, 1.0, "#FBC132");
         vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(0deg)";
         LivenessRef.oldCircles[0] = 1.0;

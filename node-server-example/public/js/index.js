@@ -187,6 +187,7 @@ function setupFrontEnd() {
 
     myVoiceIt.encapsulatedVideoVerification({
       doLiveness:isLivenessEnabled(),
+      doLivenessAudio: isLivenessAudioEnabled(),
       contentLanguage:contentLanguage,
       phrase:'never forget tomorrow is a new day',
       needEnrollmentsCallback:function(){

@@ -151,6 +151,7 @@ export function initialize(backendEndpointPath, language){
   voiceIt2ObjRef.encapsulatedVideoVerification = function(options) {
     voiceIt2ObjRef.setupView(options.doLiveness).then(function(){
       voiceIt2ObjRef.liveness = options.doLiveness;
+      voiceIt2ObjRef.livenessAudio = options.doLivenessAudio;
       voiceIt2ObjRef.type.biometricType = 'video';
       voiceIt2ObjRef.type.action = 'Verification';
       voiceIt2ObjRef.setPhrase(options.phrase || '');
@@ -373,6 +374,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       } else {
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.viMessage,150, ()=>{
           vi$.fadeIn(voiceIt2ObjRef.modal.domRef.viMessage,150);
+
           voiceIt2ObjRef.modal.displayMessage(response.lcoStrings[i]);
         });
         voiceIt2ObjRef.modal.hideProgressCircle(150, ()=>{
