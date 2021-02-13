@@ -76,3 +76,5 @@ typings/
 .serverless
 
 .DS_Store
+
+svelte-frontend/node_modules/*
