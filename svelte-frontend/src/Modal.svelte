@@ -1,3 +1,15 @@
+<script>
+  export let biometricType;
+  export let callType;
+  export let doLiveness;
+</script>
+
+<div>
+  <p>biometricType: {biometricType}</p>
+  <p>callType: {callType}</p>
+  <p>doLiveness: {doLiveness}</p>
+</div>
+
 <div class="viModal ui modal transition visible active" style="max-width: 460px; min-width: 460px; overflow: hidden; margin-bottom: 8%; background: transparent;">
    <i class="close icon" style="top: 1rem; right: 1rem; color: rgb(255, 255, 255); font-size: 25px;"></i>
    <div class="ui card" style="z-index: -2;">
