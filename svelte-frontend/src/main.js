@@ -1,2 +1,2 @@
-import Modal from './Modal.svelte';
-export default Modal;
+import App from './App.svelte';
+export default App;

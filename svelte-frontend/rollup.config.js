@@ -33,7 +33,7 @@ export default {
 	output: {
 		sourcemap: true,
 		format: 'iife',
-		name: 'Modal',
+		name: 'App',
 		file: 'public/build/voiceit2.js'
 	},
 	plugins: [
