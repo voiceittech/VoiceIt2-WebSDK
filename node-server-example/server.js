@@ -72,13 +72,12 @@ app.get('/console', function (req, res) {
 app.post('/example_endpoint', multer.any(), function (req, res) {
     sess = req.session;
     const myVoiceIt = new VoiceIt2WebSDK(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN);
-    myVoiceIt.initBackend(req, res, function(jsonObj){
+    myVoiceIt.makeCall(req, res, function(jsonObj){
       const callType = jsonObj.callType.toLowerCase();
       const userId = jsonObj.userId;
       if(jsonObj.jsonResponse.responseCode === "SUCC"){
         // Activate Session with userId
         sess.userId = userId;
-        console.log('Session Set')
       }
     });
 });

@@ -82,7 +82,7 @@ function VoiceIt2(apk, tok, options) {
     return token;
   }
 
-  this.initBackend = (req, res, resultCallback) => {
+  this.makeCall = (req, res, resultCallback) => {
     const reqType = req.body.viRequestType;
     const secureToken = req.body.viSecureToken;
     const mainThis = this;
