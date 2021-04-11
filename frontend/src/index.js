@@ -753,38 +753,6 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     }
   };
 
-  voiceIt2ObjRef.onFinishLivenessFaceVerification = function(){
-      voiceIt2ObjRef.modal.showWaitingLoader(true,true);
-      voiceIt2ObjRef.apiRef.faceVerificationWithLiveness({
-      }, function(response){
-      voiceIt2ObjRef.modal.removeWaitingLoader();
-      if (response.responseCode === "SUCC") {
-        voiceIt2ObjRef.exitOut(true, response);
-        voiceIt2ObjRef.displayAppropriateMessage(response);
-        //do something after successful. Right now it just stays there
-      } else {
-        voiceIt2ObjRef.attempts++;
-        //continue to verify
-        if (voiceIt2ObjRef.attempts > MAX_ATTEMPTS) {
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
-          voiceIt2ObjRef.exitOut(false, response);
-        } else {
-          voiceIt2ObjRef.displayAppropriateMessage(response);
-          if (vi$.contains(ErrorCodes, response.responseCode)) {
-            voiceIt2ObjRef.exitOut(false, response);
-          } else {
-            setTimeout(function() {
-              if (voiceIt2ObjRef.liveness) {
-                voiceIt2ObjRef.initiate();
-              } else {
-                voiceIt2ObjRef.continueVerification(response);
-              }
-            }, 100);
-          }
-        }
-      }
-    });
-  };
 
   // One-time setup for the listeners to prevent duplicate api calls/records
   voiceIt2ObjRef.setupListeners = function() {
@@ -919,6 +887,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     });
   };
 
+  ///REFACTOR
   voiceIt2ObjRef.startView = function() {
     if (voiceIt2ObjRef.type.action === "Verification" && voiceIt2ObjRef.type.biometricType === "voice") {
       voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
@@ -926,23 +895,34 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     }
 
     if (!voiceIt2ObjRef.liveness || voiceIt2ObjRef.type.action === 'Enrollment') {
-      if (voiceIt2ObjRef.type.biometricType !== "face") {
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
-      } else {
+      if (voiceIt2ObjRef.type.biometricType === "face") {
         voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("LOOK_INTO_CAM"));
-      }
-      if (voiceIt2ObjRef.type.biometricType === "voice") {
-        voiceIt2ObjRef.modal.revealWaveform(500);
-      } else if (voiceIt2ObjRef.type.biometricType === "face") {
         voiceIt2ObjRef.modal.createProgressCircle(3200);
         voiceIt2ObjRef.modal.revealProgressCircle();
       } else if (voiceIt2ObjRef.type.biometricType === "video") {
-        voiceIt2ObjRef.modal.createVideoCircle();
-        voiceIt2ObjRef.modal.createProgressCircle(5200);
-        voiceIt2ObjRef.modal.domRef.progressCircle.style.display = 'block';
-        voiceIt2ObjRef.modal.revealProgressCircle();
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+          voiceIt2ObjRef.modal.revealWaveform(500);
+          voiceIt2ObjRef.modal.createVideoCircle();
+          voiceIt2ObjRef.modal.createProgressCircle(5200);
+          voiceIt2ObjRef.modal.domRef.progressCircle.style.display = 'block';
+          voiceIt2ObjRef.modal.revealProgressCircle();
+      } else if (voiceIt2ObjRef.type.biometricType === "voice"){
+          voiceIt2ObjRef.modal.revealWaveform(500);
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
       }
-  }
+
+      // if (voiceIt2ObjRef.type.biometricType === "voice") {
+      //   voiceIt2ObjRef.modal.revealWaveform(500);
+      // } else if (voiceIt2ObjRef.type.biometricType === "face") {
+      //   voiceIt2ObjRef.modal.createProgressCircle(3200);
+      //   voiceIt2ObjRef.modal.revealProgressCircle();
+      // } else if (voiceIt2ObjRef.type.biometricType === "video") {
+      //   voiceIt2ObjRef.modal.createVideoCircle();
+      //   voiceIt2ObjRef.modal.createProgressCircle(5200);
+      //   voiceIt2ObjRef.modal.domRef.progressCircle.style.display = 'block';
+      //   voiceIt2ObjRef.modal.revealProgressCircle();
+      // }
+      }
 
     vi$.fadeOut(voiceIt2ObjRef.modal.domRef.outerOverlay, 1500, null, 0.3);
     voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
@@ -1100,7 +1080,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   // Destroy video, canvas, and other objects
   voiceIt2ObjRef.destroy = function(destroyFinished) {
     if (voiceIt2ObjRef.liveness){
-      voiceIt2ObjRef.livenessObj = undefined; 
+      voiceIt2ObjRef.livenessObj = undefined;
     }
     window.cancelAnimationFrame(voiceIt2ObjRef.animationId);
     voiceIt2ObjRef.isInitiated = false;
