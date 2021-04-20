@@ -369,9 +369,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     voiceIt2ObjRef.modal.revealProgressCircle(150);
     var intervalId = setInterval(()=>{
       i++;
-      if (i >= response.lco.length){
+      if (i >= response.lco.length || voiceIt2ObjRef.destroyed){
         clearInterval(intervalId);
       } else {
+        console.log("NEXT CHALLENGE");
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.viMessage,150, ()=>{
           vi$.fadeIn(voiceIt2ObjRef.modal.domRef.viMessage,150);
 
@@ -1067,14 +1068,17 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   // Exit the modal post completion of task
   voiceIt2ObjRef.exitOut = function (success, response){
-      // Give user 4 seconds to read final message, then exit out of the modal
+    if (!voiceIt2ObjRef.destroyed){
       vi$.delay(TIME_BEFORE_EXITING_MODAL_AFTER_SUCCESS, function(){
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.modalDimBackground, 1100, function(){
               voiceIt2ObjRef.destroy();
               voiceIt2ObjRef.modal.hide();
-              voiceIt2ObjRef.completionCallback(success, response);
+              if(voiceIt2ObjRef.biometricType === "Verification"){
+                voiceIt2ObjRef.completionCallback(success, response);
+              }
         });
       });
+    }
   };
 
   // Destroy video, canvas, and other objects
@@ -1095,6 +1099,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     }
 
     if (voiceIt2ObjRef.player !== undefined) {
+      voiceIt2ObjRef.player.off('finishRecord', function(){
+
+      });
       voiceIt2ObjRef.player.record().destroy();
       voiceIt2ObjRef.player = undefined;
     }
@@ -1113,6 +1120,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     voiceIt2ObjRef.modal.destroy();
     voiceIt2ObjRef.destroyed = true;
     if(destroyFinished){ destroyFinished();}
+    console.log(voiceIt2ObjRef.player);
   };
 
   voiceIt2ObjRef.createOverlay = function() {
