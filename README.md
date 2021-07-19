@@ -1,6 +1,6 @@
 <img src="./js.png" width="100%" style="width:100%" />
 
-# VoiceIt API 2 Web SDK
+# VoiceIt API 2 Web SDK [![travis](https://travis-ci.com/voiceittech/VoiceIt2-WebSDK.svg?branch=master)](https://travis-ci.com/voiceittech/VoiceIt2-WebSDK)
 The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 in the browser with a PHP or NodeJS backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
 
 * [Prerequisites](#prerequisites)
