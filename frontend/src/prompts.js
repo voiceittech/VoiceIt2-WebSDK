@@ -1,6 +1,6 @@
 export default function Prompts(language) {
   var promptsRef = this;
-  promptsRef.currentPhrase = "";
+  promptsRef.currentPhrase = '';
 
   switch(language) {
       case 'es-ES':
@@ -27,7 +27,7 @@ export default function Prompts(language) {
           GET_VERIFIED:"Ok, vamos a verificarte",
           READY_FOR_VOICE_VERIFICATION: "Prepárate para verificar tu voz",
           VERIFY: function() {
-            return "Por favor di <br/>\"" + promptsRef.currentPhrase + "\"";
+            return `Por favor di <br/>"${promptsRef.currentPhrase}"`;
           },
           VERIFY_FACE: "Espera mientras ejecutamos la verificación.",
           ENROLL_FACE: "Espera mientras ejecutamos el enrolamiento.",
@@ -35,13 +35,13 @@ export default function Prompts(language) {
           VERIFY_FACE_FAILED_TRY_AGAIN: "Verificación facial fallida. Inténtalo de nuevo.",
           VIDEO_VERIFY_FAILED:"Verificación de video fallida.",
           ENROLL_0: function() {
-            return "Por favor di <br/>\"" + promptsRef.currentPhrase + "\'";
+            return `Por favor di <br/>"${promptsRef.currentPhrase}"`;
           },
           ENROLL_1: function() {
-            return "Por favor di <br/>\"" + promptsRef.currentPhrase + "\"<br/> otra vez";
+            return `Por favor di <br/>"${promptsRef.currentPhrase}"<br/> otra vez`;
           },
           ENROLL_2: function() {
-            return "Por favor di <br/>\"" + promptsRef.currentPhrase + "\"<br/> una última vez";
+            return `Por favor di <br/>"${promptsRef.currentPhrase}"<br/> una última vez`;
           },
           FACE_ENROLL:" Espera a que enrolemos tu rostro.",
           WAITING:"Por favor, espera.",
@@ -53,7 +53,7 @@ export default function Prompts(language) {
           SUCC_VERIFICATION:"Has sido verificado correctamente.",
           SUCC:"Has sido verificado correctamente.",
           PDNM: function() {
-            return "Asegúrate de decir la frase correcta: \"" + promptsRef.currentPhrase    + "\"";
+            return `Asegúrate de decir la frase correcta: "${promptsRef.currentPhrase}"`;
           },
           CLNE: "El idioma del contenido no está habilitado para el nivel gratuito, solo no-STT está disponible en el plan de nivel gratuito VoiceIt",
           FNFD:"Lo siento, hemos encontrado tu cara.\n Vuelve a intentarlo.",
@@ -110,7 +110,7 @@ export default function Prompts(language) {
           GET_VERIFIED: "There you are, let's get you verified",
           READY_FOR_VOICE_VERIFICATION: "Please get ready to verify your voice",
           VERIFY: function() {
-            return "Please say<br/>\"" + promptsRef.currentPhrase + "\"";
+            return `Please say<br/>"${promptsRef.currentPhrase}"`;
           },
           VERIFY_FACE: "Please wait while we run verification",
           ENROLL_FACE: "Please wait while we run enrollment",
@@ -118,13 +118,13 @@ export default function Prompts(language) {
           VERIFY_FACE_FAILED_TRY_AGAIN: "Failed face verification. Please Try again.",
           VIDEO_VERIFY_FAILED: "Failed video verification",
           ENROLL_0: function() {
-            return "Please say<br/>\"" + promptsRef.currentPhrase + "\'";
+            return `Please say<br/>"${promptsRef.currentPhrase}"`;
           },
           ENROLL_1: function() {
-            return "Please say<br/>\"" + promptsRef.currentPhrase + "\"<br/> again";
+            return `Please say<br/>"${promptsRef.currentPhrase}"<br/> again`;
           },
           ENROLL_2: function() {
-            return "Please say<br/>\"" + promptsRef.currentPhrase + "\"<br/> one last time";
+            return `Please say<br/>"${promptsRef.currentPhrase}"<br/> one last time`;
           },
           FACE_ENROLL: "Please wait for your face to be enrolled",
           WAITING: "Please wait",
@@ -137,7 +137,7 @@ export default function Prompts(language) {
           SUCC: "You've been successfully verified",
           /* Response Code Based Prompts */
           PDNM: function() {
-            return "Please make sure you are saying the correct phrase: \"" + promptsRef.currentPhrase + "\"";
+            return `Please make sure you are saying the correct phrase: "${promptsRef.currentPhrase}"`;
           },
           CLNE: "Content language not enabled for free tier, only no-STT is available on the VoiceIt free tier plan",
           FNFD: "Sorry, I couldn't quite see your face.\nPlease try again.",

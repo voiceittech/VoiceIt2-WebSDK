@@ -11,7 +11,7 @@ export default function Modal(mRef, language) {
   const VoiceItModalRef = this;
   const TIME_TO_READ_LIVENESS_TUTORIAL = 6000;
   const prompts = new Prompts(language);
-  //stores the JS DOM Elements as value to the name, which is "elName"
+  //stores the JS DOM Elements as value to the name, which is 'elName'
   //https://www.w3schools.com/js/js_htmldom_elements.asp
   VoiceItModalRef.domRef = {};
   VoiceItModalRef.mainRef = mRef;
@@ -227,7 +227,7 @@ export default function Modal(mRef, language) {
     //     'width': '70%'
     //   },
     //   'attributes': {
-    //     'src': language == "es-ES" ? LivenessTutorialES : LivenessTutorial
+    //     'src': language == 'es-ES' ? LivenessTutorialES : LivenessTutorial
     //   },
     //   'elName':'livenessTutorial',
     //   'nodeName': 'img',
@@ -245,7 +245,7 @@ export default function Modal(mRef, language) {
       'elName': 'skipButton',
       'nodeName': 'a',
       'parent': 'livenessOverlay',
-      'text': language === "es-ES" ? "Omitir" : "Skip"
+      'text': language === 'es-ES' ? 'Omitir' : 'Skip'
     }, {
       'styles':{
         'display': 'flex',
@@ -286,7 +286,7 @@ export default function Modal(mRef, language) {
       'nodeName': 'button',
       'elName': 'readyButton',
       'parent': 'overlayHolder',
-      'text': language === "es-ES" ? "Comenzar" : "Click to begin"
+      'text': language === 'es-ES' ? 'Comenzar' : 'Click to begin'
       }, {
       'styles':{
         'top': '6%',
@@ -343,7 +343,7 @@ export default function Modal(mRef, language) {
   }
 
   VoiceItModalRef.buildModal = function() {
-    var svgns = "http://www.w3.org/2000/svg";
+    var svgns = 'http://www.w3.org/2000/svg';
     VoiceItModalRef.modalElementTree.forEach(function(modalPart) {
       var ele;
       //  Svg elements require creation under different namespace
@@ -372,7 +372,7 @@ export default function Modal(mRef, language) {
           ele.textContent = modalPart.text;
         }
       }
-      //add into domRef. Doesn't happen for query selector compatible elements, such as "body"
+      //add into domRef. Doesn't happen for query selector compatible elements, such as 'body'
       if(modalPart['elName']){
         VoiceItModalRef.domRef[modalPart['elName']] = ele;
       }
@@ -498,7 +498,7 @@ export default function Modal(mRef, language) {
       vi$.remove(VoiceItModalRef.domRef.audioPrompts)
     }
     VoiceItModalRef.domRef.audioPrompts = vi$.create('AUDIO');
-    // const filePath = "wav/" + fileName + ".wav";
+    // const filePath = 'wav/' + fileName + '.wav';
     var audioPromptsProps = {
       'attributes':{
         'height':'500px',
@@ -508,7 +508,7 @@ export default function Modal(mRef, language) {
         'autoplay' : 'true',
       }
     };
-    let sourceElem = vi$.create("SOURCE");
+    let sourceElem = vi$.create('SOURCE');
     sourceElem.setAttribute('id', 'audioSrc');
     for (var prop in audioPromptsProps.attributes) {
       VoiceItModalRef.domRef.audioPrompts.setAttribute(prop, audioPromptsProps.attributes[prop]);
@@ -549,7 +549,7 @@ export default function Modal(mRef, language) {
     // Creates the Waveform for Voice Enrollment and Verification
     VoiceItModalRef.domRef.viCard.insertBefore(VoiceItModalRef.domRef.waveform, VoiceItModalRef.domRef.content);
     var colors = [Colors.MAIN_THEME_COLOR, Colors.MAIN_THEME_COLOR, Colors.MAIN_THEME_COLOR, Colors.MAIN_THEME_COLOR];
-    var waveContext = VoiceItModalRef.domRef.waveform.getContext("2d");
+    var waveContext = VoiceItModalRef.domRef.waveform.getContext('2d');
     var waveStartTime = new Date().getTime();
 
     function getPath(height) {
@@ -617,7 +617,7 @@ export default function Modal(mRef, language) {
           window.cancelAnimationFrame(animationId);
         });
     }).catch(function(err) {
-        console.log("error : " + err);
+        console.log('error : ' + err);
     });
 
 
@@ -653,7 +653,7 @@ export default function Modal(mRef, language) {
     vi$.fadeOut(VoiceItModalRef.domRef.livenessOverlay, 400, function() {
       VoiceItModalRef.domRef.readyButton.style.display = 'inline-block';
       vi$.fadeIn(VoiceItModalRef.domRef.readyButton, 100);
-      VoiceItModalRef.domRef.content.style.display = "block";
+      VoiceItModalRef.domRef.content.style.display = 'block';
       vi$.remove(VoiceItModalRef.domRef.livenessOverlay);
       if(VoiceItModalRef.domRef.imageCanvas) {
          VoiceItModalRef.domRef.imageCanvas.style.opacity = 1.0;
@@ -667,7 +667,7 @@ export default function Modal(mRef, language) {
   //   VoiceItModalRef.domRef.livenessOverlay.style.opacity = 1.0;
   //   VoiceItModalRef.domRef.livenessOverlay.style.display = 'inline-flex';
   //   VoiceItModalRef.domRef.livenessText.style.display = '';
-  //   VoiceItModalRef.domRef.content.style.display = "none";
+  //   VoiceItModalRef.domRef.content.style.display = 'none';
   //   vi$.delay(TIME_TO_READ_LIVENESS_TUTORIAL, function(){
   //     VoiceItModalRef.endLivenessTutorial();
   //   })
@@ -725,13 +725,13 @@ export default function Modal(mRef, language) {
         }
         VoiceItModalRef.domRef.overlayHolder.insertBefore(VoiceItModalRef.domRef.waitingLoader, VoiceItModalRef.domRef.firstChild);
         //add the checking text Here
-        var overflowParent = document.getElementsByClassName("image")[0].children[1];
-        overflowParent.style.overflow = "";
+        var overflowParent = document.getElementsByClassName('image')[0].children[1];
+        overflowParent.style.overflow = '';
         if (livenessText){
-          var checkingText = document.createElement("div");
-          checkingText.textContent = "Checking";
-          checkingText.id = "checkingText";
-          checkingText.setAttribute("style","top: 101%;margin: auto;color: white;position: absolute;font-size: 1rem;");
+          var checkingText = document.createElement('div');
+          checkingText.textContent = 'Checking';
+          checkingText.id = 'checkingText';
+          checkingText.setAttribute('style', 'top: 101%; margin: auto; color: white; position: absolute; font-size: 1rem;');
           overflowParent.children[3].appendChild(checkingText);
         }
   }
@@ -748,8 +748,8 @@ export default function Modal(mRef, language) {
       vi$.remove(VoiceItModalRef.domRef.videoCircle);
     }
     var videoCircleRadius = 130;
-    var svgNS = "http://www.w3.org/2000/svg";
-    VoiceItModalRef.domRef.videoCircle = document.createElementNS(svgNS, "svg");
+    var svgNS = 'http://www.w3.org/2000/svg';
+    VoiceItModalRef.domRef.videoCircle = document.createElementNS(svgNS, 'svg');
     var vidCircleProps = {
         'styles':{
           'right': '-1.5%',
@@ -769,9 +769,9 @@ export default function Modal(mRef, language) {
     for (var prop in vidCircleProps.styles) {
       VoiceItModalRef.domRef.videoCircle.style[prop] = vidCircleProps.styles[prop];
     }
-    var circleMask = document.createElementNS(svgNS, "mask");
+    var circleMask = document.createElementNS(svgNS, 'mask');
     circleMask.setAttribute('id', 'viCircleMask');
-    var whiteRectangle = document.createElementNS(svgNS, "rect");
+    var whiteRectangle = document.createElementNS(svgNS, 'rect');
     var rectAttrs =
     {
         'x': '0',
@@ -784,7 +784,7 @@ export default function Modal(mRef, language) {
       whiteRectangle.setAttribute(prop, rectAttrs[prop]);
     }
     circleMask.appendChild(whiteRectangle);
-    var innerBlackCircle = document.createElementNS(svgNS, "circle");
+    var innerBlackCircle = document.createElementNS(svgNS, 'circle');
     var blackCircleAttrs =
     {
         'cx': '230',
@@ -797,9 +797,9 @@ export default function Modal(mRef, language) {
     }
     circleMask.appendChild(innerBlackCircle);
     VoiceItModalRef.domRef.videoCircle.appendChild(circleMask);
-    var circleGroup = document.createElementNS(svgNS, "g");
+    var circleGroup = document.createElementNS(svgNS, 'g');
     circleGroup.setAttribute('mask', 'url(#viCircleMask)');
-    var soundCircle = document.createElementNS(svgNS, "circle");
+    var soundCircle = document.createElementNS(svgNS, 'circle');
     soundCircle.style.opacity = '1.0';
     soundCircle.style.zIndex = '13';
     var soundCircleAttrs =
@@ -843,7 +843,7 @@ export default function Modal(mRef, language) {
           window.cancelAnimationFrame(animationId);
         });
     }).catch(function(err) {
-        console.log("error : " + err);
+        console.log('error : ' + err);
     });
     vi$.fadeIn(VoiceItModalRef.domRef.videoCircle, 500);
   }
@@ -902,7 +902,7 @@ export default function Modal(mRef, language) {
     var message = vi$.create('p');
     message.style.paddingTop = '200px';
     message.style.color = '#FFFFFF';
-    message.setAttribute('class','ui header');
+    message.setAttribute('class', 'ui header');
     message.innerHTML = 'Access Denied! Invalid secure token detected.<br/>Please contact support.';
     content.appendChild(message);
     VoiceItModalRef.domRef.viCard.appendChild(content);

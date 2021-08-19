@@ -6,7 +6,7 @@ const VoiceIt2WebSDK = require('../voiceit-node-websdk')
 // const  = require('../voiceit-node-websdk/tokenGenerator')
 const app = express()
 const port = 3000
-let test = "";
+let test = '';
 
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
@@ -29,9 +29,9 @@ app.use(express.static('public'))
 
 app.get('/login', function (req, res) {
   if(req.query.email === config.DEMO_EMAIL && req.query.password === config.DEMO_PASSWORD){
-    let generatedToken = "";
+    let generatedToken = '';
     const userId = config.VOICEIT_TEST_USER_ID;
-    if (userId.substring(0,4) === "usr_"){
+    if (userId.substring(0,4) === 'usr_'){
       //use the token generator to generate a token passed to the client
       generatedToken = VoiceIt2WebSDK.generateTokenForUser({
           userId: config.VOICEIT_TEST_USER_ID,
@@ -81,7 +81,7 @@ app.post('/example_endpoint', multer.any(), function (req, res) {
     myVoiceIt.makeCall(req, res, function(jsonObj){
       if (
           (jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.success) || // Liveness Server returns success true/false instead of responseCode
-          (!jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.responseCode === "SUCC")
+          (!jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.responseCode === 'SUCC')
       ) {
         // Activate Session with userId
         req.session.userId = jsonObj.userId;

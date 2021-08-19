@@ -2,7 +2,7 @@ import ProgressBar from 'progressbar.js';
 import Colors from './colors';
 
 const vi$ = {
-  LCOs: ["FACE_NEUTRAL", "FACE_LEFT", "FACE_RIGHT", "FACE_DOWN", "FACE_UP", "FACE_TILT_LEFT", "FACE_TILT_RIGHT", "SMILE"],
+  LCOs: ['FACE_NEUTRAL', 'FACE_LEFT', 'FACE_RIGHT', 'FACE_DOWN', 'FACE_UP', 'FACE_TILT_LEFT', 'FACE_TILT_RIGHT', 'SMILE'],
   post: function(modal, endPoint, requestType, token, props, callback) {
       var http = new XMLHttpRequest();
       var formData = new FormData();
@@ -13,7 +13,7 @@ const vi$ = {
             formData.append(key, props[key]);
         }
       }
-      http.open("POST", endPoint, true);
+      http.open('POST', endPoint, true);
       http.send(formData);
       http.onreadystatechange = function() {
         if (http.readyState === 4) {
@@ -35,26 +35,26 @@ const vi$ = {
     var fullVersion = '' + parseFloat(navigator.appVersion);
     var majorVersion = parseInt(navigator.appVersion, 10);
     var nameOffset, verOffset, ix;
-    if ((verOffset = nAgt.indexOf("Opera")) != -1) {
-      browserName = "Opera";
+    if ((verOffset = nAgt.indexOf('Opera')) != -1) {
+      browserName = 'Opera';
       fullVersion = nAgt.substring(verOffset + 6);
-      if ((verOffset = nAgt.indexOf("Version")) != -1)
+      if ((verOffset = nAgt.indexOf('Version')) != -1)
         fullVersion = nAgt.substring(verOffset + 8);
       }
-    else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
-      browserName = "Microsoft Internet Explorer";
+    else if ((verOffset = nAgt.indexOf('MSIE')) != -1) {
+      browserName = 'Microsoft Internet Explorer';
       fullVersion = nAgt.substring(verOffset + 5);
-    } else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
-      browserName = "Chrome";
+    } else if ((verOffset = nAgt.indexOf('Chrome')) != -1) {
+      browserName = 'Chrome';
       fullVersion = nAgt.substring(verOffset + 7);
-    } else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
-      browserName = "Safari";
+    } else if ((verOffset = nAgt.indexOf('Safari')) != -1) {
+      browserName = 'Safari';
       fullVersion = nAgt.substring(verOffset + 7);
-      if ((verOffset = nAgt.indexOf("Version")) != -1)
+      if ((verOffset = nAgt.indexOf('Version')) != -1)
         fullVersion = nAgt.substring(verOffset + 8);
       }
-    else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
-      browserName = "Firefox";
+    else if ((verOffset = nAgt.indexOf('Firefox')) != -1) {
+      browserName = 'Firefox';
       fullVersion = nAgt.substring(verOffset + 8);
     } else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) < (verOffset = nAgt.lastIndexOf('/'))) {
       browserName = nAgt.substring(nameOffset, verOffset);
@@ -65,9 +65,9 @@ const vi$ = {
     }
 
     // trim the fullVersion string at semicolon/space if present
-    if ((ix = fullVersion.indexOf(";")) != -1)
+    if ((ix = fullVersion.indexOf(';')) != -1)
       fullVersion = fullVersion.substring(0, ix);
-    if ((ix = fullVersion.indexOf(" ")) != -1)
+    if ((ix = fullVersion.indexOf(' ')) != -1)
       fullVersion = fullVersion.substring(0, ix);
 
     majorVersion = parseInt('' + fullVersion, 10);

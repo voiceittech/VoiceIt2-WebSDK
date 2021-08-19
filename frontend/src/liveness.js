@@ -1,5 +1,5 @@
-import Colors from "./colors";
-import vi$ from "./utilities";
+import Colors from './colors';
+import vi$ from './utilities';
 
 export default function Liveness(VoiceItObj) {
   const modal = VoiceItObj.modal;
@@ -8,22 +8,22 @@ export default function Liveness(VoiceItObj) {
 
   LivenessRef.playAudioPrompt = function(promptPath){
     switch (promptPath) {
-      case "LIVENESS_SUCCESS.wav":
+      case 'LIVENESS_SUCCESS.wav':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/" + promptPath;
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/' + promptPath;
+          document.getElementById('audioPrompt').load();
       }
         break;
-      case "LIVENESS_TRY_AGAIN.wav":
+      case 'LIVENESS_TRY_AGAIN.wav':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/" + promptPath;
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/' + promptPath;
+          document.getElementById('audioPrompt').load();
       }
         break;
-      case "LIVENESS_FAILED.wav":
+      case 'LIVENESS_FAILED.wav':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/" + promptPath;
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/' + promptPath;
+          document.getElementById('audioPrompt').load();
       }
         break;
       default:
@@ -33,99 +33,99 @@ export default function Liveness(VoiceItObj) {
   LivenessRef.drawCircle = function(testType) {
     modal.createAudioPrompts();
     switch (testType) {
-      case "FACE_UP":
+      case 'FACE_UP':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_UP.wav";
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/FACE_UP.wav';
+          document.getElementById('audioPrompt').load();
       }
       modal.updateProgressCircle(
         modal.domRef.progressCircle,
         0.25,
-        "#FBC132"
+        '#FBC132'
       );
-      vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(315deg)";
+      vi$.qs(modal.domRef.progressCircle).style.transform = 'rotate(315deg)';
       LivenessRef.oldCircles[0] = 0.25;
-      LivenessRef.oldCircles[1] = "rotate(315deg)";
+      LivenessRef.oldCircles[1] = 'rotate(315deg)';
         break;
-      case "FACE_DOWN":
+      case 'FACE_DOWN':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_DOWN.wav";
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/FACE_DOWN.wav';
+          document.getElementById('audioPrompt').load();
       }
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
           0.25,
-          "#FBC132"
+          '#FBC132'
         );
-        vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(135deg)";
+        vi$.qs(modal.domRef.progressCircle).style.transform = 'rotate(135deg)';
         LivenessRef.oldCircles[0] = 0.25;
-        LivenessRef.oldCircles[1] = "rotate(135deg)";
+        LivenessRef.oldCircles[1] = 'rotate(135deg)';
         break;
-      case "FACE_TILT_RIGHT":
+      case 'FACE_TILT_RIGHT':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_TILT_RIGHT.wav";
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/FACE_TILT_RIGHT.wav';
+          document.getElementById('audioPrompt').load();
       }
       modal.updateProgressCircle(
         modal.domRef.progressCircle,
         0.25,
-        "#FBC132"
+        '#FBC132'
       );
-      vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(22.5deg)";
+      vi$.qs(modal.domRef.progressCircle).style.transform = 'rotate(22.5deg)';
       LivenessRef.oldCircles[0] = 0.25;
-      LivenessRef.oldCircles[1] = "rotate(22.5deg)";
+      LivenessRef.oldCircles[1] = 'rotate(22.5deg)';
       break;
-      case "FACE_RIGHT":
+      case 'FACE_RIGHT':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_RIGHT.wav";
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/FACE_RIGHT.wav';
+          document.getElementById('audioPrompt').load();
       }
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
           0.25,
-          "#FBC132"
+          '#FBC132'
         );
-        vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(45deg)";
+        vi$.qs(modal.domRef.progressCircle).style.transform = 'rotate(45deg)';
         LivenessRef.oldCircles[0] = 0.25;
-        LivenessRef.oldCircles[1] = "rotate(45deg)";
+        LivenessRef.oldCircles[1] = 'rotate(45deg)';
         break;
-      case "FACE_TILT_LEFT":
+      case 'FACE_TILT_LEFT':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_TILT_LEFT.wav";
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/FACE_TILT_LEFT.wav';
+          document.getElementById('audioPrompt').load();
       }
       modal.updateProgressCircle(
         modal.domRef.progressCircle,
         0.25,
-        "#FBC132"
+        '#FBC132'
       );
-      vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(247.5deg)";
+      vi$.qs(modal.domRef.progressCircle).style.transform = 'rotate(247.5deg)';
       LivenessRef.oldCircles[0] = 0.25;
-      LivenessRef.oldCircles[1] = "rotate(247.5deg)";
+      LivenessRef.oldCircles[1] = 'rotate(247.5deg)';
       break;
-      case "FACE_LEFT":
+      case 'FACE_LEFT':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/FACE_LEFT.wav";
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/FACE_LEFT.wav';
+          document.getElementById('audioPrompt').load();
       }
         modal.updateProgressCircle(
           modal.domRef.progressCircle,
           0.25,
-          "#FBC132"
+          '#FBC132'
         );
-        vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(220deg)";
+        vi$.qs(modal.domRef.progressCircle).style.transform = 'rotate(220deg)';
         LivenessRef.oldCircles[0] = 0.25;
-        LivenessRef.oldCircles[1] = "rotate(220deg)";
+        LivenessRef.oldCircles[1] = 'rotate(220deg)';
         break;
-      case "SMILE":
+      case 'SMILE':
       if (VoiceItObj.livenessAudio) {
-          document.getElementById("audioSrc").src = "wav/" + VoiceItObj.contentLanguage + "/SMILE.wav";
-          document.getElementById("audioPrompt").load();
+          document.getElementById('audioSrc').src = 'wav/' + VoiceItObj.contentLanguage + '/SMILE.wav';
+          document.getElementById('audioPrompt').load();
       }
-        modal.updateProgressCircle(modal.domRef.progressCircle, 1.0, "#FBC132");
-        vi$.qs(modal.domRef.progressCircle).style.transform = "rotate(0deg)";
+        modal.updateProgressCircle(modal.domRef.progressCircle, 1.0, '#FBC132');
+        vi$.qs(modal.domRef.progressCircle).style.transform = 'rotate(0deg)';
         LivenessRef.oldCircles[0] = 1.0;
-        LivenessRef.oldCircles[1] = "rotate(0deg)";
+        LivenessRef.oldCircles[1] = 'rotate(0deg)';
         break;
       default:
     }
@@ -146,12 +146,12 @@ export default function Liveness(VoiceItObj) {
             modal.updateProgressCircle(
               modal.domRef.progressCircle,
               0.25,
-              "#FBC132"
+              '#FBC132'
             );
             vi$.qs(modal.domRef.progressCircle).style.transform =
-              "rotate(135deg)";
+              'rotate(135deg)';
             LivenessRef.oldCircles[0] = 0.25;
-            LivenessRef.oldCircles[1] = "rotate(135deg)";
+            LivenessRef.oldCircles[1] = 'rotate(135deg)';
             modal.revealProgressCircle(300);
           });
         }, 2000);
@@ -169,12 +169,12 @@ export default function Liveness(VoiceItObj) {
             modal.updateProgressCircle(
               modal.domRef.progressCircle,
               0.25,
-              "#FBC132"
+              '#FBC132'
             );
             vi$.qs(modal.domRef.progressCircle).style.transform =
-              "rotate(45deg)";
+              'rotate(45deg)';
             LivenessRef.oldCircles[0] = 0.25;
-            LivenessRef.oldCircles[1] = "rotate(45deg)";
+            LivenessRef.oldCircles[1] = 'rotate(45deg)';
             modal.revealProgressCircle(300);
           });
         }, 2000);
@@ -192,12 +192,12 @@ export default function Liveness(VoiceItObj) {
             modal.updateProgressCircle(
               modal.domRef.progressCircle,
               0.25,
-              "#FBC132"
+              '#FBC132'
             );
             vi$.qs(modal.domRef.progressCircle).style.transform =
-              "rotate(220deg)";
+              'rotate(220deg)';
             LivenessRef.oldCircles[0] = 0.25;
-            LivenessRef.oldCircles[1] = "rotate(220deg)";
+            LivenessRef.oldCircles[1] = 'rotate(220deg)';
             modal.revealProgressCircle(300);
           });
         }, 2000);
@@ -211,15 +211,15 @@ export default function Liveness(VoiceItObj) {
         vi$.qs(modal.domRef.progressCircle).style.transform =
           LivenessRef.oldCircles[1];
         setTimeout(function() {
-          modal.displayMessage(LivenessRef.prompts.getPrompt("SMILE"));
+          modal.displayMessage(LivenessRef.prompts.getPrompt('SMILE'));
           modal.hideProgressCircle(300, function() {
             modal.updateProgressCircle(
               modal.domRef.progressCircle,
               1.0,
-              "#FBC132"
+              '#FBC132'
             );
             LivenessRef.oldCircles[0] = 1.0;
-            LivenessRef.oldCircles[1] = "rotate(0deg)";
+            LivenessRef.oldCircles[1] = 'rotate(0deg)';
             modal.revealProgressCircle(300);
           });
         }, 300);
@@ -233,15 +233,15 @@ export default function Liveness(VoiceItObj) {
         vi$.qs(modal.domRef.progressCircle).style.transform =
           LivenessRef.oldCircles[1];
         setTimeout(function() {
-          modal.displayMessage(LivenessRef.prompts.getPrompt("YAWN"));
+          modal.displayMessage(LivenessRef.prompts.getPrompt('YAWN'));
           modal.hideProgressCircle(300, function() {
             modal.updateProgressCircle(
               modal.domRef.progressCircle,
               1.0,
-              "#FBC132"
+              '#FBC132'
             );
             LivenessRef.oldCircles[0] = 1.0;
-            LivenessRef.oldCircles[1] = "rotate(0deg)";
+            LivenessRef.oldCircles[1] = 'rotate(0deg)';
             modal.revealProgressCircle(300);
           });
         }, 300);

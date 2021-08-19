@@ -23,7 +23,7 @@ import Colors from './colors';
 
 // Constant Variables
 const TIME_BEFORE_EXITING_MODAL_AFTER_SUCCESS = 2800;
-const ErrorCodes = ["TVER", "PNTE", "NFEF", "UNAC", "UNFD"];
+const ErrorCodes = ['TVER', 'PNTE', 'NFEF', 'UNAC', 'UNFD'];
 const MAX_ATTEMPTS = 3;
 
 export function initialize(backendEndpointPath, language){
@@ -37,7 +37,7 @@ export function initialize(backendEndpointPath, language){
     voiceIt2ObjRef.modal = new Modal(voiceIt2ObjRef, language);
     voiceIt2ObjRef.apiRef = new api(voiceIt2ObjRef.modal, backendEndpointPath);
     voiceIt2ObjRef.enrollCounter = 0;
-    voiceIt2ObjRef.LCO = "";
+    voiceIt2ObjRef.LCO = '';
     // Variables needed for the audio/video streams, and for destroying instances
     voiceIt2ObjRef.viImageCanvasCtx;
     voiceIt2ObjRef.videoStream;
@@ -50,15 +50,15 @@ export function initialize(backendEndpointPath, language){
     voiceIt2ObjRef.video;
     voiceIt2ObjRef.player;
     voiceIt2ObjRef.prompts = new Prompts(language);
-    voiceIt2ObjRef.getLCOResponse = "";
+    voiceIt2ObjRef.getLCOResponse = '';
     voiceIt2ObjRef.type = {
-      biometricType: "",
-      action: ""
+      biometricType: '',
+      action: ''
     };
     voiceIt2ObjRef.liveness = false;
     voiceIt2ObjRef.isInitiated = false;
     // Declare display/control objects such as overlays, waveforms, etc
-    voiceIt2ObjRef.livenessType = "face";
+    voiceIt2ObjRef.livenessType = 'face';
   }
 
   voiceIt2ObjRef.setThemeColor = function(hexColor){
@@ -178,10 +178,10 @@ export function initialize(backendEndpointPath, language){
     voiceIt2ObjRef.modal.darkenCircle(true);
     setTimeout(function() {
       // voiceIt2ObjRef.overlayj.fadeTo(300, 0.3);
-      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('VERIFY'));
 
       voiceIt2ObjRef.player.record().start();
-      voiceIt2ObjRef.livenessType = "voice";
+      voiceIt2ObjRef.livenessType = 'voice';
       // Record 5 Second Video
       setTimeout(function() {
         if (voiceIt2ObjRef.player !== undefined) {
@@ -221,13 +221,13 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         function() {
             vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
             voiceIt2ObjRef.startView();
-            if (voiceIt2ObjRef.type.biometricType !== "voice") {
+            if (voiceIt2ObjRef.type.biometricType !== 'voice') {
               voiceIt2ObjRef.modal.revealProgressCircle(500);
             }
         }
       );
 
-      document.addEventListener("keydown", function(e){
+      document.addEventListener('keydown', function(e){
         var keyCode = e.keyCode;
         if(keyCode === 37) {
           vi$.qs(voiceIt2ObjRef.modal.domRef.leftArrowIcon).click();
@@ -262,9 +262,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt2ObjRef.handleDeletion = function(response) {
-    if (response.responseCode === "SUCC") {
+    if (response.responseCode === 'SUCC') {
       voiceIt2ObjRef.modal.hideWarningOverlay(500, function() {
-        if (voiceIt2ObjRef.type.biometricType === "voice") {
+        if (voiceIt2ObjRef.type.biometricType === 'voice') {
           voiceIt2ObjRef.modal.createWaveform();
         } else {
           vi$.fadeIn(voiceIt2ObjRef.modal.domRef.imageCanvas, 500);
@@ -282,11 +282,11 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   voiceIt2ObjRef.displayAppropriateMessage = function(response) {
     // setTimeout(function() {
       // voiceIt2ObjRef.waitj.fadeTo(300, 0.0, function() {
-    if (response.responseCode === "SUCC") {
-      if (voiceIt2ObjRef.type.action === "Verification") {
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_VERIFICATION"));
+    if (response.responseCode === 'SUCC') {
+      if (voiceIt2ObjRef.type.action === 'Verification') {
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_VERIFICATION'));
       } else {
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_ENROLLMENT"));
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_ENROLLMENT'));
       }
     } else {
       voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt(response.responseCode));
@@ -294,16 +294,16 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt2ObjRef.setup = function() {
-    if (voiceIt2ObjRef.liveness && voiceIt2ObjRef.biometricType !== "voice"){
-      document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].childNodes[0].nodeValue = voiceIt2ObjRef.prompts.getPrompt("BEGIN");
+    if (voiceIt2ObjRef.liveness && voiceIt2ObjRef.biometricType !== 'voice'){
+      document.getElementsByClassName('small ui inverted basic button viReadyButton')[0].childNodes[0].nodeValue = voiceIt2ObjRef.prompts.getPrompt('BEGIN');
     }
     voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
     voiceIt2ObjRef.modal.domRef.readyButton.style.opacity = 0;
     voiceIt2ObjRef.modal.domRef.outerOverlay.style.opacity = 0;
     voiceIt2ObjRef.showLoadingOverlay();
-    if (voiceIt2ObjRef.type.biometricType === "voice") {
+    if (voiceIt2ObjRef.type.biometricType === 'voice') {
       voiceIt2ObjRef.handleVoiceSetup();
-    } else if (voiceIt2ObjRef.type.biometricType === "face") {
+    } else if (voiceIt2ObjRef.type.biometricType === 'face') {
       voiceIt2ObjRef.handleFaceSetup();
     } else {
       voiceIt2ObjRef.handleVideoSetup();
@@ -320,7 +320,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   //ready up animations and stuff for face enroll/verific.
   voiceIt2ObjRef.handleFaceSetup = function() {
     //get the LCO
-    const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
+    const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== 'Enrollment';
     if (doLiveness) {
       voiceIt2ObjRef.livenessObj = new Liveness(voiceIt2ObjRef);
       //show waiting loader for at least 1 second
@@ -342,7 +342,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
           setTimeout(voiceIt2ObjRef.modal.endLivenessTutorial(),700);
           vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
             function() {
-              document.getElementsByClassName("content")[0].style.bottom = "3.5em";
+              document.getElementsByClassName('content')[0].style.bottom = '3.5em';
                 vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
                 voiceIt2ObjRef.startView();
                 voiceIt2ObjRef.player.record().start();
@@ -390,16 +390,16 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.changeDisplayTextForLiveness = function() {
     setTimeout(()=>{
-      document.getElementsByClassName("small ui inverted basic button viReadyButton")[0].style.bottom = "-14%";
-      document.getElementsByClassName("image")[0].children[1].style.overflow = "unset";
-      document.getElementsByClassName("content")[0].style.bottom = "3.7rem";
+      document.getElementsByClassName('small ui inverted basic button viReadyButton')[0].style.bottom = '-14%';
+      document.getElementsByClassName('image')[0].children[1].style.overflow = 'unset';
+      document.getElementsByClassName('content')[0].style.bottom = '3.7rem';
     },300);
   }
 
   // Ready up animations and stuff for video enroll/verific.
   voiceIt2ObjRef.handleVideoSetup = function() {
     //get the LCO
-    const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== "Enrollment";
+    const doLiveness = voiceIt2ObjRef.liveness && voiceIt2ObjRef.type.action !== 'Enrollment';
     if (doLiveness) {
       voiceIt2ObjRef.livenessObj = new Liveness(voiceIt2ObjRef);
       voiceIt2ObjRef.apiRef.getLCO({
@@ -421,7 +421,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         voiceIt2ObjRef.changeDisplayTextForLiveness();
         vi$.clickOn(voiceIt2ObjRef.modal.domRef.readyButton,
           function() {
-            document.getElementsByClassName("content")[0].style.bottom = "3.5em";
+            document.getElementsByClassName('content')[0].style.bottom = '3.5em';
               vi$.remove(voiceIt2ObjRef.modal.domRef.readyButton);
               voiceIt2ObjRef.startView();
               voiceIt2ObjRef.getLCOResponse = response;
@@ -454,7 +454,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       i++;
       if (i >= response.lco.length){
         clearInterval(intervalId);
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('VERIFY'));
         voiceIt2ObjRef.modal.hideProgressCircle(100, ()=>{
           voiceIt2ObjRef.modal.createVideoCircle();
           voiceIt2ObjRef.modal.createProgressCircle(4000);
@@ -479,7 +479,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     webcam.height = 480;
     webcam.width = 640;
     document.body.appendChild(webcam);
-    voiceIt2ObjRef.viImageCanvasCtx = voiceIt2ObjRef.modal.domRef.imageCanvas.getContext("2d");
+    voiceIt2ObjRef.viImageCanvasCtx = voiceIt2ObjRef.modal.domRef.imageCanvas.getContext('2d');
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error(
         'Browser API navigator.mediaDevices.getUserMedia not available');
@@ -661,7 +661,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     if (response.success) {
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();
-      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC"));
+      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC'));
     } else {
       //continue to verify
       if (!response.retry) {
@@ -690,7 +690,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     if (response.success) {
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.modal.removeWaitingLoader();
-      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC"));
+      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC'));
     } else {
       //continue to verify
       if (!response.retry) {
@@ -716,14 +716,14 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.handleVerificationResponse = function(response){
     voiceIt2ObjRef.modal.removeWaitingLoader();
-    if (response.responseCode === "SUCC") {
+    if (response.responseCode === 'SUCC') {
       voiceIt2ObjRef.exitOut(true, response);
       voiceIt2ObjRef.displayAppropriateMessage(response);
     } else {
       voiceIt2ObjRef.attempts++;
       //continue to verify
       if (voiceIt2ObjRef.attempts > MAX_ATTEMPTS) {
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('MAX_ATTEMPTS'));
         voiceIt2ObjRef.exitOut(false, response);
       } else {
         voiceIt2ObjRef.displayAppropriateMessage(response);
@@ -740,7 +740,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   voiceIt2ObjRef.handleEnrollmentResponse = function(response){
     voiceIt2ObjRef.modal.removeWaitingLoader();
     // Handle enrollment success;
-    if (response.responseCode === "SUCC") {
+    if (response.responseCode === 'SUCC') {
       if (voiceIt2ObjRef.enrollCounter < 3) {
         voiceIt2ObjRef.enrollCounter++;
         voiceIt2ObjRef.continueEnrollment(response);
@@ -748,7 +748,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     } else {
       voiceIt2ObjRef.attempts++;
       if (voiceIt2ObjRef.attempts > MAX_ATTEMPTS) {
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("MAX_ATTEMPTS"));
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('MAX_ATTEMPTS'));
         voiceIt2ObjRef.exitOut(false, response);
       } else {
         voiceIt2ObjRef.continueEnrollment(response);
@@ -767,9 +767,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     voiceIt2ObjRef.player.on('deviceError', function() {
       //permission not granted
       //could'nt start recording device please try again.
-      // remove ready button, show that "permission not granted"
+      // remove ready button, show that 'permission not granted'
       voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
-      voiceIt2ObjRef.modal.displayMessage("Recording permission not granted, please refresh and try again");
+      voiceIt2ObjRef.modal.displayMessage('Recording permission not granted, please refresh and try again');
     });
 
     //called before deviceError above
@@ -804,14 +804,14 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             } else {
               //show error and return
               voiceIt2ObjRef.modal.removeWaitingLoader();
-              voiceIt2ObjRef.modal.displayMessage("Recording error occurred, please try again");
+              voiceIt2ObjRef.modal.displayMessage('Recording error occurred, please try again');
             }
           },200);
         }
       } else {
         //show error message
         voiceIt2ObjRef.modal.removeWaitingLoader();
-        voiceIt2ObjRef.modal.displayMessage("Recording error occurred, please try again");
+        voiceIt2ObjRef.modal.displayMessage('Recording error occurred, please try again');
         return;
       }
     });
@@ -820,8 +820,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   voiceIt2ObjRef.handleFinishRecording = function(){
     if (
         voiceIt2ObjRef.liveness &&
-        voiceIt2ObjRef.type.action !== "Enrollment" &&
-        voiceIt2ObjRef.type.biometricType == "video"
+        voiceIt2ObjRef.type.action !== 'Enrollment' &&
+        voiceIt2ObjRef.type.biometricType == 'video'
     ) {
       voiceIt2ObjRef.modal.destroyVideoCircle();
       voiceIt2ObjRef.modal.hideProgressCircle(100);
@@ -836,8 +836,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       });
     } else if (
       voiceIt2ObjRef.liveness &&
-      voiceIt2ObjRef.type.biometricType === "face" &&
-      voiceIt2ObjRef.type.action === "Verification") {
+      voiceIt2ObjRef.type.biometricType === 'face' &&
+      voiceIt2ObjRef.type.action === 'Verification') {
         voiceIt2ObjRef.modal.hideProgressCircle(350);
         //make api call to Andrew Here
         vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
@@ -850,15 +850,15 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         });
     } else if (
       !voiceIt2ObjRef.liveness ||
-      voiceIt2ObjRef.type.biometricType === "voice" ||
-      voiceIt2ObjRef.type.action === "Enrollment"
+      voiceIt2ObjRef.type.biometricType === 'voice' ||
+      voiceIt2ObjRef.type.action === 'Enrollment'
     ) {
       vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
       voiceIt2ObjRef.modal.showWaitingLoader(true);
 
       if(
-        voiceIt2ObjRef.type.biometricType === "voice" &&
-        voiceIt2ObjRef.type.action === "Verification"
+        voiceIt2ObjRef.type.biometricType === 'voice' &&
+        voiceIt2ObjRef.type.action === 'Verification'
       ){
         voiceIt2ObjRef.apiRef.voiceVerification({
           viContentLanguage: voiceIt2ObjRef.contentLanguage,
@@ -870,8 +870,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       }
 
       if(
-        voiceIt2ObjRef.type.biometricType === "face" &&
-        voiceIt2ObjRef.type.action === "Verification"
+        voiceIt2ObjRef.type.biometricType === 'face' &&
+        voiceIt2ObjRef.type.action === 'Verification'
       ){
           voiceIt2ObjRef.apiRef.faceVerification({
             viVideoData : voiceIt2ObjRef.player.recordedData
@@ -881,8 +881,8 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       }
 
       if(
-        voiceIt2ObjRef.type.biometricType === "video" &&
-        voiceIt2ObjRef.type.action === "Verification"
+        voiceIt2ObjRef.type.biometricType === 'video' &&
+        voiceIt2ObjRef.type.action === 'Verification'
       ){
         voiceIt2ObjRef.apiRef.videoVerification({
           viContentLanguage: voiceIt2ObjRef.contentLanguage,
@@ -893,7 +893,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         });
       }
 
-      if(voiceIt2ObjRef.type.biometricType === "voice" && voiceIt2ObjRef.type.action === "Enrollment"){
+      if(voiceIt2ObjRef.type.biometricType === 'voice' && voiceIt2ObjRef.type.action === 'Enrollment'){
         voiceIt2ObjRef.apiRef.createVoiceEnrollment({
           viContentLanguage: voiceIt2ObjRef.contentLanguage,
           viPhrase: voiceIt2ObjRef.phrase,
@@ -903,7 +903,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         });
       }
 
-      if(voiceIt2ObjRef.type.biometricType === "face" && voiceIt2ObjRef.type.action === "Enrollment"){
+      if(voiceIt2ObjRef.type.biometricType === 'face' && voiceIt2ObjRef.type.action === 'Enrollment'){
         voiceIt2ObjRef.apiRef.createFaceEnrollment({
           viVideoData : voiceIt2ObjRef.player.recordedData
         }, function(response){
@@ -911,7 +911,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         });
       }
 
-      if(voiceIt2ObjRef.type.biometricType === "video" && voiceIt2ObjRef.type.action === "Enrollment"){
+      if(voiceIt2ObjRef.type.biometricType === 'video' && voiceIt2ObjRef.type.action === 'Enrollment'){
         voiceIt2ObjRef.apiRef.createVideoEnrollment({
           viContentLanguage: voiceIt2ObjRef.contentLanguage,
           viPhrase: voiceIt2ObjRef.phrase,
@@ -925,34 +925,34 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   ///REFACTOR
   voiceIt2ObjRef.startView = function() {
-    if (voiceIt2ObjRef.type.action === "Verification" && voiceIt2ObjRef.type.biometricType === "voice") {
-      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+    if (voiceIt2ObjRef.type.action === 'Verification' && voiceIt2ObjRef.type.biometricType === 'voice') {
+      voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('VERIFY'));
       voiceIt2ObjRef.modal.revealWaveform(500);
     }
 
     if (!voiceIt2ObjRef.liveness || voiceIt2ObjRef.type.action === 'Enrollment') {
-      if (voiceIt2ObjRef.type.biometricType === "face") {
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("LOOK_INTO_CAM"));
+      if (voiceIt2ObjRef.type.biometricType === 'face') {
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('LOOK_INTO_CAM'));
         voiceIt2ObjRef.modal.createProgressCircle(3200);
         voiceIt2ObjRef.modal.revealProgressCircle();
-      } else if (voiceIt2ObjRef.type.biometricType === "video") {
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+      } else if (voiceIt2ObjRef.type.biometricType === 'video') {
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('VERIFY'));
           voiceIt2ObjRef.modal.revealWaveform(500);
           voiceIt2ObjRef.modal.createVideoCircle();
           voiceIt2ObjRef.modal.createProgressCircle(5200);
           voiceIt2ObjRef.modal.domRef.progressCircle.style.display = 'block';
           voiceIt2ObjRef.modal.revealProgressCircle();
-      } else if (voiceIt2ObjRef.type.biometricType === "voice"){
+      } else if (voiceIt2ObjRef.type.biometricType === 'voice'){
           voiceIt2ObjRef.modal.revealWaveform(500);
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('VERIFY'));
       }
 
-      // if (voiceIt2ObjRef.type.biometricType === "voice") {
+      // if (voiceIt2ObjRef.type.biometricType === 'voice') {
       //   voiceIt2ObjRef.modal.revealWaveform(500);
-      // } else if (voiceIt2ObjRef.type.biometricType === "face") {
+      // } else if (voiceIt2ObjRef.type.biometricType === 'face') {
       //   voiceIt2ObjRef.modal.createProgressCircle(3200);
       //   voiceIt2ObjRef.modal.revealProgressCircle();
-      // } else if (voiceIt2ObjRef.type.biometricType === "video") {
+      // } else if (voiceIt2ObjRef.type.biometricType === 'video') {
       //   voiceIt2ObjRef.modal.createVideoCircle();
       //   voiceIt2ObjRef.modal.createProgressCircle(5200);
       //   voiceIt2ObjRef.modal.domRef.progressCircle.style.display = 'block';
@@ -962,10 +962,10 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
     vi$.fadeOut(voiceIt2ObjRef.modal.domRef.outerOverlay, 1500, null, 0.3);
     voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
-    if(voiceIt2ObjRef.type.biometricType === "face" && voiceIt2ObjRef.liveness){
+    if(voiceIt2ObjRef.type.biometricType === 'face' && voiceIt2ObjRef.liveness){
       return;
     }
-    if(voiceIt2ObjRef.type.biometricType === "video" && voiceIt2ObjRef.liveness){
+    if(voiceIt2ObjRef.type.biometricType === 'video' && voiceIt2ObjRef.liveness){
       return;
     }
     if(voiceIt2ObjRef.player){
@@ -975,20 +975,20 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   voiceIt2ObjRef.continueEnrollment = function(response) {
     // Handle the response (can use displayAppropriateMessage() method- will see it later on)
-    if (voiceIt2ObjRef.type.biometricType !== "face") {
-      if (response.responseCode === "SUCC") {
+    if (voiceIt2ObjRef.type.biometricType !== 'face') {
+      if (response.responseCode === 'SUCC') {
         // TODO: Refactor getting prompts based on counter
         if (voiceIt2ObjRef.enrollCounter === 1) {
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_ENROLLMENT_1"));
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_ENROLLMENT_1'));
         } else if (voiceIt2ObjRef.enrollCounter === 2) {
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_ENROLLMENT_2"));
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_ENROLLMENT_2'));
         } else if (voiceIt2ObjRef.enrollCounter === 3) {
-          if (voiceIt2ObjRef.type.biometricType === "voice") {
+          if (voiceIt2ObjRef.type.biometricType === 'voice') {
             voiceIt2ObjRef.enrollmentNeededVoice = false;
           } else {
             voiceIt2ObjRef.enrollmentNeededVideo = false;
           }
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_ENROLLMENT_3"));
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_ENROLLMENT_3'));
           voiceIt2ObjRef.exitOut(true, response);
         }
       } else {
@@ -996,17 +996,17 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       }
         voiceIt2ObjRef.modal.removeWaitingLoader();
 
-    } else if (voiceIt2ObjRef.type.biometricType === "face") {
-      if (response.responseCode === "SUCC") {
+    } else if (voiceIt2ObjRef.type.biometricType === 'face') {
+      if (response.responseCode === 'SUCC') {
         // voiceIt2ObjRef.enrollmentNeededFace = false;
-        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("SUCC_ENROLLMENT_3"));
+        voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('SUCC_ENROLLMENT_3'));
         voiceIt2ObjRef.exitOut(true, response);
       }
       //handle re-recording and animations for face
       else {
         setTimeout(function() {
           voiceIt2ObjRef.modal.hideProgressCircle(350);
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("LOOK_INTO_CAM"));
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('LOOK_INTO_CAM'));
           voiceIt2ObjRef.modal.createProgressCircle(5200);
           voiceIt2ObjRef.modal.revealProgressCircle(350);
           vi$.fadeOut(voiceIt2ObjRef.modal.domRef.outerOverlay, 500, function(){
@@ -1018,25 +1018,25 @@ voiceIt2ObjRef.initModalClickListeners = function(){
   }
 
     // Handle re-recording and prompts/animations along with it (for voice/video)
-    if (voiceIt2ObjRef.enrollCounter < 3 && voiceIt2ObjRef.type.biometricType !== "face") {
+    if (voiceIt2ObjRef.enrollCounter < 3 && voiceIt2ObjRef.type.biometricType !== 'face') {
       setTimeout(function() {
         voiceIt2ObjRef.modal.hideProgressCircle(350);
         if (voiceIt2ObjRef.enrollCounter >= 0) {
-            voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("ENROLL_" + voiceIt2ObjRef.enrollCounter));
+            voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('ENROLL_' + voiceIt2ObjRef.enrollCounter));
         }
 
-        if (voiceIt2ObjRef.type.biometricType === "video") {
+        if (voiceIt2ObjRef.type.biometricType === 'video') {
           vi$.fadeOut(voiceIt2ObjRef.modal.domRef.outerOverlay, 500, function(){
             voiceIt2ObjRef.player.record().start();
           });
         }
 
-        if (voiceIt2ObjRef.type.biometricType === "voice") {
+        if (voiceIt2ObjRef.type.biometricType === 'voice') {
           voiceIt2ObjRef.modal.hideProgressCircle();
           voiceIt2ObjRef.player.record().start();
         } else {
             voiceIt2ObjRef.modal.hideProgressCircle(350);
-            if (voiceIt2ObjRef.type.biometricType === "face"){
+            if (voiceIt2ObjRef.type.biometricType === 'face'){
               voiceIt2ObjRef.modal.createProgressCircle(3200);
             } else {
             voiceIt2ObjRef.modal.createProgressCircle(5200);
@@ -1052,12 +1052,12 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     if(voiceIt2ObjRef.destroyed){ return ;}
     setTimeout(function() {
       voiceIt2ObjRef.modal.hideProgressCircle(350);
-      if (voiceIt2ObjRef.type.biometricType === "face") {
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("LOOK_INTO_CAM"));
+      if (voiceIt2ObjRef.type.biometricType === 'face') {
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('LOOK_INTO_CAM'));
       } else {
-          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt("VERIFY"));
+          voiceIt2ObjRef.modal.displayMessage(voiceIt2ObjRef.prompts.getPrompt('VERIFY'));
       }
-      if (voiceIt2ObjRef.type.biometricType === "voice") {
+      if (voiceIt2ObjRef.type.biometricType === 'voice') {
         voiceIt2ObjRef.modal.revealWaveform(500, function() {
           voiceIt2ObjRef.player.record().start();
         });
@@ -1068,7 +1068,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
             voiceIt2ObjRef.player.record().start();
           }
           voiceIt2ObjRef.modal.revealProgressCircle(350);
-          if (voiceIt2ObjRef.type.biometricType === "face"){
+          if (voiceIt2ObjRef.type.biometricType === 'face'){
             voiceIt2ObjRef.modal.createProgressCircle(3200);
           } else {
           voiceIt2ObjRef.modal.createProgressCircle(5200);
@@ -1082,9 +1082,9 @@ voiceIt2ObjRef.initModalClickListeners = function(){
 
   // Show this before verification with liveness
   voiceIt2ObjRef.showLoadingOverlay = function() {
-    if (voiceIt2ObjRef.type.action !== "Enrollment") {
-      if (!voiceIt2ObjRef.liveness || voiceIt2ObjRef.type.biometricType === "voice") {
-        if(voiceIt2ObjRef.type.biometricType === "voice"){
+    if (voiceIt2ObjRef.type.action !== 'Enrollment') {
+      if (!voiceIt2ObjRef.liveness || voiceIt2ObjRef.type.biometricType === 'voice') {
+        if(voiceIt2ObjRef.type.biometricType === 'voice'){
           voiceIt2ObjRef.modal.createWaveform();
         } else {
           voiceIt2ObjRef.modal.domRef.imageCanvas.style.opacity = '1.0';
@@ -1108,7 +1108,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         vi$.fadeOut(voiceIt2ObjRef.modal.domRef.modalDimBackground, 1100, function(){
               voiceIt2ObjRef.destroy();
               voiceIt2ObjRef.modal.hide();
-              if(voiceIt2ObjRef.biometricType === "Verification"){
+              if(voiceIt2ObjRef.biometricType === 'Verification'){
                 voiceIt2ObjRef.completionCallback(success, response);
               }
         });
@@ -1124,7 +1124,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     window.cancelAnimationFrame(voiceIt2ObjRef.animationId);
     voiceIt2ObjRef.isInitiated = false;
     vi$.remove('#viVideo');
-    if (voiceIt2ObjRef.type.biometricType !== "voice") {
+    if (voiceIt2ObjRef.type.biometricType !== 'voice') {
       vi$.remove(voiceIt2ObjRef.modal.domRef.imageCanvas);
     }
 
@@ -1145,7 +1145,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
        voiceIt2ObjRef.modal.domRef.readyButton.style.display = 'none';
     }
 
-    if (voiceIt2ObjRef.type.biometricType !== "voice") {
+    if (voiceIt2ObjRef.type.biometricType !== 'voice') {
       if(voiceIt2ObjRef.modal.domRef.imageCanvas){
         var ctx = voiceIt2ObjRef.modal.domRef.imageCanvas.getContext('2d');
         ctx.clearRect(0, 0, voiceIt2ObjRef.modal.domRef.imageCanvas.width, voiceIt2ObjRef.modal.domRef.imageCanvas.height);
@@ -1163,7 +1163,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
     context2.beginPath();
     context2.arc(230, 148, 131, 0, 2 * Math.PI);
     context2.rect(460, 0, -460, 345);
-    context2.fillStyle = "rgba(0,0,0,1.0)";
+    context2.fillStyle = 'rgba(0,0,0,1.0)';
     context2.fill('evenodd');
   };
 
