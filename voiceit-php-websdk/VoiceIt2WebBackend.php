@@ -203,29 +203,21 @@ class VoiceIt2WebBackend {
       returnJson($resp);
     }
 
-    if($reqType == "faceLiveness"){
+    if($reqType == "faceVerificationWithLiveness"){
       $lcoId = "".$_POST["vilcoId"];
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
-      $resp = $this->faceLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName);
+      $resp = $this->faceVerificationWithLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName);
       unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
       $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
       returnJson($resp);
     }
 
-    if($reqType == "videoLiveness"){
+    if($reqType == "videoVerificationWithLiveness"){
       $lcoId = "".$_POST["vilcoId"];
       $phrase = "".$_POST["viPhrase"];
       $videoFileName = saveFileData($FILES_REF["viVideoData"]['tmp_name'], "mp4");
-      $resp = $this->videoLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName, $phrase);
+      $resp = $this->videoVerificationWithLiveness($EXTRACTED_USER_ID, $lcoId, $videoFileName, $phrase);
       unlink($videoFileName) or die("Couldn't delete ".$videoFileName);
-      $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
-      returnJson($resp);
-    }
-
-    if($reqType == "faceVerificationWithLiveness"){
-      $photoFileName = saveFileData($FILES_REF["viPhotoData"]['tmp_name'], "png");
-      $resp = $this->faceVerificationWithPhoto($EXTRACTED_USER_ID, $photoFileName);
-      unlink($photoFileName) or die("Couldn't delete ".$photoFileName);
       $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
       returnJson($resp);
     }
@@ -240,17 +232,6 @@ class VoiceIt2WebBackend {
       returnJson($resp);
     }
 
-    if($reqType == "videoVerificationWithLiveness"){
-      $contentLang = "".$_POST["viContentLanguage"];
-      $phrase = "".$_POST["viPhrase"];
-      $audioFileName = saveFileData($FILES_REF["viVoiceData"]['tmp_name'], "wav");
-      $photoFileName = saveFileData($FILES_REF["viPhotoData"]['tmp_name'], "png");
-      $resp = $this->videoVerificationWithPhoto($EXTRACTED_USER_ID, $contentLang, $phrase, $audioFileName, $photoFileName);
-      unlink($audioFileName) or die("Couldn't delete ".$audioFileName);
-      unlink($photoFileName) or die("Couldn't delete ".$photoFileName);
-      $resultCallback(formatResponse($reqType, $EXTRACTED_USER_ID, $resp));
-      returnJson($resp);
-    }
   }
 
   public function addNotificationUrl($url) {
@@ -434,7 +415,7 @@ class VoiceIt2WebBackend {
     return curl_exec($crl);
   }
 
-  public function faceLiveness($userId, $lcoId, $file) {
+  public function faceVerificationWithLiveness($userId, $lcoId, $file) {
     $this->checkFileExists($file);
     $crl = curl_init();
     curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/verification/face'.$this->notification_url);
@@ -486,7 +467,7 @@ class VoiceIt2WebBackend {
     return curl_exec($crl);
   }
 
-  public function videoLiveness($userId, $lcoId, $file, $phrase) {
+  public function videoVerificationWithLiveness($userId, $lcoId, $file, $phrase) {
     $this->checkFileExists($file);
     $crl = curl_init();
     curl_setopt($crl, CURLOPT_URL, $this->LIVENESS_URL.'/verification/video'.$this->notification_url);

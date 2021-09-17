@@ -223,20 +223,8 @@ function VoiceIt2(apk, tok, options) {
                 });
               });
               break;
-          case "faceVerificationWithLiveness":
-              var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
-                mainThis.faceVerificationWithPhoto({
-                    userId: extractedUserId,
-                    photoFilePath: tempFilePath
-                  }, (result) => {
-                    fs.unlinkSync(tempFilePath);
-                    resultCallback(formatResponse(reqType, extractedUserId, result));
-                    res.json(result);
-                });
-              });
-              break;
           case "initialLiveness":
-          var contentLang = req.body.viContentLanguage;
+              var contentLang = req.body.viContentLanguage;
               mainThis.getLCO({
                 userId: extractedUserId,
                 contentLanguage: contentLang
@@ -246,9 +234,9 @@ function VoiceIt2(apk, tok, options) {
                   res.json(result);
               });
               break;
-          case "faceLiveness":
+          case "faceVerificationWithLiveness":
           var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
-            mainThis.faceLiveness({
+            mainThis.faceVerificationWithLiveness({
               userId: extractedUserId,
               file: tempFilePath,
               lcoId: req.body.vilcoId
@@ -259,10 +247,10 @@ function VoiceIt2(apk, tok, options) {
             });
           });
             break;
-          case "videoLiveness":
+          case "videoVerificationWithLiveness":
           var phrase = req.body.viPhrase;
           var tempFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'mp4', function(){
-            mainThis.videoLiveness({
+            mainThis.videoVerificationWithLiveness({
               userId: extractedUserId,
               file: tempFilePath,
               lcoId: req.body.vilcoId,
@@ -287,26 +275,6 @@ function VoiceIt2(apk, tok, options) {
                   fs.unlinkSync(tempFilePath);
                   resultCallback(formatResponse(reqType, extractedUserId, result));
                   res.json(result);
-                });
-              });
-              break;
-          case "videoVerificationWithLiveness":
-              var phrase = req.body.viPhrase;
-              var contentLang = req.body.viContentLanguage;
-              var wavFilePath = writeFileBuffer(options.tempFilePath, req.files[0].buffer, 'wav', function(){
-                var jpgFilePath = writeFileBuffer(options.tempFilePath, req.files[1].buffer, 'jpg', function(){
-                  mainThis.videoVerificationWithPhoto({
-                    userId: extractedUserId,
-                    contentLanguage: contentLang,
-                    phrase: phrase,
-                    audioFilePath: wavFilePath,
-                    photoFilePath: jpgFilePath
-                  }, (result) => {
-                    fs.unlinkSync(wavFilePath);
-                    fs.unlinkSync(jpgFilePath);
-                    resultCallback(formatResponse(reqType, extractedUserId, result));
-                    res.json(result);
-                  });
                 });
               });
               break;
@@ -516,7 +484,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
 
-  this.faceLiveness = (options, callback) => {
+  this.faceVerificationWithLiveness = (options, callback) => {
       if (!checkFileExists(options.file, callback)) {
         return;
       }
@@ -537,7 +505,7 @@ function VoiceIt2(apk, tok, options) {
       });
     }
 
-    this.videoLiveness = (options, callback) => {
+    this.videoVerificationWithLiveness = (options, callback) => {
         if (!checkFileExists(options.file, callback)) {
           return;
         }

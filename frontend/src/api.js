@@ -25,22 +25,22 @@ export default function api(modal, endPoint){
     );
   }
 
-  apiRef.faceLiveness = (options, callback) => {
+  apiRef.faceVerificationWithLiveness = (options, callback) => {
     vi$.post(
       modal,
       BASE_END_POINT,
-      'faceLiveness',
+      'faceVerificationWithLiveness',
       vi$.getToken(),
       options,
       callback
     );
   }
 
-  apiRef.videoLiveness = (options, callback) => {
+  apiRef.videoVerificationWithLiveness = (options, callback) => {
     vi$.post(
       modal,
       BASE_END_POINT,
-      'videoLiveness',
+      'videoVerificationWithLiveness',
       vi$.getToken(),
       options,
       callback
@@ -80,16 +80,6 @@ export default function api(modal, endPoint){
     );
   }
 
-  apiRef.faceVerificationWithLiveness = (options, callback) => {
-    vi$.post(
-      modal,
-      BASE_END_POINT,
-      'faceVerificationWithLiveness',
-      vi$.getToken(),
-      options,
-      callback
-    );
-  }
 
   apiRef.voiceVerification = (options, callback) => {
     vi$.post(
@@ -107,17 +97,6 @@ export default function api(modal, endPoint){
       modal,
       BASE_END_POINT,
       'videoVerification',
-      vi$.getToken(),
-      options,
-      callback
-    );
-  }
-
-  apiRef.videoVerificationWithLiveness = (options, callback) => {
-    vi$.post(
-      modal,
-      BASE_END_POINT,
-      'videoVerificationWithLiveness',
       vi$.getToken(),
       options,
       callback

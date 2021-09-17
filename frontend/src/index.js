@@ -835,7 +835,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
       voiceIt2ObjRef.modal.hideProgressCircle(100);
       vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
       voiceIt2ObjRef.modal.showWaitingLoader(true,true);
-      voiceIt2ObjRef.apiRef.videoLiveness({
+      voiceIt2ObjRef.apiRef.videoVerificationWithLiveness({
         viVideoData : voiceIt2ObjRef.player.recordedData,
         vilcoId: voiceIt2ObjRef.livenessReqId,
         viPhrase: voiceIt2ObjRef.phrase
@@ -850,7 +850,7 @@ voiceIt2ObjRef.initModalClickListeners = function(){
         //make api call to Andrew Here
         vi$.fadeIn(voiceIt2ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
         voiceIt2ObjRef.modal.showWaitingLoader(true,true);
-        voiceIt2ObjRef.apiRef.faceLiveness({
+        voiceIt2ObjRef.apiRef.faceVerificationWithLiveness({
           viVideoData : voiceIt2ObjRef.player.recordedData,
           vilcoId: voiceIt2ObjRef.livenessReqId
         }, function(response){
