@@ -20,19 +20,24 @@ type Backend struct {
 	livenessServerClient LivenessServerClient
 }
 
-func (backend *Backend) Initialize(apiKey, apiToken string, baseUrls BaseUrls) {
+func (backend *Backend) Initialize(apiKey, apiToken string, sessionExpirationTimeHours int, baseUrls ...BaseUrls) {
 
 	var api2BaseUrl, livenessServerBaseUrl string
-	if baseUrls.API2 != "" {
-		api2BaseUrl = baseUrls.API2
-	} else {
-		api2BaseUrl = "https://api.voiceit.io"
-	}
 
-	if baseUrls.LivenessServer != "" {
-		livenessServerBaseUrl = baseUrls.LivenessServer
+	if len(baseUrls) < 1 { // baseUrls optional parameter not passed
+		api2BaseUrl, livenessServerBaseUrl = "https://api.voiceit.io", "https://liveness.voiceit.io"
 	} else {
-		livenessServerBaseUrl = "https://liveness.voiceit.io"
+		if baseUrls[0].API2 != "" {
+			api2BaseUrl = baseUrls[0].API2
+		} else {
+			api2BaseUrl = "https://api.voiceit.io"
+		}
+
+		if baseUrls[0].LivenessServer != "" {
+			livenessServerBaseUrl = baseUrls[0].LivenessServer
+		} else {
+			livenessServerBaseUrl = "https://liveness.voiceit.io"
+		}
 	}
 
 	backend.vi = voiceit2.VoiceIt2{
