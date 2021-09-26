@@ -78,7 +78,7 @@ func main() {
 		if VOICEIT_TEST_USER_ID[:4] == "usr_" {
 			tok, err := backend.GenerateTokenForUser(VOICEIT_TEST_USER_ID)
 			if err != nil {
-				log.Println("backend.GenerateTokenForUser(VOICEIT_TEST_USER_ID) Exception: " + err.Error())
+				log.Println(`backend.GenerateTokenForUser("` + VOICEIT_TEST_USER_ID + `") Exception: ` + err.Error())
 				ret["ResponseCode"] = "GERR"
 				ret["Message"] = "Internal Server Error"
 				marshaled, _ := json.Marshal(ret)
@@ -106,10 +106,9 @@ func main() {
 	r.Post("/example_endpoint/", backend.MakeCall)
 
 	r.Get("/content_language", func(w http.ResponseWriter, req *http.Request) {
-		ret := make(map[string]interface{})
+		ret := make(map[string]string)
 		ret["contentLanguage"] = CONTENT_LANGUAGE
 		marshaled, _ := json.Marshal(ret)
-		fmt.Println("marshaled: " + string(marshaled))
 		w.Write(marshaled)
 	})
 
