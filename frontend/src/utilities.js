@@ -23,6 +23,9 @@ const vi$ = {
           if(parsedJson.responseCode === 'INVT'){
             modal.showTokenErrorAndDestroy();
             return;
+          } else if (parsedJson.responseCode === 'BERR'){
+            modal.showGenericErrorAndDestroy(parsedJson.message);
+            return;
           }
           callback(parsedJson);
         }

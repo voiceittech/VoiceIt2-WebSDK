@@ -79,8 +79,8 @@ func main() {
 			tok, err := backend.GenerateTokenForUser(VOICEIT_TEST_USER_ID)
 			if err != nil {
 				log.Println(`backend.GenerateTokenForUser("` + VOICEIT_TEST_USER_ID + `") Exception: ` + err.Error())
-				ret["ResponseCode"] = "GERR"
-				ret["Message"] = "Internal Server Error"
+				ret["ResponseCode"] = "BERR"
+				ret["Message"] = "Unable to generate secure token."
 				marshaled, _ := json.Marshal(ret)
 				w.Write(marshaled)
 				return
