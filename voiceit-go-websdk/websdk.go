@@ -169,7 +169,7 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
 	var clientResponseBytes []byte
 	var err error
 
-	// Take file from multpart form request, copy to bytes.Buffer (Usable in client side requests to API 2/Liveness Server), withouth having to write to disk
+	// Take file from multpart form request, copy to bytes.Buffer (Usable in client side requests to API 2/Liveness Server), without having to write to disk
 	if viRequestType == "createVoiceEnrollment" || viRequestType == "createFaceEnrollment" || viRequestType == "createVideoEnrollment" || viRequestType == "voiceVerification" || viRequestType == "faceVerification" || viRequestType == "faceVerificationWithLiveness" || viRequestType == "videoVerificationWithLiveness" || viRequestType == "videoVerification" {
 
 		var key string
