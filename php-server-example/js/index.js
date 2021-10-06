@@ -52,17 +52,16 @@ function showForTime(elementSelector, timeInSeconds){
   }, timeInSeconds + 200);
 }
 
-function exampleLoginAPICall(values, callback) {
-    var bodyString = '?email=' + values.email + '&password=' + values.password;
-    var http = new XMLHttpRequest();
-    http.open("GET", "/login" + bodyString, true);
-    http.send(null);
-    http.onreadystatechange = function() {
-      if (http.readyState === 4) {
-        var response = JSON.parse(http.responseText.trim());
-        callback(response);
-      }
-    }
+async function exampleLoginAPICall(values) {
+  let formData = new FormData()
+  formData.append('email', values.email);
+  formData.append('password', values.password);
+
+  return await fetch('/login', {method: 'POST', body: formData})
+    .then(response => response.json())
+    .then((data) => {
+      return data;
+    });
 }
 
 function isLivenessEnabled(){
@@ -243,7 +242,7 @@ window.onload = function(event) {
     return passedCheck;
   }
 
-  document.querySelector('#loginBtn').addEventListener('click', function() {
+  document.querySelector('#loginBtn').addEventListener('click', async function() {
     var em = document.querySelector('input[name="email"]').value;
     var pass = document.querySelector('input[name="password"]').value;
     var loginCreds = {
@@ -253,24 +252,26 @@ window.onload = function(event) {
 
     if (validateCredentialsFormat(loginCreds)) {
       showLoader(true);
-      exampleLoginAPICall(loginCreds, function(response) {
-        if (response.responseCode === "SUCC") {
-          window.loggedIn = true;
-          window.myVoiceIt.setSecureToken(response.token);
-          if(window.frontEndInitialized){
-            showLoader(false);
-            showElement('#biometricOptions');
-          }
-          hideElement('#loginBtn');
-          hideElement('#formOverlay');
-          showMessage('Please choose a 2FA verification option below');
-        } else {
-          if(window.frontEndInitialized){
-            showLoader(false);
-          }
-          showMessage(response.message, true);
+      const response = await exampleLoginAPICall(loginCreds);
+
+      if (response.responseCode === "SUCC" && response.token) {
+        window.loggedIn = true;
+        window.myVoiceIt.setSecureToken(response.token);
+        if(window.frontEndInitialized){
+          showLoader(false);
+          showElement('#biometricOptions');
         }
-      });
+        hideElement('#loginBtn');
+        hideElement('#formOverlay');
+        showMessage('Please choose a 2FA verification option below');
+      } else {
+        if(window.frontEndInitialized){
+          showLoader(false);
+        }
+        // hideElement('#loginBtn');
+        // hideElement('#formOverlay');
+        showMessage(response.message, true);
+      }
     }
 
   });

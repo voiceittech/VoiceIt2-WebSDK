@@ -55,11 +55,11 @@ func main() {
 
 	r.Get("/favicon.ico", func(w http.ResponseWriter, req *http.Request) { w.Write(faviconBytes) })
 
-	r.Get("/login", func(w http.ResponseWriter, req *http.Request) {
+	r.Post("/login", func(w http.ResponseWriter, req *http.Request) {
 
 		ret := make(map[string]interface{})
 
-		if req.URL.Query().Get("email") != DEMO_EMAIL {
+		if req.FormValue("email") != DEMO_EMAIL {
 			ret["responseCode"] = "UNFD"
 			ret["message"] = "User not found. Please make sure you entered the right userId and API credentials in config.go"
 			marshaled, _ := json.Marshal(ret)
@@ -67,7 +67,7 @@ func main() {
 			return
 		}
 
-		if req.URL.Query().Get("password") != DEMO_PASSWORD {
+		if req.FormValue("password") != DEMO_PASSWORD {
 			ret["responseCode"] = "INPW"
 			ret["message"] = "Incorrect Password"
 			marshaled, _ := json.Marshal(ret)

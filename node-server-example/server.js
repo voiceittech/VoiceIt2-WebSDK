@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const config = require('./config')
 const VoiceIt2WebSDK = require('../voiceit-node-websdk')
 // const  = require('../voiceit-node-websdk/tokenGenerator')
-const app = express()
+const app = express();
 const port = 3000
 let test = '';
 
@@ -15,20 +15,21 @@ app.use(session({
   secret: 'supersecretsessionkey',
   resave: false,
   saveUninitialized: true,
-}))
+}));
 
 app.use('/favicon.ico', express.static('public/images/favicon.ico'));
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 // for parsing multipart/form-data
 const multer = require('multer')()
+app.use(multer.array());
 // serve all static files in public directory
-app.use(express.static('public'))
+app.use(express.static('public'));
 
-app.get('/login', function (req, res) {
-  if(req.query.email === config.DEMO_EMAIL && req.query.password === config.DEMO_PASSWORD){
+app.post('/login', function (req, res) {
+  if(req.body.email === config.DEMO_EMAIL && req.body.password === config.DEMO_PASSWORD){
     let generatedToken = '';
     const userId = config.VOICEIT_TEST_USER_ID;
     if (userId.substring(0,4) === 'usr_'){
@@ -44,7 +45,7 @@ app.get('/login', function (req, res) {
       'message' : 'Successfully authenticated user',
       'token' : generatedToken
     });
-  } else if (req.query.password !== config.DEMO_PASSWORD){
+  } else if (req.body.password !== config.DEMO_PASSWORD){
     res.json({
       'responseCode': 'INPW',
       'message' : 'Incorrect Password'

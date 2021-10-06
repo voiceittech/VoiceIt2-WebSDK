@@ -3,8 +3,8 @@ require('../../voiceit-php-websdk/VoiceIt2WebBackend.php');
 include('../config.php');
 
 
-$email = "".$_GET["email"];
-$password = "".$_GET["password"];
+$email = "".$_POST["email"];
+$password = "".$_POST["password"];
 
 if($email == $DEMO_EMAIL && $password == $DEMO_PASSWORD){
   header("HTTP/1.1 200 OK");
