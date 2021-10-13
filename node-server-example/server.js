@@ -18,12 +18,29 @@ app.use(session({
 }));
 
 app.use('/favicon.ico', express.static('public/images/favicon.ico'));
+
+
 // parse application/json
 app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 // for parsing multipart/form-data
 const multer = require('multer')()
+
+app.post('/example_endpoint', multer.any(), function (req, res) {
+  //the token comes in from the fron end in the request body
+    const myVoiceIt = new VoiceIt2WebSDK.Voiceit2(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
+    myVoiceIt.makeCall(req, res, function(jsonObj){
+      if (
+          (jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.success) || // Liveness Server returns success true/false instead of responseCode
+          (!jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.responseCode === 'SUCC')
+      ) {
+        // Activate Session with userId
+        req.session.userId = jsonObj.userId;
+      }
+    });
+});
+
 app.use(multer.array());
 // serve all static files in public directory
 app.use(express.static('public'));
@@ -76,19 +93,6 @@ app.get('/console', function (req, res) {
   }
 })
 
-app.post('/example_endpoint', multer.any(), function (req, res) {
-  //the token comes in from the fron end in the request body
-    const myVoiceIt = new VoiceIt2WebSDK.Voiceit2(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
-    myVoiceIt.makeCall(req, res, function(jsonObj){
-      if (
-          (jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.success) || // Liveness Server returns success true/false instead of responseCode
-          (!jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.responseCode === 'SUCC')
-      ) {
-        // Activate Session with userId
-        req.session.userId = jsonObj.userId;
-      }
-    });
-});
 
 app.get('/content_language', function (req, res) {
   res.json({contentLanguage: config.CONTENT_LANGUAGE});
