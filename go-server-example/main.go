@@ -47,19 +47,19 @@ func init() {
 
 func main() {
 
-	r := chi.NewRouter()
-	r.Use(middleware.RealIP)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Logger)
+	router := chi.NewRouter()
+	router.Use(middleware.RealIP)
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.Logger)
 
-	r.Get("/favicon.ico", func(w http.ResponseWriter, req *http.Request) { w.Write(faviconBytes) })
+	router.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) { w.Write(faviconBytes) })
 
-	r.Post("/login", func(w http.ResponseWriter, req *http.Request) {
+	router.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 
 		ret := make(map[string]interface{})
 
-		if req.FormValue("email") != DEMO_EMAIL {
+		if r.FormValue("email") != DEMO_EMAIL {
 			ret["responseCode"] = "UNFD"
 			ret["message"] = "User not found. Please make sure you entered the right userId and API credentials in config.go"
 			marshaled, _ := json.Marshal(ret)
@@ -67,7 +67,7 @@ func main() {
 			return
 		}
 
-		if req.FormValue("password") != DEMO_PASSWORD {
+		if r.FormValue("password") != DEMO_PASSWORD {
 			ret["responseCode"] = "INPW"
 			ret["message"] = "Incorrect Password"
 			marshaled, _ := json.Marshal(ret)
@@ -95,27 +95,43 @@ func main() {
 
 	})
 
-	r.Get("/logout", func(w http.ResponseWriter, req *http.Request) {
+	router.Get("/logout", func(w http.ResponseWriter, r *http.Request) {
 		// No cookie sessions need to be reset since all sessions handled inside custom client wrapper code in frontend
-		http.Redirect(w, req, "/", 302)
+		http.Redirect(w, r, "/", 302)
 	})
 
-	r.Get("/console", func(w http.ResponseWriter, req *http.Request) { w.Write(consoleBytes) })
+	router.Get("/console", func(w http.ResponseWriter, r *http.Request) { w.Write(consoleBytes) })
 
-	r.Post("/example_endpoint", backend.MakeCall)
-	r.Post("/example_endpoint/", backend.MakeCall)
+	router.Post("/example_endpoint", func(w http.ResponseWriter, r *http.Request) {
+		ret, err := backend.MakeCall(w, r)
+		if err != nil {
+			w.Write([]byte("backend.MakeCall(w, r) Exception: " + err.Error()))
+			return
+		}
+		bytes, _ := json.Marshal(ret)
+		w.Write(bytes)
+	})
+	router.Post("/example_endpoint/", func(w http.ResponseWriter, r *http.Request) {
+		ret, err := backend.MakeCall(w, r)
+		if err != nil {
+			w.Write([]byte("backend.MakeCall(w, r) Exception: " + err.Error()))
+			return
+		}
+		bytes, _ := json.Marshal(ret)
+		w.Write(bytes)
+	})
 
-	r.Get("/content_language", func(w http.ResponseWriter, req *http.Request) {
+	router.Get("/content_language", func(w http.ResponseWriter, r *http.Request) {
 		ret := make(map[string]string)
 		ret["contentLanguage"] = CONTENT_LANGUAGE
 		marshaled, _ := json.Marshal(ret)
 		w.Write(marshaled)
 	})
 
-	fileServer(r)
+	fileServer(router)
 
 	fmt.Println("Serving VoiceIt WebSDK Example at port :" + HTTP_PORT)
-	log.Fatal(http.ListenAndServe(":"+HTTP_PORT, r))
+	log.Fatal(http.ListenAndServe(":"+HTTP_PORT, router))
 }
 
 func fileServer(router *chi.Mux) {

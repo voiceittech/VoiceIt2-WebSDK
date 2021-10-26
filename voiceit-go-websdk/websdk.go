@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	platformVersion = "1.5.6"
+	platformVersion = "1.5.7"
 	platformId      = "53"
 )
 
@@ -121,33 +121,33 @@ func (websdk WebSDK) validateToken(tokenString string) (valid bool, userId strin
 
 }
 
-func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
+func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) (map[string]interface{}, error) {
+
+	res := make(map[string]interface{})
 
 	if err := r.ParseMultipartForm(32 << 20); err != nil {
 		log.Println("r.ParseMultipartForm(32 << 20) Exception: " + err.Error())
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("r.ParseMultipartForm(32 << 20) Exception: " + err.Error()))
-		return
+		// w.Write([]byte("r.ParseMultipartForm(32 << 20) Exception: " + err.Error()))
+		return res, errors.New("r.ParseMultipartForm(32 << 20) Exception: " + err.Error())
 	}
 
 	viRequestType, viSecureToken := r.FormValue("viRequestType"), r.FormValue("viSecureToken")
 
-	res := make(map[string]interface{})
-
 	if viRequestType == "" {
 		log.Println(`viRequestType == ""`)
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("viRequestType not passed"))
-		return
+		// w.Write([]byte("viRequestType not passed"))
+		return res, errors.New("viRequestType not passed")
 	}
 
 	if viSecureToken == "" {
 		log.Println(`viSecureToken == ""`)
 		res["responseCode"] = "INVT"
 		res["message"] = "Invalid Token"
-		marshaled, _ := json.Marshal(res)
-		w.Write(marshaled)
-		return
+		// marshaled, _ := json.Marshal(res)
+		// w.Write(marshaled)
+		return res, nil
 	}
 
 	valid, userId := websdk.validateToken(viSecureToken)
@@ -156,9 +156,9 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
 		log.Println(`websdk.validateToken("` + viSecureToken + `"); !valid`)
 		res["responseCode"] = "INVT"
 		res["message"] = "Invalid Token"
-		marshaled, _ := json.Marshal(res)
-		w.Write(marshaled)
-		return
+		// marshaled, _ := json.Marshal(res)
+		// w.Write(marshaled)
+		return res, nil
 	}
 
 	// Used to store multipart form file in RAM until it is sent off as part of client request
@@ -191,18 +191,18 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
 			log.Println(`r.FormFile("` + key + `") Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = `r.FormFile("` + key + `")` + err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 
 		if _, err := io.Copy(buf, file); err != nil {
 			log.Println(`io.Copy(buf, file) Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = `io.Copy(buf, file)` + key + `")` + err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 
 		// If not filename was passed, create one using psudorandom hash generator
@@ -214,8 +214,8 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
 
 		// Make client request to API 2/Liveness Server
 	} else if viRequestType == "enoughVoiceEnrollments" || viRequestType == "enoughFaceEnrollments" || viRequestType == "enoughVideoEnrollments" {
-		websdk.enoughEnrollments(w, viRequestType, userId)
-		return
+		return websdk.enoughEnrollments(w, viRequestType, userId)
+		// return
 	}
 
 	switch viRequestType {
@@ -243,25 +243,30 @@ func (websdk WebSDK) MakeCall(w http.ResponseWriter, r *http.Request) {
 	default:
 		res["responseCode"] = "IRT"
 		res["message"] = `Invalid request type "` + viRequestType + `"`
-		marshaled, _ := json.Marshal(res)
-		w.Write(marshaled)
-		return
+		// marshaled, _ := json.Marshal(res)
+		// w.Write(marshaled)
+		return res, nil
 	}
 
 	if err != nil {
 		log.Println(`Case: "` + viRequestType + `" Client Call Exception: ` + err.Error())
 		res["responseCode"] = "BERR"
 		res["message"] = "Client Call Exception: " + err.Error()
-		marshaled, _ := json.Marshal(res)
-		w.Write(marshaled)
-		return
+		// marshaled, _ := json.Marshal(res)
+		// w.Write(marshaled)
+		return res, nil
 	}
 
-	w.Write(clientResponseBytes)
+	// w.Write(clientResponseBytes)
+	if err := json.Unmarshal(clientResponseBytes, &res); err != nil {
+		return res, errors.New(`json.Unmarshal([]byte("` + string(clientResponseBytes) + `"), &res) Exception: ` + err.Error())
+	}
+
+	return res, nil
 
 }
 
-func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, userId string) {
+func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, userId string) (map[string]interface{}, error) {
 	res := make(map[string]interface{})
 	switch viRequestType {
 	case "enoughVoiceEnrollments":
@@ -272,9 +277,9 @@ func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, use
 			log.Println(`websdk.vi.GetAllVoiceEnrollments("` + userId + `") Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if err := json.Unmarshal(ret, &voiceEnrollmentsResponse); err != nil {
 			log.Println(`json.Unmarshal([]byte("` + string(ret) + `"), &voiceEnrollmentsResponse) Exception: ` + err.Error())
@@ -282,24 +287,24 @@ func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, use
 			res["message"] = err.Error()
 			marshaled, _ := json.Marshal(res)
 			w.Write(marshaled)
-			return
+			return res, nil
 		}
 		ret, err = websdk.vi.GetAllVideoEnrollments(userId)
 		if err != nil {
 			log.Println(`websdk.vi.GetAllVideoEnrollments("` + userId + `") Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if err := json.Unmarshal(ret, &videoEnrollmentsResponse); err != nil {
 			log.Println(`json.Unmarshal([]byte("` + string(ret) + `"), &videoEnrollmentsResponse) Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if voiceEnrollmentsResponse.ResponseCode == "SUCC" && videoEnrollmentsResponse.ResponseCode == "SUCC" && voiceEnrollmentsResponse.Count+videoEnrollmentsResponse.Count >= 3 {
 			res["enoughEnrollments"] = true
@@ -315,34 +320,34 @@ func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, use
 			log.Println(`websdk.vi.GetAllFaceEnrollments("` + userId + `") Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if err := json.Unmarshal(ret, &faceEnrollmentsResponse); err != nil {
 			log.Println(`json.Unmarshal([]byte("` + string(ret) + `"), &faceEnrollmentsResponse) Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		ret, err = websdk.vi.GetAllVideoEnrollments(userId)
 		if err != nil {
 			log.Println(`websdk.vi.GetAllVideoEnrollments("` + userId + `") Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if err := json.Unmarshal(ret, &videoEnrollmentsResponse); err != nil {
 			log.Println(`json.Unmarshal([]byte("` + string(ret) + `"), &videoEnrollmentsResponse) Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if faceEnrollmentsResponse.ResponseCode == "SUCC" && videoEnrollmentsResponse.ResponseCode == "SUCC" && faceEnrollmentsResponse.Count+videoEnrollmentsResponse.Count >= 1 {
 			res["enoughEnrollments"] = true
@@ -356,17 +361,17 @@ func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, use
 			log.Println(`websdk.vi.GetAllVideoEnrollments("` + userId + `") Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if err := json.Unmarshal(ret, &videoEnrollmentsResponse); err != nil {
 			log.Println(`json.Unmarshal([]byte("` + string(ret) + `"), &videoEnrollmentsResponse) Exception: ` + err.Error())
 			res["responseCode"] = "BERR"
 			res["message"] = err.Error()
-			marshaled, _ := json.Marshal(res)
-			w.Write(marshaled)
-			return
+			// marshaled, _ := json.Marshal(res)
+			// w.Write(marshaled)
+			return res, nil
 		}
 		if videoEnrollmentsResponse.ResponseCode == "SUCC" && videoEnrollmentsResponse.Count >= 3 {
 			res["enoughEnrollments"] = true
@@ -374,6 +379,7 @@ func (websdk WebSDK) enoughEnrollments(w http.ResponseWriter, viRequestType, use
 			res["enoughEnrollments"] = false
 		}
 	}
-	marshaled, _ := json.Marshal(res)
-	w.Write(marshaled)
+	// marshaled, _ := json.Marshal(res)
+	// w.Write(marshaled)
+	return res, nil
 }
