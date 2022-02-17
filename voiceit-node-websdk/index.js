@@ -5,9 +5,6 @@ const fs = require('fs');
 const uuidv4 = require('uuid/v4');
 const pckg = require('./package.json');
 
-const API2_BASE_URL = 'https://api.voiceit.io';
-const LIVENESS_SERVER_BASE_URL = 'https://liveness.voiceit.io'
-
 function checkFileExists(filePath, callback) {
   if (!fs.existsSync(filePath)) {
     callback(Error(`File Path ${filePath} Does Not Exist`));
@@ -41,26 +38,37 @@ function generateTokenForUser (options) {
   return token;
 }
 
-function VoiceIt2(apk, tok, options) {
+function VoiceIt2(apiKey, apiToken, options, api2CustomUrl, livenessServerCustomUrl) {
+
+  let api2BaseUrl = 'https://api.voiceit.io';
+  let livenesServerBaseUrl = 'https://liveness.voiceit.io'
+
   // Set default options
-  if (typeof options === 'undefined'){
+  if (typeof options === 'undefined') {
     this.options = {
       tempFilePath: options.tempFilePath || "",
       sessionExpirationTimeHours: 1
     };
-  }
-  else {
-     if (!options.sessionExpirationTimeHours){
+  } else {
+     if (!options.sessionExpirationTimeHours) {
       options.sessionExpirationTimeHours = 1;
-    } else if (!options.tempFilePath){
+    } else if (!options.tempFilePath) {
       options.tempFilePath= "";
+    }
+
+    if api2CustomUrl !== undefined {
+      api2BaseUrl = options.api2CustomUrl;
+    }
+
+    if livenessServerCustomUrl !== undefined {
+      livenesServerBaseUrl = options.livenessServerCustomUrl;
     }
   }
 
   this.axiosInstance = axios.create({
     auth: {
-      username: apk,
-      password: tok,
+      username: apiKey,
+      password: apiToken,
     },
     headers: {
       platformId: '44',
@@ -82,7 +90,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.validateToken = (userToken, callback) => {
-    jwt.verify(userToken,`SECRET%_${tok}`, function(err, decodedPayload) {
+    jwt.verify(userToken,`SECRET%_${apiToken}`, function(err, decodedPayload) {
     if (err) {
       callback(false);
     } else {
@@ -288,7 +296,7 @@ function VoiceIt2(apk, tok, options) {
   /* User API Calls */
 
   this.createUser = (callback) => {
-    this.axiosInstance.post(`${API2_BASE_URL}/users${this.notificationUrl}`)
+    this.axiosInstance.post(`${api2BaseUrl}/users${this.notificationUrl}`)
       .then((httpResponse) => {
         callback(httpResponse.data);
       }).catch((error) => {
@@ -297,7 +305,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.getLCO = (options, callback) => {
-    this.axiosInstance.get(`${LIVENESS_SERVER_BASE_URL}/v1/verification/${options.userId}/${options.contentLanguage}`)
+    this.axiosInstance.get(`${livenesServerBaseUrl}/v1/verification/${options.userId}/${options.contentLanguage}`)
       .then((httpResponse) => {
         callback(httpResponse.data,httpResponse.status);
       }).catch((error) => {
@@ -306,7 +314,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.checkUserExists = (options, callback) => {
-    this.axiosInstance.get(`${API2_BASE_URL}/users/${options.userId}${this.notificationUrl}`)
+    this.axiosInstance.get(`${api2BaseUrl}/users/${options.userId}${this.notificationUrl}`)
       .then((httpResponse) => {
         callback(httpResponse.data);
       }).catch((error) => {
@@ -315,7 +323,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.deleteUser = (options, callback) => {
-    this.axiosInstance.delete(`${API2_BASE_URL}/users/${options.userId}${this.notificationUrl}`)
+    this.axiosInstance.delete(`${api2BaseUrl}/users/${options.userId}${this.notificationUrl}`)
       .then((httpResponse) => {
         callback(httpResponse.data);
       }).catch((error) => {
@@ -326,7 +334,7 @@ function VoiceIt2(apk, tok, options) {
   /* Enrollment API Calls */
 
   this.getAllVoiceEnrollments = (options, callback) => {
-    this.axiosInstance.get(`${API2_BASE_URL}/enrollments/voice/${options.userId}${this.notificationUrl}`)
+    this.axiosInstance.get(`${api2BaseUrl}/enrollments/voice/${options.userId}${this.notificationUrl}`)
       .then((httpResponse) => {
         callback(httpResponse.data);
       }).catch((error) => {
@@ -335,7 +343,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.getAllFaceEnrollments = (options, callback) => {
-    this.axiosInstance.get(`${API2_BASE_URL}/enrollments/face/${options.userId}${this.notificationUrl}`)
+    this.axiosInstance.get(`${api2BaseUrl}/enrollments/face/${options.userId}${this.notificationUrl}`)
       .then((httpResponse) => {
         callback(httpResponse.data);
       }).catch((error) => {
@@ -344,7 +352,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
   this.getAllVideoEnrollments = (options, callback) => {
-    this.axiosInstance.get(`${API2_BASE_URL}/enrollments/video/${options.userId}${this.notificationUrl}`)
+    this.axiosInstance.get(`${api2BaseUrl}/enrollments/video/${options.userId}${this.notificationUrl}`)
       .then((httpResponse) => {
         callback(httpResponse.data);
       }).catch((error) => {
@@ -365,7 +373,7 @@ function VoiceIt2(apk, tok, options) {
       filename: 'recording.wav',
     });
 
-    this.axiosInstance.post(`${API2_BASE_URL}/enrollments/voice${this.notificationUrl}`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/enrollments/voice${this.notificationUrl}`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
@@ -379,7 +387,7 @@ function VoiceIt2(apk, tok, options) {
     form.append('userId', options.userId);
     form.append('video', fs.createReadStream(options.videoFilePath));
 
-    this.axiosInstance.post(`${API2_BASE_URL}/enrollments/face`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/enrollments/face`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
@@ -401,7 +409,7 @@ function VoiceIt2(apk, tok, options) {
       filename: 'video.mp4',
     });
 
-    this.axiosInstance.post(`${API2_BASE_URL}/enrollments/video${this.notificationUrl}`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/enrollments/video${this.notificationUrl}`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
@@ -411,7 +419,7 @@ function VoiceIt2(apk, tok, options) {
   };
 
    this.deleteAllEnrollments = (options, callback) => {
-     this.axiosInstance.delete(`${API2_BASE_URL}/enrollments/${options.userId}/all${this.notificationUrl}`)
+     this.axiosInstance.delete(`${api2BaseUrl}/enrollments/${options.userId}/all${this.notificationUrl}`)
        .then((httpResponse) => {
          callback(httpResponse.data);
        }).catch((error) => {
@@ -434,7 +442,7 @@ function VoiceIt2(apk, tok, options) {
       filename: 'recording.wav',
     });
 
-    this.axiosInstance.post(`${API2_BASE_URL}/verification/voice${this.notificationUrl}`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/verification/voice${this.notificationUrl}`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
@@ -454,7 +462,7 @@ function VoiceIt2(apk, tok, options) {
       filename: 'video.mp4',
     });
 
-    this.axiosInstance.post(`${API2_BASE_URL}/verification/face${this.notificationUrl}`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/verification/face${this.notificationUrl}`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
@@ -474,7 +482,7 @@ function VoiceIt2(apk, tok, options) {
       filename: 'photo.jpg',
     });
 
-    this.axiosInstance.post(`${API2_BASE_URL}/verification/face${this.notificationUrl}`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/verification/face${this.notificationUrl}`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
@@ -496,7 +504,7 @@ function VoiceIt2(apk, tok, options) {
       form.append('file', fs.createReadStream(options.file), {
         filename: 'video.mp4',
       });
-      this.axiosInstance.post(`${LIVENESS_SERVER_BASE_URL}/v1/verification/face`, form, {
+      this.axiosInstance.post(`${livenesServerBaseUrl}/v1/verification/face`, form, {
         headers: form.getHeaders(),
       }).then((httpResponse) => {
         callback(httpResponse.data);
@@ -517,7 +525,7 @@ function VoiceIt2(apk, tok, options) {
         form.append('file', fs.createReadStream(options.file), {
           filename: 'video.mp4',
         });
-        this.axiosInstance.post(`${LIVENESS_SERVER_BASE_URL}/v1/verification/video`, form, {
+        this.axiosInstance.post(`${livenesServerBaseUrl}/v1/verification/video`, form, {
           headers: form.getHeaders(),
         }).then((httpResponse) => {
           callback(httpResponse.data);
@@ -539,7 +547,7 @@ function VoiceIt2(apk, tok, options) {
     form.append('video', fs.createReadStream(options.videoFilePath), {
       filename: 'video.mp4',
     });
-    this.axiosInstance.post(`${API2_BASE_URL}/verification/video${this.notificationUrl}`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/verification/video${this.notificationUrl}`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
@@ -566,7 +574,7 @@ function VoiceIt2(apk, tok, options) {
     form.append('photo', fs.createReadStream(options.photoFilePath), {
       filename: 'photo.jpg',
     });
-    this.axiosInstance.post(`${API2_BASE_URL}/verification/video${this.notificationUrl}`, form, {
+    this.axiosInstance.post(`${api2BaseUrl}/verification/video${this.notificationUrl}`, form, {
       headers: form.getHeaders(),
     }).then((httpResponse) => {
       callback(httpResponse.data);
